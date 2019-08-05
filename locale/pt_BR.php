@@ -1,0 +1,228 @@
+<?php if (!defined('APPLICATION')) exit();
+
+use Yaga;
+
+// Misc
+$definition['1 year'] = '1 ano';
+$definition['3 months'] = '3 meses';
+$definition['5 years'] = '5 anos';
+$definition['6 months'] = '6 meses';
+$definition['Auto Award'] = 'Prêmio Automatico';
+$definition['Automatically Award'] = 'Ganhar Automaticamente';
+$definition['Award Value'] = 'Valor do Prêmio';
+$definition['Css Class'] = 'Classe de Css';
+$definition['Days'] = 'Dias';
+$definition['Description'] = 'Descrição';
+$definition['Export'] = 'Exportar';
+$definition['Grant'] = 'Conceder';
+$definition['Icon'] = 'Icone';
+$definition['Image Files'] = 'Arquivo de Imagens';
+$definition['Image'] = 'Imagem';
+$definition['Less than:'] = 'Menor que:';
+$definition['More than or:'] = 'Maior que ou:';
+$definition['More than:'] = 'Maior que:';
+$definition['Permission'] = 'Permissão';
+$definition['Photo'] = 'Foto';
+$definition['Rule'] = 'Regra';
+$definition['Time Frame'] = 'Periodo de Tempo';
+$definition['Tooltip'] = 'Dica';
+$definition['Weeks'] = 'Semanas';
+$definition['Yaga.Settings'] = 'Configurações do Yaga';
+$definition['Years'] = 'Anos';
+
+// Actions
+$definition['Yaga.Action'] = 'Ação';
+$definition['Yaga.Action.Add'] = 'Adicionar Ação';
+$definition['Yaga.Action.Added'] = 'Ação Adicionada com Sucesso!';
+$definition['Yaga.Action.Delete'] = 'Deletar Ação';
+$definition['Yaga.Action.Edit'] = 'Editar Ação';
+$definition['Yaga.Action.Invalid'] = 'Ação Inválida';
+$definition['Yaga.Action.InvalidTargetID'] = 'ID Inválida';
+$definition['Yaga.Action.InvalidTargetType'] = 'Alvo de Reação Inválida';
+$definition['Yaga.Action.Move'] = 'Mover as %s reações?';
+$definition['Yaga.Action.PermDesc'] = "Um usuário precisará da seguinte permissão para usar essa ação. O padrão é 'Yaga.Reactions.Add'.";
+$definition['Yaga.ActionUpdated'] = 'Ação Atualizada com Sucesso!';
+$definition['Yaga.Actions.Current'] = 'Ações Atuais';
+$definition['Yaga.Actions.Desc'] = "As ações são mostradas embaixo do Conteúdo Gerado pelo Usuário, tais como discussões, comentários e artigos de atividade. Outros usuários podem selecionar uma 'reação'. O proprietário do item original receberá pontos com base nas reações dos outros. Isso forma um ciclo de feedback positivo para ambas as ações positivas <em>e</em> negativas.";
+$definition['Yaga.Actions.Manage'] = 'Gerencias Ações';
+$definition['Yaga.Actions.Settings.Desc'] = 'Aqui você pode gerenciar as ações disponíveis que podem ser usadas ​​como reações. Arraste os itens para classificar a ordem de exibição.';
+$definition['Yaga.Reactions'] = 'Reações';
+$definition['Yaga.Reactions.RecordFormat'] = '%s - %s no %s.';
+$definition['Yaga.Reactions.RecordLimit.Plural'] = 'e %s outros.';
+$definition['Yaga.Reactions.RecordLimit.Single'] = 'e %s outros.';
+$definition['Yaga.Reactions.Use'] = 'Usar Reações';
+
+// Badges
+$definition['Yaga.Badge'] = 'Emblema';
+$definition['Yaga.Badge.Add'] = 'Adicionar Emblema';
+$definition['Yaga.Badge.Added'] = 'Emblema atualizado com sucesso!';
+$definition['Yaga.Badge.AlreadyAwarded'] = '%s já possue este emblema!';
+$definition['Yaga.Badge.Award'] = 'Dar Emblema';
+$definition['Yaga.Badge.Delete'] = 'Deletar Emblema';
+$definition['Yaga.Badge.DetailLink'] = 'Ver Estatísticas sobre este Emblema';
+$definition['Yaga.Badge.Earned'] = 'Você ganhou este Emblema';
+$definition['Yaga.Badge.Earned.Format'] = 'Você ganhou este Emblemas as %s do %s';
+$definition['Yaga.Badge.EarnedByNone'] = 'Ninguem ganhou este Emblema ainda.';
+$definition['Yaga.Badge.EarnedByPlural'] = '%s pessoas ganharam este Emblema.';
+$definition['Yaga.Badge.EarnedBySingle'] = '%s pessoa ganhou este Emblema.';
+$definition['Yaga.Badge.EarnedHeadlineFormat'] = '{ActivityUserID,You} ganhou o emblema <a href="{Url,html}">{Data.Name,text}</a>.';
+$definition['Yaga.Badge.Edit'] = 'Editar Emblema';
+$definition['Yaga.Badge.GiveTo'] = 'Dar um Emblema a %s';
+$definition['Yaga.Badge.PhotoDeleted'] = 'A Foto do Emblema foi Deletada.';
+$definition['Yaga.Badge.Reason'] = 'Razão (opcional)';
+$definition['Yaga.Badge.RecentRecipients'] = 'Ganhadores mais recentes';
+$definition['Yaga.Badge.Updated'] = 'Emblema atualizado com sucesso!';
+$definition['Yaga.Badge.View'] = 'Ver Emblema: ';
+$definition['Yaga.Badges'] = 'Emblemas';
+$definition['Yaga.Badges.All'] = 'Todos os Emblamas';
+$definition['Yaga.Badges.Desc'] = 'Emblemas são concedidos aos usuários que atendem aos critérios definidos pelas regras associadas. São registrados em seu perfil e também por pontos. Eles podem ser usados ​​para criar um sistema de conquista que reforça o bom comportamento do usuário.';
+$definition['Yaga.Badges.Manage'] = 'Gerenciar Emblemas';
+$definition['Yaga.Badges.Mine'] = 'Meus Emblemas';
+$definition['Yaga.Badges.Notify'] = 'Me notificar quando eu ganhar um Emblema.';
+$definition['Yaga.Badges.Settings.Desc'] = 'Você pode gerenciar os emblemas disponíveis aqui. Emblemas desativadas não serão concedidos automaticamente.';
+$definition['Yaga.Badges.Use'] = 'Usar Emblemas';
+
+// Best Content
+$definition['Yaga.BestContent'] = 'O Melhor...';
+$definition['Yaga.BestContent.Action'] = 'Melhor %s Conteúdo';
+$definition['Yaga.BestContent.AllTime'] = 'Melhor Conteúdo de Todos os Tempos';
+$definition['Yaga.BestContent.Recent'] = 'Melhores Conteúdos Recentes';
+
+// Errors
+$definition['Yaga.Error.AddFile'] ='Não é possível adicionar arquivo: %s';
+$definition['Yaga.Error.ArchiveChecksum'] = 'Arquivo parece estar corrompido: Checksum é inválido.';
+$definition['Yaga.Error.ArchiveCreate'] = 'Não é possível criar o arquivo: %s';
+$definition['Yaga.Error.ArchiveExtract'] = 'Não é possível extrair o arquivo.';
+$definition['Yaga.Error.ArchiveOpen'] = 'Não é possível abrir o arquivo.';
+$definition['Yaga.Error.ArchiveSave'] = 'Não é possivel Salvar o arquivo: %s';
+$definition['Yaga.Error.DeleteFailed'] = 'Falhou ao Deletar %s';
+$definition['Yaga.Error.FileDNE'] = 'Arquivo não exite.';
+$definition['Yaga.Error.Includes'] = 'Você deve selecionar pelo menos um item para o transportar.';
+$definition['Yaga.Error.NeedJS'] = 'Isto deve ser feito via Javascript';
+$definition['Yaga.Error.NoActions'] = 'Não há ações difinidas.';
+$definition['Yaga.Error.NoBadges'] = 'Você não pode prêmiar emblemas sem defini-los.';
+$definition['Yaga.Error.NoRanks'] = 'Você não pode promover usuários sem ter definido Emblemas.';
+$definition['Yaga.Error.NoRules'] = 'Você não pode Adicionar ou Editar Emblemas sem regras!';
+$definition['Yaga.Error.ReactToOwn'] = 'Você não pode reagir em su próprio comteúdo.';
+$definition['Yaga.Error.Rule404'] = 'Regra não encontrada.';
+$definition['Yaga.Error.TransportCopy'] = 'Não é possivel copiar arquivo de imagem.';
+$definition['Yaga.Error.TransportRequirements'] = 'Você não parece ter os requisitos mínimos para o transportar de uma configuração Yaga automaticamente. Por favor, veja o manual_transport.md para mais informações.';
+
+// Leader Board
+$definition['Yaga.LeaderBoard.AllTime'] = 'Liders de todos os tempos ';
+$definition['Yaga.LeaderBoard.Max'] = 'Número máximo de líderes para mostrar';
+$definition['Yaga.LeaderBoard.Month'] = "Lider deste mês";
+$definition['Yaga.LeaderBoard.Use'] = 'Mostrar classificação na página de atividade';
+$definition['Yaga.LeaderBoard.Week'] = "Liders desta semana";
+$definition['Yaga.LeaderBoard.Year'] = "Liders deste ano";
+
+// Perks
+$definition['Yaga.Perks'] = 'Previlégios';
+$definition['Yaga.Perks.Curation'] = 'Curadoria de Conteúdo';
+$definition['Yaga.Perks.EditTimeout'] = 'Tempo de Edição';
+$definition['Yaga.Perks.Emoticons'] = 'Formatar Emoticons';
+$definition['Yaga.Perks.MeActions'] = 'Formatar Ações /me';
+$definition['Yaga.Perks.Signatures'] = 'Editar Sinatura';
+$definition['Yaga.Perks.Tags'] = 'Adicionar Tags';
+
+// Ranks
+$definition['Yaga.Rank'] = 'Posição';
+$definition['Yaga.Rank.Add'] = 'Adicionar Posição';
+$definition['Yaga.Rank.Added'] = 'Posição adicionada com sucesso!';
+$definition['Yaga.Rank.Delete'] = 'Deletar Posição';
+$definition['Yaga.Rank.Edit'] = 'Editar Posição';
+$definition['Yaga.Rank.Photo.Desc'] = 'Esta foto será mostrada em mensagens de atividade e em notificações relativas a progressão da posição.';
+$definition['Yaga.Rank.PhotoDeleted'] = 'Foto da Posição deletada com sucesso.';
+$definition['Yaga.Rank.PhotoUploaded'] = 'Foto da Posição atualizada com sucesso!';
+$definition['Yaga.Rank.Progression'] = 'Progresso de Posição';
+$definition['Yaga.Rank.Progression.Desc'] = 'Permitir o usuário progredir automaticamente após esta Posição.';
+$definition['Yaga.Rank.Promote'] = 'Editar Posição';
+$definition['Yaga.Rank.Promote.Format'] = "Editar Posição do %s";
+$definition['Yaga.Rank.PromotedHeadlineFormat'] = '{ActivityUserID,You} ganhou uma promoção para {Data.Name,text}.';
+$definition['Yaga.Rank.RecordActivity'] = 'Gravar esta atualização de posição no log de atividade.';
+$definition['Yaga.Rank.Updated'] = 'Posição atualizada com sucesso!';
+$definition['Yaga.Ranks'] = 'Posições';
+$definition['Yaga.Ranks.AgeReq'] = 'Tempo Requirido';
+$definition['Yaga.Ranks.Desc'] = "Posições são concedidas aos usuários com base na idade de sua conta e pontos acumulados. Posições têm vantagens associadas que podem ser utilizados para alterar a experiência do usuário.";
+$definition['Yaga.Ranks.Manage'] = 'Gerenciar Posições';
+$definition['Yaga.Ranks.Notify'] = 'Me notificar quando for promovido.';
+$definition['Yaga.Ranks.PointsReq'] = 'Pontos Requiridos';
+$definition['Yaga.Ranks.PostsReq'] = 'Postagens Requiridas';
+$definition['Yaga.Ranks.RequiredAgeDNC'] = 'A Conta pode ter qualquer idade';
+$definition['Yaga.Ranks.RequiredAgeFormat'] = 'A conta tem que ter %s de atividade.';
+$definition['Yaga.Ranks.Settings.Desc'] = 'Aqui você pode gerenciar as posições disponíveis. Posições desativadas não serão concedidas automaticamente. Arraste os itens para classificar a ordem de promoção.';
+$definition['Yaga.Ranks.Use'] = 'Usar Posições';
+
+// Rules
+$definition['Yaga.Rules.AwardCombo'] = 'Prêmio Combo';
+$definition['Yaga.Rules.AwardCombo.Criteria.Head'] = 'Número de Tipos de Emblema';
+$definition['Yaga.Rules.AwardCombo.Desc'] = 'Prêmie este emblema se a contagem de emblemas únicos (com base na regra) que um usuário recebeu dentro de prazo determinado.';
+$definition['Yaga.Rules.CakeDayPost'] = 'Post de Aniversário';
+$definition['Yaga.Rules.CakeDayPost.Desc'] = 'Premie estem emblema se o usuário postou no dia de aniversário de sua conta';
+$definition['Yaga.Rules.CommentCount'] = 'Total de Comentários';
+$definition['Yaga.Rules.CommentCount.Criteria.Head'] = 'Total de Comentários';
+$definition['Yaga.Rules.CommentCount.Desc'] = 'Premie este emblema se o usuário atingiu um determinado numero de comentários.';
+$definition['Yaga.Rules.CommentMarathon'] = 'Maratona de Comentários';
+$definition['Yaga.Rules.CommentMarathon.Criteria.Head'] = 'Numero de Comentários';
+$definition['Yaga.Rules.CommentMarathon.Desc'] = 'Premie este emblema se o usuário fez um numero determinado de comentários em um periodo de tempo.';
+$definition['Yaga.Rules.DiscussionBodyLength'] = 'Comprimeto';
+$definition['Yaga.Rules.DiscussionBodyLength.Criteria.Head'] = 'Quantos caractéres?';
+$definition['Yaga.Rules.DiscussionBodyLength.Desc'] = 'Premie este emblema caso a discussão de um usuário atinja um determinado numero de caracteres. Certifique-se de que você insira um número menor ou igual a %s.';
+$definition['Yaga.Rules.DiscussionCategory'] = 'Discussão na categoria';
+$definition['Yaga.Rules.DiscussionCategory.Criteria.Head'] = 'Selecione a Categoria:';
+$definition['Yaga.Rules.DiscussionCategory.Desc'] = 'Premie este emblema se um usuário iniciou uma discussão em uma determinada categoria.';
+$definition['Yaga.Rules.DiscussionCount'] = 'Total de Discussões';
+$definition['Yaga.Rules.DiscussionCount.Criteria.Head'] = 'Total de Discussões';
+$definition['Yaga.Rules.DiscussionCount.Desc'] = 'Premie este emblema caso o usuário tenha iniciado um determinado numero de discussões.';
+$definition['Yaga.Rules.DiscussionPageCount'] = 'Quantidade de Páginas';
+$definition['Yaga.Rules.DiscussionPageCount.Criteria.Head'] = 'Quantas páginas?';
+$definition['Yaga.Rules.DiscussionPageCount.Desc'] = 'Premie este emblema caso a discussão de um usuário atinja um determinado numero de páginas.';
+$definition['Yaga.Rules.HasMentioned'] = 'Mencionado';
+$definition['Yaga.Rules.HasMentioned.Desc'] = 'Premie um usuário caso ele mencione alguem no formato `@usuário`.';
+$definition['Yaga.Rules.HolidayVisit'] = 'Visita de Feriado';
+$definition['Yaga.Rules.HolidayVisit.Criteria.Head'] = 'Data do feriado';
+$definition['Yaga.Rules.HolidayVisit.Desc'] = 'Premie o usuário caso ele visite o forum em uma determinada data.';
+$definition['Yaga.Rules.LengthOfService'] = 'Tempo de Serviço';
+$definition['Yaga.Rules.LengthOfService.Criteria.Head'] = 'Tempo Servido';
+$definition['Yaga.Rules.LengthOfService.Desc'] = "Premie este emblema caso o usuário tenha dias, meses ou anos ativo.";
+$definition['Yaga.Rules.ManualAward'] = 'Prêmio Manual';
+$definition['Yaga.Rules.ManualAward.Desc'] = 'Este emblema <strong>nunca</strong> será ganho <em>automaticamente</em>. Use para emblemas exclusivas.';
+$definition['Yaga.Rules.NecroPost'] = 'Reviva a Discussão';
+$definition['Yaga.Rules.NecroPost.Criteria.Head'] = 'A quanto tempo a discussão esta morta?';
+$definition['Yaga.Rules.NecroPost.Desc'] = 'Premie este emblema caso o usuário poste em uma discussão morta.';
+$definition['Yaga.Rules.NewbieComment'] = "Comente na discussão de um usuário novo";
+$definition['Yaga.Rules.NewbieComment.Criteria.Head'] = 'Noobesa do usuário';
+$definition['Yaga.Rules.NewbieComment.Desc'] = 'Premie este emblema caso o usuário comente na discussão do novato.';
+$definition['Yaga.Rules.PhotoExists'] = 'Usuário tem Avatar';
+$definition['Yaga.Rules.PhotoExists.Desc'] = 'Premie este emblema caso o usuário tenha colocado uma foto de perfil.';
+$definition['Yaga.Rules.PostCount'] = 'Total de Posts';
+$definition['Yaga.Rules.PostCount.Criteria.Head'] = 'Total de Posts';
+$definition['Yaga.Rules.PostCount.Desc'] = 'Premie este emblema caso o usuário atinja um numero determinado de comentários e/ou discussões .';
+$definition['Yaga.Rules.PostReactions'] = 'Reação de Posts';
+$definition['Yaga.Rules.PostReactions.Criteria.Head'] = 'Quantidade de Reações';
+$definition['Yaga.Rules.PostReactions.Desc'] = 'Premie este emblema caso o comentário de um usuario atinja um numero determinado de reações.';
+$definition['Yaga.Rules.PostReactions.LabelFormat'] = "# de %s's:";
+$definition['Yaga.Rules.QnAAnserCount'] = 'Resposta Aceitas (Plugin QnA Requirido)';
+$definition['Yaga.Rules.QnAAnserCount.Criteria.Head'] = 'Quantas Resposta aceitas?';
+$definition['Yaga.Rules.QnAAnserCount.Desc'] = 'Premie este emblema caso o usuário tenha aceitado um numero determinado de respostas.';
+$definition['Yaga.Rules.ReactionCount'] = 'Reações Totais';
+$definition['Yaga.Rules.ReactionCount.Criteria.Head'] = 'Total de Reações';
+$definition['Yaga.Rules.ReactionCount.Desc'] = 'Premie este emblema caso o usuário tenha recebido um numero determinado de reações.';
+$definition['Yaga.Rules.ReflexComment'] = 'Comentar em uma Nova Discussão Rapidamente';
+$definition['Yaga.Rules.ReflexComment.Criteria.Head'] = 'Segundos para Comentar';
+$definition['Yaga.Rules.ReflexComment.Desc'] = "Premie este emblema caso o usuário pode x segundos após a criação da discussão.";
+$definition['Yaga.Rules.SocialConnection'] = 'Conecções Sociais';
+$definition['Yaga.Rules.SocialConnection.Criteria.Head'] = 'Qual Rede Social?';
+$definition['Yaga.Rules.SocialConnection.Desc'] = 'Premie este emblema caso o usuário conecte a uma determinada rede social.';
+
+// Transport
+$definition['Yaga.Export'] = 'Exportar Configuração do Yaga';
+$definition['Yaga.Export.Desc'] = 'Você pode exportar a configuração existente do Yaga para fins de backup ou de transporte. Selecione quais seções de sua configuração Yaga devem ser exportados.';
+$definition['Yaga.Export.Success'] = 'Sua configuração Yaga foi exportada com sucesso para: <strong>%s</strong>';
+$definition['Yaga.Import'] = 'Importar Configuração do Yaga';
+$definition['Yaga.Import.Desc'] = 'Você pode importa a configuração para <strong>substituir</strong> sua configuração atual. Selecione quais seções de sua configuração do Yaga devem ser <strong>substituidas</strong>.';
+$definition['Yaga.Import.Success'] = 'Você substituiu com êxito a configuração do Yaga com o conteúdo do: <strong>%s</strong>';
+$definition['Yaga.Transport'] = 'Importar / Exportar Configuração';
+$definition['Yaga.Transport.Desc'] = 'Você pode usar esta ferramenta para facilitar o transporte de sua configuração do Yaga em sites com uma unica transferência de arquivos.';
+$definition['Yaga.Transport.File'] = 'Transporte de Arquivo Yaga';
+$definition['Yaga.Transport.Return'] = 'Voltar à página principal de configurações do Yaga.';

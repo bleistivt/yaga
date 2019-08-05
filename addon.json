@@ -1,0 +1,36 @@
+{
+    "name": "Yet Another Gamification Application",
+    "description": "Yaga provides customizable reactions, badges, and ranks for your Vanilla forum software. Increase user activity by letting users react to content with emotions. Give users badges based on statistics and engagement in your community. Create and award custom badges for special events and recognition. Award Ranks which can confer different (configurable) permissions based on community perception and participation.",
+    "version": "1.0",
+    "url": "http://github.com/bleistivt/yaga",
+    "license": "GPLv2",
+    "mobileFriendly": true,
+    "hasLocale": true,
+    "settingsUrl": "/yaga/settings",
+    "settingsPermission": "Garden.Settings.Manage",
+    "key": "yaga",
+    "type": "addon",
+    "registerPermissions": {
+            "Yaga.Reactions.Add": 0,
+            "Yaga.Reactions.Manage": 0,
+            "Yaga.Reactions.View": 1,
+            "Yaga.Reactions.Edit": 0,
+            "Yaga.Badges.Add": 0,
+            "Yaga.Badges.Manage": 0,
+            "Yaga.Badges.View": 1,
+            "Yaga.Ranks.Add": 0,
+            "Yaga.Ranks.Manage": 0,
+            "Yaga.Ranks.View": 1
+    },
+    "authors": [
+        {
+        "name": "Zachary Doll",
+        "email": "hgtonight@daklutz.com",
+        "homepage": "http://www.daklutz.com"
+        },
+        {
+            "name": "Bleistivt.com",
+            "homepage": "bleistivt.net"
+        }
+    ]
+}

@@ -1,0 +1,124 @@
+/* Copyright 2013-2014 Zachary Doll */
+
+/* Donation Aside */
+.Footer .Aside.Box form {
+    text-align: center;
+    padding: 20px;
+}
+
+/* Panel Icon */
+#Panel div.Gamification h4 {
+ background-position: 164px -841px;
+}
+
+.Yaga div.Popup div.Body {
+    max-width: 300px;
+}
+
+.Yaga.Badge .InfoMessage,
+.Yaga.Badge .AlertMessage,
+.Yaga.Badge .CasualMessage,
+.Yaga.Badge .WarningMessage {
+    width: 240px;
+    padding: 10px;
+}
+
+.Yaga #Content h3 {
+    margin-top: 20px;
+}
+
+/* Reaction Specific Settings view */
+#ActionIcons {
+    width: 255px;
+}
+
+#ActionIcons img {
+    padding: 6px;
+    cursor: pointer;
+}
+
+#Actions li {
+    border: 1px solid #e0e0e0;
+    border-right: none;
+    cursor: move;
+    margin: -1px 0 0 -1px;
+    background-color: #ffffff;
+    padding: 10px;
+}
+
+#Actions li.Placeholder {
+    background-color: #cfcfcf;
+}
+
+#Actions h4 {
+    padding: 0px;
+}
+
+#Actions .Action {
+    display: inline-block;
+}
+#Actions .Tools {
+    display: inline-block;
+    vertical-align: top;
+}
+.Reactions.Preview {
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: left;
+}
+
+#AdvancedActionSettings {
+    cursor: pointer;
+}
+
+#AdvancedActionSettings span {
+    text-align: right;
+    width: 250px;
+}
+
+/* Rank Settings */
+.Rank .Aside {
+    border: medium none;
+    padding: 10px 20px 0px 20px;
+    background: none;
+    border-left: solid 1px #EEEEEE;
+    max-width: none;
+}
+
+.Rank .Aside img {
+    float: left;
+    height: 100px;
+    margin-right: 20px;
+}
+
+.Rank.settings #Content form ul {
+    padding: 0px;
+}
+
+/* Dashboard Stats */
+ul.StatsOverview {
+     text-align: center;
+     padding: 20px 0 20px 20px;
+}
+ul.StatsOverview li {
+     display: inline-block;
+     width: 25%;
+     text-align: center;
+     white-space: nowrap;
+     color: #555;
+     font-size: 10px;
+}
+ul.StatsOverview li div {
+     margin: 0 auto;
+     text-align: left;
+     width: 140px;
+     overflow: visible;
+}
+ul.StatsOverview li strong {
+     display: block;
+     font-family: 'helvetica neue', arial, helvetica;
+     font-weight: bold;
+     font-size: 30px;
+     line-height: 1;
+     color: #222;
+}
