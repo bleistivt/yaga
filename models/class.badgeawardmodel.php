@@ -15,6 +15,13 @@ use Yaga;
 class BadgeAwardModel extends Gdn_Model {
 
     /**
+     * Memory cache for getUnobtained()
+     * 
+     * @var unobtainedCache
+     */
+    private $unobtainedCache = [];
+
+    /**
      * Defines the related database table name.
      */
     public function __construct() {
@@ -66,6 +73,8 @@ class BadgeAwardModel extends Gdn_Model {
      */
     public function award($badgeID, $userID, $insertUserID = null, $reason = '') {
         $badge = Yaga::badgeModel()->getByID($badgeID);
+        $this->unobtainedCache[$userID] = null;
+
         if (!empty($badge)) {
             if (!$this->exists($userID, $badgeID)) {
                 $this->SQL->insert('BadgeAward', [
@@ -164,13 +173,16 @@ class BadgeAwardModel extends Gdn_Model {
      * @return DataSet
      */
     public function getUnobtained($userID) {
-        $px = $this->Database->DatabasePrefix;
-        $sql = 'select b.BadgeID, b.Enabled, b.RuleClass, b.RuleCriteria, '
-                       .'ba.UserID '
-                       ."from {$px}Badge as b "
-                       ."left join {$px}BadgeAward as ba ON b.BadgeID = ba.BadgeID and ba.UserID = :UserID ";
+        if (!isset($this->unobtainedCache[$userID])) {
+            $px = $this->Database->DatabasePrefix;
+            $sql = 'select b.BadgeID, b.Enabled, b.RuleClass, b.RuleCriteria, '
+                .'ba.UserID '
+                ."from {$px}Badge as b "
+                ."left join {$px}BadgeAward as ba ON b.BadgeID = ba.BadgeID and ba.UserID = :UserID ";
 
-        return $this->Database->query($sql, [':UserID' => $userID])->result();
+            $this->unobtainedCache[$userID] = $this->Database->query($sql, [':UserID' => $userID])->result();
+        }
+        return $this->unobtainedCache[$userID];
     }
 
     /**

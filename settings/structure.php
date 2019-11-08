@@ -61,9 +61,9 @@ $construct->table('Badge')
 // Tracks the actual awarding of badges
 $construct->table('BadgeAward')
                 ->primaryKey('BadgeAwardID')
-                ->column('BadgeID', 'int')
+                ->column('BadgeID', 'int', false, 'index.UserBadges')
                 ->column('UserID', 'int')
-                ->column('InsertUserID', 'int', null)
+                ->column('InsertUserID', 'int', null, 'index.UserBadges')
                 ->column('Reason', 'text', null)
                 ->column('DateInserted', 'datetime')
                 ->set($explicit, $drop);
