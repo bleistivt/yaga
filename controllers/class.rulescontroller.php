@@ -14,6 +14,13 @@ use Yaga;
 class RulesController extends Gdn_Controller {
 
     /**
+     * Memory cache for getInteractionRules()
+     * 
+     * @var unobtainedCache
+     */
+    private static $interactionRulesCache = null;
+
+    /**
      * May be used in the future.
      *
      * @since 1.0
@@ -76,28 +83,32 @@ class RulesController extends Gdn_Controller {
      * @return array Rules that are currently available to use that are interactive.
      */
     public static function getInteractionRules() {
-        $rules = Gdn::cache()->get('Yaga.Badges.InteractionRules');
-        if ($rules === Gdn_Cache::CACHEOP_FAILURE) {
-            $allRules = RulesController::getRules();
+        if (self::$interactionRulesCache === null) {
+            $rules = Gdn::cache()->get('Yaga.Badges.InteractionRules');
+            if ($rules === Gdn_Cache::CACHEOP_FAILURE) {
+                $allRules = RulesController::getRules();
 
-            $tempRules = [];
-            foreach ($allRules as $className => $name) {
-                $rule = new $className();
-                if ($rule->interacts()) {
-                    $tempRules[$className] = $name;
+                $tempRules = [];
+                foreach ($allRules as $className => $name) {
+                    $rule = new $className();
+                    if ($rule->interacts()) {
+                        $tempRules[$className] = $name;
+                    }
                 }
-            }
-            if (empty($tempRules)) {
-                $rules = serialize(false);
-            }
-            else{
-                $rules = serialize($tempRules);
+                if (empty($tempRules)) {
+                    $rules = serialize(false);
+                }
+                else{
+                    $rules = serialize($tempRules);
+                }
+
+                Gdn::cache()->store('Yaga.Badges.InteractionRules', $rules, [Gdn_Cache::FEATURE_EXPIRY => c('Yaga.Rules.CacheExpire', 86400)]);
             }
 
-            Gdn::cache()->store('Yaga.Badges.InteractionRules', $rules, [Gdn_Cache::FEATURE_EXPIRY => c('Yaga.Rules.CacheExpire', 86400)]);
+            self::$interactionRulesCache = unserialize($rules);
         }
-
-        return unserialize($rules);
+        
+        return self::$interactionRulesCache;
     }
 
     /**
