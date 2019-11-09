@@ -237,7 +237,7 @@ class ReactionModel extends Gdn_Model {
                 $iDs = (array)$iDs;
         }
 
-        if (in_array($type, ['discussion', 'comment', 'activity']) && !empty($iDs)) {
+        if (!empty($iDs)) {
             $result = $this->SQL
                 ->select('a.*, r.InsertUserID as UserID, r.DateInserted, r.ParentID')
                 ->from('Action a')
