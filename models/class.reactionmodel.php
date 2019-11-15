@@ -120,10 +120,13 @@ class ReactionModel extends Gdn_Model {
      * @return DataSet
      */
     public function getUserCount($userID, $actionID) {
-        return $this->SQL->getCount(
-            'Reaction',
-            ['ActionID' => $actionID, 'ParentAuthorID' => $userID]
-        );
+        return $this->SQL
+            ->select('ReactionID', 'count', 'RowCount')
+            ->from('Reaction')
+            ->where(['ActionID' => $actionID, 'ParentAuthorID' => $userID])
+            ->get()
+            ->firstRow()
+            ->RowCount;
     }
 
     /**
@@ -134,10 +137,13 @@ class ReactionModel extends Gdn_Model {
      * @return DataSet
      */
     public function getUserTakenCount($userID, $actionID) {
-        return $this->SQL->getCount(
-            'Reaction',
-            ['ActionID' => $actionID, 'InsertUserID' => $userID]
-        );
+        return $this->SQL
+            ->select('ReactionID', 'count', 'RowCount')
+            ->from('Reaction')
+            ->where(['ActionID' => $actionID, 'InsertUserID' => $userID])
+            ->get()
+            ->firstRow()
+            ->RowCount;
     }
 
     /**

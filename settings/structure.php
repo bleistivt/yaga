@@ -20,11 +20,11 @@ $px = $database->DatabasePrefix;
 // Tracks the data associated with reacting to content
 $construct->table('Reaction')
                 ->primaryKey('ReactionID')
-                ->column('InsertUserID', 'int', false, 'index.1')
-                ->column('ActionID', 'int', false, 'index')
-                ->column('ParentID', 'int', true)
-                ->column('ParentType', 'varchar(100)')
-                ->column('ParentAuthorID', 'int', false, 'index')
+                ->column('InsertUserID', 'int', false, ['index.1', 'unique.Reaction'])
+                ->column('ActionID', 'int', false, ['index', 'index.Profile'])
+                ->column('ParentID', 'int', false, 'unique.Reaction')
+                ->column('ParentType', 'varchar(100)', false, 'unique.Reaction')
+                ->column('ParentAuthorID', 'int', false, ['index', 'index.Profile'])
                 ->column('DateInserted', 'datetime')
                 ->set($explicit, $drop);
 
