@@ -1,7 +1,5 @@
 <?php if (!defined('APPLICATION')) exit();
 
-use Yaga;
-
 /**
  * This rule awards badges when a user mentions another user in a discussion,
  * comment, or activity

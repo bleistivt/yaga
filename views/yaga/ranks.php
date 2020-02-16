@@ -1,7 +1,5 @@
 <?php if (!defined('APPLICATION')) exit();
 
-use Yaga;
-
 /* Copyright 2015 Zachary Doll */
 echo wrap($this->title(), 'h1');
 $user = (Gdn::session()->User) ?: (object)['RankID' => 0];

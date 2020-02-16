@@ -1,7 +1,5 @@
 <?php if (!defined('APPLICATION')) exit();
 
-use Yaga;
-
 /**
  * This rule awards badges based on the sum of a user's discussions & comments count
  *

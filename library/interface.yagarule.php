@@ -1,7 +1,5 @@
 <?php if (!defined('APPLICATION')) exit();
 
-use Yaga;
-
 /**
  * Describes the functions required to create a new rule for badges in Yaga.
  *

@@ -1,7 +1,5 @@
 <?php if (!defined('APPLICATION')) exit();
 
-use Yaga;
-
 /**
  * This rule is selected if the rule class saved in the database is no longer
  * available. It is functionally equivalent to Manual Award.

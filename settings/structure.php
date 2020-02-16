@@ -1,7 +1,5 @@
 <?php if (!defined('APPLICATION')) exit();
 
-use Yaga;
-
 /* Copyright 2013 Zachary Doll */
 
 if(!isset($drop)) {
@@ -13,7 +11,7 @@ if (!isset($explicit)) {
 }
 
 $database = Gdn::database();
-$sql = $database->sQL(); // To run queries.
+$sql = $database->sql(); // To run queries.
 $construct = $database->structure(); // To modify and add database tables.
 $px = $database->DatabasePrefix;
 

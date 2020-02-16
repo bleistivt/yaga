@@ -1,7 +1,5 @@
 <?php if (!defined('APPLICATION')) exit();
 
-use Yaga;
-
 /**
  * This rule awards badges to a particular post's owner when it receives the
  * target number of reactions.

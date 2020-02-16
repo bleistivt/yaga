@@ -1,7 +1,5 @@
 <?php if (!defined('APPLICATION')) exit();
 
-use Yaga;
-
 /**
  * This rule never awards badges. It can safely be used for special badges that
  * only need to be manually awarded

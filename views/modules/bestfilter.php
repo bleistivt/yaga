@@ -1,6 +1,4 @@
 <?php if (!defined('APPLICATION')) exit();
-
-use Yaga;
 $controller = Gdn::controller();
 $activeFilter = $controller->data('ActiveFilter');
 

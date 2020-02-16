@@ -1,7 +1,5 @@
 <?php if (!defined('APPLICATION')) exit();
 
-use Yaga;
-
 // Register Yaga library classes and interfaces in the autoloader
 $map = Gdn_Autoloader::MAP_LIBRARY;
 $context = Gdn_Autoloader::CONTEXT_APPLICATION;

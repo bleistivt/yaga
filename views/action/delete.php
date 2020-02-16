@@ -1,7 +1,5 @@
 <?php if (!defined('APPLICATION')) exit();
 
-use Yaga;
-
 $actionName = $this->data('ActionName');
 $otherActions = $this->data('OtherActions', null);
 

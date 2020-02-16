@@ -1,7 +1,5 @@
 <?php if (!defined('APPLICATION')) exit();
 
-use Yaga;
-
 /* Copyright 2013 Zachary Doll */
 if (property_exists($this, 'Action')) {
     echo wrap(Gdn::translate('Yaga.Action.Edit'), 'h1');

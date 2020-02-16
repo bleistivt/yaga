@@ -1,7 +1,5 @@
 <?php if (!defined('APPLICATION')) exit();
 
-use Yaga;
-
 /* Copyright 2013 Zachary Doll */
 
 echo '<div class="Box Leaderboard">';

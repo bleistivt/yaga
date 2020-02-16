@@ -1,7 +1,5 @@
 <?php if (!defined('APPLICATION')) exit();
 
-use Yaga;
-
 // Misc
 $definition['1 year'] = '1 Jahr';
 $definition['3 months'] = '3 Monate';

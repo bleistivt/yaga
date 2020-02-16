@@ -1,10 +1,8 @@
 <?php if (!defined('APPLICATION')) exit();
 
-use Yaga;
-
 /* Copyright 2013-2016 Zachary Doll */
 
-$sql = Gdn::database()->sQL();
+$sql = Gdn::database()->sql();
 
 // Only insert default actions if none exist
 $row = $sql->get('Action', '', 'asc', 1)->firstRow(DATASET_TYPE_ARRAY);

@@ -708,7 +708,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param BadgeAwardModel $sender
      */
-    public function badgeAwardModel_afterBadgeAward_handler(\Yaga\BadgeAwardModel $sender) {
+    public function badgeAwardModel_afterBadgeAward_handler(\BadgeAwardModel $sender) {
         Yaga::executeBadgeHooks($sender, __FUNCTION__);
     }
 
