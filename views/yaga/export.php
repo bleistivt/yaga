@@ -9,7 +9,7 @@ echo wrap($this->title(), 'h1');
 echo $this->Form->open();
 echo $this->Form->errors();
 
-echo wrap(wrap(t("Yaga.$transportType.Desc"), 'div'), 'div', ['class' => 'Wrap']);
+echo wrap(wrap(Gdn::translate("Yaga.$transportType.Desc"), 'div'), 'div', ['class' => 'Wrap']);
 ?>
 <ul>
     <li>

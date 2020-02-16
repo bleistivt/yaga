@@ -23,17 +23,16 @@ class NecroPost implements YagaRule {
 
         if ($discussion->DateLastComment && $lastCommentDate < $necroDate) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     public function form($form) {
         $lengths = [
-            'day' => t('Days'),
-            'week' => t('Weeks'),
-            'year' => t('Years')
+            'day' => Gdn::translate('Days'),
+            'week' => Gdn::translate('Weeks'),
+            'year' => Gdn::translate('Years')
         ];
 
         $string = $form->label('Yaga.Rules.NecroPost.Criteria.Head', 'NecroPost');
@@ -56,12 +55,12 @@ class NecroPost implements YagaRule {
     }
 
     public function description() {
-        $description = t('Yaga.Rules.NecroPost.Desc');
+        $description = Gdn::translate('Yaga.Rules.NecroPost.Desc');
         return wrap($description, 'div', ['class' => 'InfoMessage']);
     }
 
     public function name() {
-        return t('Yaga.Rules.NecroPost');
+        return Gdn::translate('Yaga.Rules.NecroPost');
     }
 
     public function interacts() {

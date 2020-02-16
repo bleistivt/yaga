@@ -9,19 +9,18 @@ use Yaga;
  * @since 1.0
  * @package Yaga
  */
-class DiscussionPageCount implements YagaRule{
+class DiscussionPageCount implements YagaRule {
 
     public function award($sender, $user, $criteria) {
         $discussion = $sender->EventArguments['Discussion'];
         $commentCount = $discussion->CountComments;
-        $pageSize = c('Vanilla.Comments.PerPage');
+        $pageSize = Gdn::config('Vanilla.Comments.PerPage');
 
         $pageCount = floor($commentCount / $pageSize);
 
         if ($pageCount >= $criteria->Pages) {
             return $discussion->InsertUserID;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -44,12 +43,12 @@ class DiscussionPageCount implements YagaRule{
     }
 
     public function description() {
-        $description = t('Yaga.Rules.DiscussionPageCount.Desc');
+        $description = Gdn::translate('Yaga.Rules.DiscussionPageCount.Desc');
         return wrap($description, 'div', ['class' => 'InfoMessage']);
     }
 
     public function name() {
-        return t('Yaga.Rules.DiscussionPageCount');
+        return Gdn::translate('Yaga.Rules.DiscussionPageCount');
     }
 
     public function interacts() {

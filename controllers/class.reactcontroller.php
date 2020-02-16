@@ -45,7 +45,7 @@ class ReactController extends Gdn_Controller {
 
         // Make sure the action exists and the user is allowed to react
         if (!$action) {
-            throw new Gdn_UserException(t('Yaga.Action.Invalid'));
+            throw new Gdn_UserException(Gdn::translate('Yaga.Action.Invalid'));
         }
 
         if (!Gdn::session()->checkPermission($action->Permission)) {
@@ -58,12 +58,10 @@ class ReactController extends Gdn_Controller {
 
         if (in_array($type, ['discussion', 'comment'])) {
             $item = getRecord($type, $iD);
-        }
-        else if ($type == 'activity') {
+        } elseif ($type == 'activity') {
             $model = new ActivityModel();
             $item = $model->getID($iD, DATASET_TYPE_ARRAY);
-        }
-        else {
+        } else {
             $this->EventArguments = [
                 'TypeFound' => false,
                 'TargetType' => $type,
@@ -75,15 +73,14 @@ class ReactController extends Gdn_Controller {
             $this->fireEvent('CustomType');
 
             if (!$this->EventArguments['TypeFound']) {
-                throw new Gdn_UserException(t('Yaga.Action.InvalidTargetType'));
+                throw new Gdn_UserException(Gdn::translate('Yaga.Action.InvalidTargetType'));
             }
         }
 
         if ($item) {
             $anchor = $anchorID.$iD;
-        }
-        else {
-            throw new Gdn_UserException(t('Yaga.Action.InvalidTargetID'));
+        } else {
+            throw new Gdn_UserException(Gdn::translate('Yaga.Action.InvalidTargetID'));
         }
 
         $userID = Gdn::session()->UserID;
@@ -101,7 +98,7 @@ class ReactController extends Gdn_Controller {
         }
 
         if ($itemOwnerID == $userID) {
-            throw new Gdn_UserException(t('Yaga.Error.ReactToOwn'));
+            throw new Gdn_UserException(Gdn::translate('Yaga.Error.ReactToOwn'));
         }
 
         // It has passed through the gauntlet

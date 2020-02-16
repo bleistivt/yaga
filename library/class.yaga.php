@@ -155,7 +155,7 @@ class Yaga {
      */
      public static function executeBadgeHooks($sender, $handler) {
         $session = Gdn::session();
-        if (!c('Yaga.Badges.Enabled') || !$session->isValid()) {
+        if (!Gdn::config('Yaga.Badges.Enabled') || !$session->isValid()) {
             return;
         }
 
@@ -180,8 +180,7 @@ class Yaga {
                 if (!in_array($class, $rules) && class_exists($class)) {
                     $rule = new $class();
                     $rules[$class] = $rule;
-                }
-                else {
+                } else {
                     if (!array_key_exists('UnknownRule', $rules)) {
                         $rules['UnkownRule'] = new UnknownRule();
                     }
@@ -199,11 +198,9 @@ class Yaga {
                         $awardedUserIDs = [];
                         if (is_array($result)) {
                             $awardedUserIDs = $result;
-                        }
-                        else if (is_numeric($result)) {
+                        } elseif (is_numeric($result)) {
                             $awardedUserIDs[] = $result;
-                        }
-                        else {
+                        } else {
                             $awardedUserIDs[] = $userID;
                         }
 

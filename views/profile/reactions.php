@@ -10,7 +10,7 @@ echo '<ul class="DataList Compact BlogList">';
 foreach ($contents as $content) {
 	static $userPhotoFirst = null;
      if ($userPhotoFirst === null) {
-            $userPhotoFirst = c('Vanilla.Comment.UserPhotoFirst', true);
+            $userPhotoFirst = Gdn::config('Vanilla.Comment.UserPhotoFirst', true);
      }
 
      $contentType = val('ItemType', $content);
@@ -41,7 +41,7 @@ foreach ($contents as $content) {
                  <?php
                  // Include source if one was set
                  if ($source = val('Source', $content)) {
-                        echo wrap(sprintf(t('via %s'), t($source.' Source', $source)), 'span', ['class' => 'MItem Source']);
+                        echo wrap(sprintf(Gdn::translate('via %s'), Gdn::translate($source.' Source', $source)), 'span', ['class' => 'MItem Source']);
                  }
                  ?>
             </div>
@@ -52,7 +52,7 @@ foreach ($contents as $content) {
                     <?php echo Gdn_Format::to($content['Body'], $content['Format']); ?>
                  </div>
                  <?php
-                 if (c('Yaga.Reactions.Enabled') && Gdn::session()->checkPermission('Yaga.Reactions.View')) {
+                 if (Gdn::config('Yaga.Reactions.Enabled') && Gdn::session()->checkPermission('Yaga.Reactions.View')) {
                         echo renderReactionRecord($contentID, strtolower($contentType));
                  }
                  ?>

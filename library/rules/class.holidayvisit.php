@@ -19,8 +19,7 @@ class HolidayVisit implements YagaRule {
         if ($criteria->Month == $month
                         && $criteria->Day == $day) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -54,12 +53,12 @@ class HolidayVisit implements YagaRule {
     }
 
     public function description() {
-        $description = t('Yaga.Rules.HolidayVisit.Desc');
+        $description = Gdn::translate('Yaga.Rules.HolidayVisit.Desc');
         return wrap($description, 'div', ['class' => 'InfoMessage']);
     }
 
     public function name() {
-        return t('Yaga.Rules.HolidayVisit');
+        return Gdn::translate('Yaga.Rules.HolidayVisit');
     }
 
     public function interacts() {

@@ -10,12 +10,12 @@ echo wrap($controller->title(), 'h1');
     <ul class="FilterMenu">
         <?php
         echo wrap(
-                        anchor(t('Yaga.BestContent.Recent'), '/best'),
+                        anchor(Gdn::translate('Yaga.BestContent.Recent'), '/best'),
                         'li',
                         ['class' => $activeFilter == 'Recent' ? 'Recent Active' : 'Recent']
             );
         echo wrap(
-                        anchor(t('Yaga.BestContent.AllTime'), '/best/alltime'),
+                        anchor(Gdn::translate('Yaga.BestContent.AllTime'), '/best/alltime'),
                         'li',
                         ['class' => $activeFilter == 'AllTime' ? 'AllTime Active' : 'AllTime']
             );

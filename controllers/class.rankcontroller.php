@@ -43,7 +43,7 @@ class RankController extends DashboardController {
         $this->permission('Yaga.Ranks.Manage');
         $this->setHighlightRoute('rank/settings');
 
-        $this->title(t('Yaga.Ranks.Manage'));
+        $this->title(Gdn::translate('Yaga.Ranks.Manage'));
 
         // Get list of ranks from the model and pass to the view
         $this->setData('Ranks', $this->RankModel->get());
@@ -59,13 +59,13 @@ class RankController extends DashboardController {
                 $imageBaseName = pathinfo($targetImage, PATHINFO_BASENAME);
 
                 // Save the uploaded image
-                $parts = $upload->saveAs($tmpImage, 'yaga'.DS.$imageBaseName);
+                $parts = $upload->saveAs($tmpImage, 'yaga/'.$imageBaseName);
                 $assetRoot = Gdn::request()->urlDomain(true).Gdn::request()->assetRoot();
                 $relativeUrl = stringBeginsWith($parts['Url'], $assetRoot, true, true);
-                saveToConfig('Yaga.Ranks.Photo', $relativeUrl);
+                Gdn::config()->saveToConfig('Yaga.Ranks.Photo', $relativeUrl);
 
-                if (c('Yaga.Ranks.Photo') == $parts['SaveName']) {
-                    $this->informMessage(t('Yaga.Rank.PhotoUploaded'));
+                if (Gdn::config('Yaga.Ranks.Photo') == $parts['SaveName']) {
+                    $this->informMessage(Gdn::translate('Yaga.Rank.PhotoUploaded'));
                 }
             }
         }
@@ -87,13 +87,12 @@ class RankController extends DashboardController {
 
         $edit = false;
         if ($rankID) {
-            $this->title(t('Yaga.Rank.Edit'));
+            $this->title(Gdn::translate('Yaga.Rank.Edit'));
             $this->Rank = $this->RankModel->getByID($rankID);
             $this->Form->addHidden('RankID', $rankID);
             $edit = true;
-        }
-        else {
-            $this->title(t('Yaga.Rank.Add'));
+        } else {
+            $this->title(Gdn::translate('Yaga.Rank.Add'));
         }
 
         // Load up all roles
@@ -109,8 +108,7 @@ class RankController extends DashboardController {
                 $data = array_merge($rankArray, $perkOptions);
                 $this->Form->setData($data);
             }
-        }
-        else {
+        } else {
             // Find the perk options
             $perkOptions = array_intersect_key(
                 $this->Form->formValues(),
@@ -141,10 +139,9 @@ class RankController extends DashboardController {
 
             if ($this->Form->save()) {
                 if ($edit) {
-                    $this->informMessage(t('Yaga.Rank.Updated'));
-                }
-                else {
-                    $this->informMessage(t('Yaga.Rank.Added'));
+                    $this->informMessage(Gdn::translate('Yaga.Rank.Updated'));
+                } else {
+                    $this->informMessage(Gdn::translate('Yaga.Rank.Added'));
                 }
                 redirectTo('/rank/settings');
             }
@@ -171,14 +168,14 @@ class RankController extends DashboardController {
         $rank = $this->RankModel->getByID($rankID);
 
         if (!$rank) {
-            throw NotFoundException(t('Yaga.Rank'));
+            throw NotFoundException(Gdn::translate('Yaga.Rank'));
         }
 
         $this->permission('Yaga.Ranks.Manage');
 
         if ($this->Form->isPostBack()) {
             if (!$this->RankModel->deleteID($rankID)) {
-                $this->Form->addError(sprintf(t('Yaga.Error.DeleteFailed'), t('Yaga.Rank')));
+                $this->Form->addError(sprintf(Gdn::translate('Yaga.Error.DeleteFailed'), Gdn::translate('Yaga.Rank')));
             }
 
             if ($this->Form->errorCount() == 0) {
@@ -191,7 +188,7 @@ class RankController extends DashboardController {
         }
 
         $this->setHighlightRoute('rank/settings');
-        $this->setData('Title', t('Yaga.Rank.Delete'));
+        $this->setData('Title', Gdn::translate('Yaga.Rank.Delete'));
         $this->render();
     }
 
@@ -212,12 +209,11 @@ class RankController extends DashboardController {
 
         if ($rank->Enabled) {
             $enable = false;
-            $toggleText = t('Disabled');
+            $toggleText = Gdn::translate('Disabled');
             $activeClass = 'InActive';
-        }
-        else {
+        } else {
             $enable = true;
-            $toggleText = t('Enabled');
+            $toggleText = Gdn::translate('Enabled');
             $activeClass = 'Active';
         }
 
@@ -240,8 +236,8 @@ class RankController extends DashboardController {
             $redirectUrl = 'rank/settings';
 
             if (Gdn::session()->validateTransientKey($transientKey)) {
-                 saveToConfig('Yaga.Ranks.Photo', null, ['RemoveEmpty' => true]);
-                 $this->informMessage(t('Yaga.Rank.PhotoDeleted'));
+                 Gdn::config()->saveToConfig('Yaga.Ranks.Photo', null, ['RemoveEmpty' => true]);
+                 $this->informMessage(Gdn::translate('Yaga.Rank.PhotoDeleted'));
             }
 
             if ($this->_DeliveryType == DELIVERY_TYPE_ALL) {
@@ -267,7 +263,7 @@ class RankController extends DashboardController {
 
         // Only allow awarding if some ranks exist
         if (!$this->RankModel->getCount()) {
-            throw new Gdn_UserException(t('Yaga.Error.NoRanks'));
+            throw new Gdn_UserException(Gdn::translate('Yaga.Error.NoRanks'));
         }
 
         $userModel = Gdn::userModel();
@@ -285,8 +281,7 @@ class RankController extends DashboardController {
         if ($this->Form->isPostBack() == false) {
             // Add the user id field
             $this->Form->addHidden('UserID', $user->UserID);
-        }
-        else {
+        } else {
             $validation = new Gdn_Validation();
             $validation->applyRule('UserID', 'ValidateRequired');
             $validation->applyRule('RankID', 'ValidateRequired');
@@ -297,16 +292,13 @@ class RankController extends DashboardController {
                     $userModel->setField($userID, 'RankProgression', $formValues['RankProgression']);
                     if ($this->Request->get('Target')) {
                         $this->RedirectUrl = $this->Request->get('Target');
-                    }
-                    elseif ($this->deliveryType() == DELIVERY_TYPE_ALL) {
+                    } elseif ($this->deliveryType() == DELIVERY_TYPE_ALL) {
                         $this->RedirectUrl = url(userUrl($user));
-                    }
-                    else {
+                    } else {
                         $this->jsonTarget('', '', 'Refresh');
                     }
                 }
-            }
-            else {
+            } else {
                 $this->Form->setValidationResults($validation->results());
             }
         }
@@ -329,8 +321,7 @@ class RankController extends DashboardController {
                  $saves = $this->RankModel->saveSort($sortArray);
                  $this->setData('Result', true);
                  $this->setData('Saves', $saves);
-            }
-            else {
+            } else {
                 $this->setData('Result', false);
             }
 

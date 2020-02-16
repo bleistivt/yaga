@@ -9,7 +9,7 @@ use Yaga;
  * @since 1.0
  * @package Yaga
  */
-class ReflexComment implements YagaRule{
+class ReflexComment implements YagaRule {
 
     public function award($sender, $user, $criteria) {
         $discussion = $sender->EventArguments['Discussion'];
@@ -26,8 +26,7 @@ class ReflexComment implements YagaRule{
 
         if ($difference <= $criteria->Seconds) {
             return $user->UserID;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -51,12 +50,12 @@ class ReflexComment implements YagaRule{
     }
 
     public function description() {
-        $description = t('Yaga.Rules.ReflexComment.Desc');
+        $description = Gdn::translate('Yaga.Rules.ReflexComment.Desc');
         return wrap($description, 'div', ['class' => 'InfoMessage']);
     }
 
     public function name() {
-        return t('Yaga.Rules.ReflexComment');
+        return Gdn::translate('Yaga.Rules.ReflexComment');
     }
 
     public function interacts() {

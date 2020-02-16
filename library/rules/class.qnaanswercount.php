@@ -9,7 +9,7 @@ use Yaga;
  * @since 0.5
  * @package Yaga
  */
-class QnAAnserCount implements YagaRule{
+class QnAAnserCount implements YagaRule {
 
     public function award($sender, $user, $criteria) {
         $result = false;
@@ -37,9 +37,9 @@ class QnAAnserCount implements YagaRule{
 
     public function form($form) {
         $comparisons = [
-            'gt' => t('More than:'),
-            'lt' => t('Less than:'),
-            'gte' => t('More than or:')
+            'gt' => Gdn::translate('More than:'),
+            'lt' => Gdn::translate('Less than:'),
+            'gte' => Gdn::translate('More than or:')
         ];
 
         $string = $form->label('Yaga.Rules.QnAAnserCount.Criteria.Head', 'QnAAnserCount');
@@ -61,12 +61,12 @@ class QnAAnserCount implements YagaRule{
     }
 
     public function description() {
-        $description = t('Yaga.Rules.QnAAnserCount.Desc');
+        $description = Gdn::translate('Yaga.Rules.QnAAnserCount.Desc');
         return wrap($description, 'div', ['class' => 'InfoMessage']);
     }
 
     public function name() {
-        return t('Yaga.Rules.QnAAnserCount');
+        return Gdn::translate('Yaga.Rules.QnAAnserCount');
     }
 
     public function interacts() {

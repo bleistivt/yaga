@@ -10,6 +10,7 @@
     "settingsPermission": "Garden.Settings.Manage",
     "key": "yaga",
     "type": "addon",
+    "priority": 10,
     "registerPermissions": {
             "Yaga.Reactions.Add": 0,
             "Yaga.Reactions.Manage": 0,
@@ -24,9 +25,9 @@
     },
     "authors": [
         {
-        "name": "Zachary Doll",
-        "email": "hgtonight@daklutz.com",
-        "homepage": "http://www.daklutz.com"
+            "name": "Zachary Doll",
+            "email": "hgtonight@daklutz.com",
+            "homepage": "http://www.daklutz.com"
         },
         {
             "name": "Bleistivt.com",

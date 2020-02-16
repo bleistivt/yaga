@@ -55,7 +55,7 @@ if(!function_exists('RenderReactionRecord')) {
      */
     function renderReactionRecord($iD, $type) {
         $reactions = Yaga::reactionModel()->getRecord($iD, $type);
-        $limit = c('Yaga.Reactions.RecordLimit');
+        $limit = Gdn::config('Yaga.Reactions.RecordLimit');
         $reactionCount = count($reactions);
         $recordsString = '';
 
@@ -63,7 +63,7 @@ if(!function_exists('RenderReactionRecord')) {
             // Limit the record if there are a lot of reactions
             if ($i < $limit || $limit <= 0) {
                 $user = Gdn::userModel()->getID($reaction->UserID);
-                $dateTitle = sprintf(t('Yaga.Reactions.RecordFormat'), $user->Name, $reaction->Name, Gdn_Format::date($reaction->DateInserted, '%B %e, %Y'));
+                $dateTitle = sprintf(Gdn::translate('Yaga.Reactions.RecordFormat'), $user->Name, $reaction->Name, Gdn_Format::date($reaction->DateInserted, '%B %e, %Y'));
                 $string = userPhoto($user, ['Size' => 'Small', 'title' => $dateTitle]);
                 $string .= '<span class="ReactSprite Reaction-'.$reaction->ActionID.' '.$reaction->CssClass.'"></span>';
                 $wrapttributes = ['class' => 'UserReactionWrap', 'data-userid' => $user->UserID, 'title' => $dateTitle];
@@ -92,7 +92,7 @@ if(!function_exists('RenderActionRow')) {
     function renderActionRow($action) {
         return wrap(
                         wrap(
-                                        anchor(t('Edit'), 'action/edit/'.$action->ActionID, ['class' => 'Popup Button']).anchor(t('Delete'), 'action/delete/'.$action->ActionID, ['class' => 'Popup Button']), 'div', ['class' => 'Tools']) .
+                                        anchor(Gdn::translate('Edit'), 'action/edit/'.$action->ActionID, ['class' => 'Popup Button']).anchor(Gdn::translate('Delete'), 'action/delete/'.$action->ActionID, ['class' => 'Popup Button']), 'div', ['class' => 'Tools']) .
                         wrap(
                                         wrap($action->Name, 'h4') .
                                         wrap(
@@ -120,9 +120,9 @@ if(!function_exists('RenderPerkPermissionForm')) {
 
         $string = $form->label($label, $fieldname);
         $string .= $form->dropdown($fieldname, [
-            '' => t('Default'),
-            'grant' => t('Grant'),
-            'revoke' => t('Revoke')
+            '' => Gdn::translate('Default'),
+            'grant' => Gdn::translate('Grant'),
+            'revoke' => Gdn::translate('Revoke')
         ]);
 
         return $string;
@@ -143,13 +143,13 @@ if(!function_exists('RenderPerkConfigurationForm')) {
         if (is_null($options)) {
             // Default to a true/false/default array
             $options = [
-                    '' => t('Default'),
-                    1 => t('Enabled'),
-                    0 => t('Disabled')
+                    '' => Gdn::translate('Default'),
+                    1 => Gdn::translate('Enabled'),
+                    0 => Gdn::translate('Disabled')
             ];
         }
         // Add a default option
-        $options = ['' => t('Default')] + $options;
+        $options = ['' => Gdn::translate('Default')] + $options;
         $form = Gdn::controller()->Form;
         $fieldname = 'Conf'.$config;
 

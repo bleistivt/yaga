@@ -17,7 +17,7 @@ foreach($this->data('Badges') as $badge) {
 
     if ($badge->UserID) {
         $readClass = '';
-        $awardDescription = sprintf(t('Yaga.Badge.Earned.Format'), Gdn_Format::date($badge->DateInserted, 'html'), $badge->InsertUserName);
+        $awardDescription = sprintf(Gdn::translate('Yaga.Badge.Earned.Format'), Gdn_Format::date($badge->DateInserted, 'html'), $badge->InsertUserName);
         if ($badge->Reason) {
             $awardDescription .= ': "'.$badge->Reason.'"';
         }
@@ -25,8 +25,7 @@ foreach($this->data('Badges') as $badge) {
 
     if ($badge->Photo) {
         $row .= img($badge->Photo, ['class' => 'BadgePhoto']);
-    }
-    else {
+    } else {
         $row .= img('plugins/yaga/design/images/default_badge.png', ['class' => 'BadgePhoto']);
     }
 

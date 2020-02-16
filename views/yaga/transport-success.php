@@ -12,22 +12,22 @@ $rankCount = $this->data('RankCount', null);
 $imageCount = $this->data('ImageCount', null);
 
 echo wrap($this->title(), 'h1');
-echo wrap(wrap(sprintf(t("Yaga.$transportType.Success"), $filename), 'div'), 'div', ['class' => 'Wrap']);
+echo wrap(wrap(sprintf(Gdn::translate("Yaga.$transportType.Success"), $filename), 'div'), 'div', ['class' => 'Wrap']);
 
 $string = '';
 if($actionCount) {
-    $string .= wrap(t('Yaga.Reactions').': '.$actionCount, 'li');
+    $string .= wrap(Gdn::translate('Yaga.Reactions').': '.$actionCount, 'li');
 }
 if($badgeCount) {
-    $string .= wrap(t('Yaga.Badges').': '.$badgeCount, 'li');
+    $string .= wrap(Gdn::translate('Yaga.Badges').': '.$badgeCount, 'li');
 }
 if($rankCount) {
-    $string .= wrap(t('Yaga.Ranks').': '.$rankCount, 'li');
+    $string .= wrap(Gdn::translate('Yaga.Ranks').': '.$rankCount, 'li');
 }
 if($imageCount) {
-    $string .= wrap(t('Image Files').': '.$imageCount, 'li');
+    $string .= wrap(Gdn::translate('Image Files').': '.$imageCount, 'li');
 }
 
 echo wrapIf($string, 'ul', ['class' => 'Wrap']);
 
-echo wrap(anchor(t('Yaga.Transport.Return'), 'yaga/settings'), 'div', ['class' => 'Wrap']);
+echo wrap(anchor(Gdn::translate('Yaga.Transport.Return'), 'yaga/settings'), 'div', ['class' => 'Wrap']);

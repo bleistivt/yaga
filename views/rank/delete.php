@@ -8,7 +8,7 @@ use Yaga; ?>
 echo $this->Form->open();
 echo $this->Form->errors();
 
-echo '<div class="P">'.sprintf(t('Are you sure you want to delete this %s?'), t('Yaga.Rank')).'</div>';
+echo '<div class="P">'.sprintf(Gdn::translate('Are you sure you want to delete this %s?'), Gdn::translate('Yaga.Rank')).'</div>';
 
 echo '<div class="Buttons Buttons-Confirm">';
 echo $this->Form->button('OK', ['class' => 'Button Primary']);

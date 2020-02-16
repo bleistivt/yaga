@@ -10,14 +10,13 @@ use Yaga;
  * @since 1.0
  * @package Yaga
  */
-class HasMentioned implements YagaRule{
+class HasMentioned implements YagaRule {
 
     public function award($sender, $user, $criteria) {
         $hasMentioned    = count($sender->EventArguments['MentionedUsers']);
         if ($hasMentioned) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -35,12 +34,12 @@ class HasMentioned implements YagaRule{
     }
 
     public function description() {
-        $description = t('Yaga.Rules.HasMentioned.Desc');
+        $description = Gdn::translate('Yaga.Rules.HasMentioned.Desc');
         return wrap($description, 'div', ['class' => 'InfoMessage']);
     }
 
     public function name() {
-        return t('Yaga.Rules.HasMentioned');
+        return Gdn::translate('Yaga.Rules.HasMentioned');
     }
 
     public function interacts() {

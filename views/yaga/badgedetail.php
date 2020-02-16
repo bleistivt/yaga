@@ -21,7 +21,7 @@ echo '<div class="Badge-Earned">';
 if($userBadgeAward) {
     echo wrap(
                     userPhoto(Gdn::session()->User) .
-                    t('Yaga.Badge.Earned').' ' .
+                    Gdn::translate('Yaga.Badge.Earned').' ' .
                     wrap(Gdn_Format::date($userBadgeAward->DateInserted, 'html'), 'span', ['class' => 'DateReceived']),
                     'div',
                     ['class' => 'EarnedThisBadge']);
@@ -31,11 +31,11 @@ if($awardCount) {
     echo wrap(plural($awardCount, 'Yaga.Badge.EarnedBySingle', 'Yaga.Badge.EarnedByPlural'), 'p', ['class' => 'BadgeCountDisplay']);
 }
 else {
-    echo wrap(t('Yaga.Badge.EarnedByNone'), 'p');
+    echo wrap(Gdn::translate('Yaga.Badge.EarnedByNone'), 'p');
 }
 
 if($recentAwards) {
-    echo wrap(t('Yaga.Badge.RecentRecipients'), 'h2');
+    echo wrap(Gdn::translate('Yaga.Badge.RecentRecipients'), 'h2');
     echo '<div class="RecentRecipients">';
     foreach ($recentAwards as $award) {
         $user = userBuilder($award);

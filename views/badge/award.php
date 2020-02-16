@@ -10,7 +10,7 @@ $username = $this->data('Username', 'Unknown');
 $this->Form->setStyles('legacy');
 
 echo '<div id="UserBadgeForm">';
-echo wrap(sprintf(t('Yaga.Badge.GiveTo'), $username), 'h1');
+echo wrap(sprintf(Gdn::translate('Yaga.Badge.GiveTo'), $username), 'h1');
 echo $this->Form->open();
 echo $this->Form->errors();
 
@@ -25,7 +25,7 @@ echo wrap(
         $this->Form->textBox('Reason', ['Multiline' => true]),
         'li') .
     wrap(
-        anchor(t('Cancel'), 'badge/settings'),
+        anchor(Gdn::translate('Cancel'), 'badge/settings'),
         'li'),
     'ul'
 );

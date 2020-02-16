@@ -43,7 +43,7 @@ class RulesController extends Gdn_Controller {
         $rules = Gdn::cache()->get('Yaga.Badges.Rules');
 
         // rule files must always be loaded
-         foreach (glob(PATH_PLUGINS.DS.'yaga'.DS.'library'.DS.'rules'.DS.'*.php') as $filename) {
+         foreach (glob(PATH_PLUGINS.'/yaga/library/rules/*.php') as $filename) {
              include_once $filename;
          }
 
@@ -65,11 +65,10 @@ class RulesController extends Gdn_Controller {
             asort($tempRules);
             if (empty($tempRules)) {
                 $rules = serialize(false);
-            }
-            else{
+            } else{
                 $rules = serialize($tempRules);
             }
-            Gdn::cache()->store('Yaga.Badges.Rules', $rules, [Gdn_Cache::FEATURE_EXPIRY => c('Yaga.Rules.CacheExpire', 86400)]);
+            Gdn::cache()->store('Yaga.Badges.Rules', $rules, [Gdn_Cache::FEATURE_EXPIRY => Gdn::config('Yaga.Rules.CacheExpire', 86400)]);
         }
 
         return unserialize($rules);
@@ -97,12 +96,11 @@ class RulesController extends Gdn_Controller {
                 }
                 if (empty($tempRules)) {
                     $rules = serialize(false);
-                }
-                else{
+                } else{
                     $rules = serialize($tempRules);
                 }
 
-                Gdn::cache()->store('Yaga.Badges.InteractionRules', $rules, [Gdn_Cache::FEATURE_EXPIRY => c('Yaga.Rules.CacheExpire', 86400)]);
+                Gdn::cache()->store('Yaga.Badges.InteractionRules', $rules, [Gdn_Cache::FEATURE_EXPIRY => Gdn::config('Yaga.Rules.CacheExpire', 86400)]);
             }
 
             self::$interactionRulesCache = unserialize($rules);
@@ -126,9 +124,8 @@ class RulesController extends Gdn_Controller {
 
             $data = ['CriteriaForm' => $formString, 'RuleClass' => $ruleClass, 'Name' => $name, 'Description' => $description];
             $this->renderData($data);
-        }
-        else {
-            $this->renderException(new Gdn_UserException(t('Yaga.Error.Rule404')));
+        } else {
+            $this->renderException(new Gdn_UserException(Gdn::translate('Yaga.Error.Rule404')));
         }
     }
 }

@@ -9,7 +9,7 @@ use Yaga;
  * @since 1.0
  * @package Yaga
  */
-class PostCount implements YagaRule{
+class PostCount implements YagaRule {
 
     public function award($sender, $user, $criteria) {
         $result = false;
@@ -38,9 +38,9 @@ class PostCount implements YagaRule{
 
     public function form($form) {
         $comparisons = [
-            'gt' => t('More than:'),
-            'lt' => t('Less than:'),
-            'gte' => t('More than or:')
+            'gt' => Gdn::translate('More than:'),
+            'lt' => Gdn::translate('Less than:'),
+            'gte' => Gdn::translate('More than or:')
         ];
 
         $string = $form->label('Yaga.Rules.PostCount.Criteria.Head', 'PostCount');
@@ -63,12 +63,12 @@ class PostCount implements YagaRule{
     }
 
     public function description() {
-        $description = t('Yaga.Rules.PostCount.Desc');
+        $description = Gdn::translate('Yaga.Rules.PostCount.Desc');
         return wrap($description, 'div', ['class' => 'InfoMessage']);
     }
 
     public function name() {
-        return t('Yaga.Rules.PostCount');
+        return Gdn::translate('Yaga.Rules.PostCount');
     }
 
     public function interacts() {

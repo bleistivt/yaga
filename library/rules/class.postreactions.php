@@ -21,8 +21,7 @@ class PostReactions implements YagaRule {
             if ($value <= 0 || $value == false) {
                 return false;
             }
-        }
-        else {
+        } else {
             return false;
         }
 
@@ -55,13 +54,12 @@ class PostReactions implements YagaRule {
 
         $actionList = '';
         foreach ($actions as $action) {
-            $actionList .= wrap(sprintf(t('Yaga.Rules.PostReactions.LabelFormat'), $action->Name).' '.$form->textbox('ActionID_'.$action->ActionID, ['class' => 'SmallInput']), 'li');
+            $actionList .= wrap(sprintf(Gdn::translate('Yaga.Rules.PostReactions.LabelFormat'), $action->Name).' '.$form->textbox('ActionID_'.$action->ActionID, ['class' => 'SmallInput']), 'li');
         }
 
         if ($actionList == '') {
-            $string .= t('Yaga.Error.NoActions');
-        }
-        else {
+            $string .= Gdn::translate('Yaga.Error.NoActions');
+        } else {
             $string .= wrap($actionList, 'ul');
         }
 
@@ -84,12 +82,12 @@ class PostReactions implements YagaRule {
     }
 
     public function description() {
-        $description = t('Yaga.Rules.PostReactions.Desc');
+        $description = Gdn::translate('Yaga.Rules.PostReactions.Desc');
         return wrap($description, 'div', ['class' => 'InfoMessage']);
     }
 
     public function name() {
-        return t('Yaga.Rules.PostReactions');
+        return Gdn::translate('Yaga.Rules.PostReactions');
     }
 
     public function interacts() {

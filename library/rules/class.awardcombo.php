@@ -30,17 +30,16 @@ class AwardCombo implements YagaRule {
 
         if (count($types) >= $target) {
             return $userID;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     public function form($form) {
         $lengths = [
-            'day' => t('Days'),
-            'week' => t('Weeks'),
-            'year' => t('Years')
+            'day' => Gdn::translate('Days'),
+            'week' => Gdn::translate('Weeks'),
+            'year' => Gdn::translate('Years')
         ];
 
         $string = $form->label('Yaga.Rules.AwardCombo.Criteria.Head', 'AwardCombo');
@@ -67,12 +66,12 @@ class AwardCombo implements YagaRule {
     }
 
     public function description() {
-        $description = t('Yaga.Rules.AwardCombo.Desc');
+        $description = Gdn::translate('Yaga.Rules.AwardCombo.Desc');
         return wrap($description, 'div', ['class' => 'InfoMessage']);
     }
 
     public function name() {
-        return t('Yaga.Rules.AwardCombo');
+        return Gdn::translate('Yaga.Rules.AwardCombo');
     }
 
     public function interacts() {

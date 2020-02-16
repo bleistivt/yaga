@@ -53,7 +53,7 @@ class YagaController extends DashboardController {
      */
     public function settings() {
         $this->permission('Garden.Settings.Manage');
-        $this->title(t('Yaga.Settings'));
+        $this->title(Gdn::translate('Yaga.Settings'));
 
         // Get list of actions from the model and pass to the view
         $configModule = new ConfigurationModule($this);
@@ -122,7 +122,7 @@ class YagaController extends DashboardController {
         $this->permission('Yaga.Ranks.View');
         $this->frontendStyle();
         $this->addCssFile('ranks.css');
-        $this->title(t('Yaga.Ranks.All'));
+        $this->title(Gdn::translate('Yaga.Ranks.All'));
 
         // Get list of ranks from the model and pass to the view
         $this->setData('Ranks', Yaga::rankModel()->get());
@@ -150,7 +150,7 @@ class YagaController extends DashboardController {
             return $this->badgeDetail($badgeID, $slug);
         }
 
-        $this->title(t('Yaga.Badges.All'));
+        $this->title(Gdn::translate('Yaga.Badges.All'));
 
         // Get list of badges from the model and pass to the view
         $userID = Gdn::session()->UserID;
@@ -187,7 +187,7 @@ class YagaController extends DashboardController {
         $this->setData('UserBadgeAward', $userBadgeAward);
         $this->setData('Badge', $badge);
 
-        $this->title(t('Yaga.Badge.View').$badge->Name);
+        $this->title(Gdn::translate('Yaga.Badge.View').$badge->Name);
 
         $this->render('badgedetail');
     }
@@ -198,11 +198,11 @@ class YagaController extends DashboardController {
      * @since 1.0
      */
     public function import() {
-        $this->title(t('Yaga.Import'));
+        $this->title(Gdn::translate('Yaga.Import'));
         $this->setData('TransportType', 'Import');
 
         if (!class_exists('ZipArchive')) {
-            $this->Form->addError(t('Yaga.Error.TransportRequirements'));
+            $this->Form->addError(Gdn::translate('Yaga.Error.TransportRequirements'));
         }
 
         if ($this->Form->isPostBack() == true) {
@@ -218,7 +218,7 @@ class YagaController extends DashboardController {
 
                 // Save the uploaded zip
                 $parts = $upload->saveAs($tmpZip, $baseName);
-                $zipFile = PATH_UPLOADS.DS.$parts['SaveName'];
+                $zipFile = PATH_UPLOADS.'/'.$parts['SaveName'];
                 $this->setData('TransportPath', $zipFile);
             }
 
@@ -226,17 +226,15 @@ class YagaController extends DashboardController {
             if (count($include)) {
                 $info = $this->_ExtractZip($zipFile);
                 $this->_ImportData($info, $include);
-                Gdn_FileSystem::removeFolder(PATH_UPLOADS.DS.'import'.DS.'yaga');
-            }
-            else {
-                $this->Form->addError(t('Yaga.Error.Includes'));
+                Gdn_FileSystem::removeFolder(PATH_UPLOADS.'/import/yaga');
+            } else {
+                $this->Form->addError(Gdn::translate('Yaga.Error.Includes'));
             }
         }
 
         if ($this->Form->errorCount() == 0 && $this->Form->isPostBack()) {
             $this->render('transport-success');
-        }
-        else {
+        } else {
             $this->render();
         }
     }
@@ -247,11 +245,11 @@ class YagaController extends DashboardController {
      * @since 1.0
      */
     public function export() {
-        $this->title(t('Yaga.Export'));
+        $this->title(Gdn::translate('Yaga.Export'));
         $this->setData('TransportType', 'Export');
 
         if (!class_exists('ZipArchive')) {
-            $this->Form->addError(t('Yaga.Error.TransportRequirements'));
+            $this->Form->addError(Gdn::translate('Yaga.Error.TransportRequirements'));
         }
 
         if ($this->Form->isPostBack()) {
@@ -259,16 +257,14 @@ class YagaController extends DashboardController {
             if (count($include)) {
                 $filename = $this->_ExportData($include);
                 $this->setData('TransportPath', $filename);
-            }
-            else {
-                $this->Form->addError(t('Yaga.Error.Includes'));
+            } else {
+                $this->Form->addError(Gdn::translate('Yaga.Error.Includes'));
             }
         }
 
         if ($this->Form->errorCount() == 0 && $this->Form->isPostBack()) {
             $this->render('transport-success');
-        }
-        else {
+        } else {
             $this->render();
         }
     }
@@ -304,18 +300,18 @@ class YagaController extends DashboardController {
     protected function _ExportData($include = [], $path = null) {
         $startTime = microtime(true);
         $info = new stdClass();
-        $info->Version = c('Yaga.Version', '?.?');
+        $info->Version = Gdn::config('Yaga.Version', '?.?');
         $info->StartDate = date('Y-m-d H:i:s');
 
         if (is_null($path)) {
-            $path = PATH_UPLOADS.DS.'export'.date('Y-m-d-His').'.yaga.zip';
+            $path = PATH_UPLOADS.'/export'.date('Y-m-d-His').'.yaga.zip';
         }
         $fH = new ZipArchive();
         $images = [];
         $hashes = [];
 
         if ($fH->open($path, ZipArchive::CREATE) !== true) {
-            $this->Form->addError(sprintf(t('Yaga.Error.ArchiveCreate'), $fH->getStatusString()));
+            $this->Form->addError(sprintf(Gdn::translate('Yaga.Error.ArchiveCreate'), $fH->getStatusString()));
             return false;
         }
 
@@ -344,7 +340,7 @@ class YagaController extends DashboardController {
             $this->setData('RankCount', count($ranks));
             $rankData = serialize($ranks);
             $fH->addFromString('ranks.yaga', $rankData);
-            array_push($images, c('Yaga.Ranks.Photo'), null);
+            array_push($images, Gdn::config('Yaga.Ranks.Photo'), null);
             $hashes[] = md5($rankData);
         }
 
@@ -371,7 +367,7 @@ class YagaController extends DashboardController {
 
         foreach ($filteredImages as $image) {
             if ($fH->addFile('.'.$image, 'images/'.$image) === false) {
-                $this->Form->addError(sprintf(t('Yaga.Error.AddFile'), $fH->getStatusString()));
+                $this->Form->addError(sprintf(Gdn::translate('Yaga.Error.AddFile'), $fH->getStatusString()));
                 //return false;
             }
             $hashes[] = md5_file('.'.$image);
@@ -392,9 +388,8 @@ class YagaController extends DashboardController {
         $fH->setArchiveComment(serialize($info));
         if ($fH->close()) {
             return $path;
-        }
-        else {
-            $this->Form->addError(sprintf(t('Yaga.Error.ArchiveSave'), $fH->getStatusString()));
+        } else {
+            $this->Form->addError(sprintf(Gdn::translate('Yaga.Error.ArchiveSave'), $fH->getStatusString()));
             return false;
         }
     }
@@ -408,14 +403,14 @@ class YagaController extends DashboardController {
      */
     protected function _ExtractZip($filename) {
         if (!file_exists($filename)) {
-            $this->Form->addError(t('Yaga.Error.FileDNE'));
+            $this->Form->addError(Gdn::translate('Yaga.Error.FileDNE'));
 			return false;
 		}
 
         $zipFile = new ZipArchive();
         $result = $zipFile->open($filename);
         if ($result !== true) {
-            $this->Form->addError(t('Yaga.Error.ArchiveOpen'));
+            $this->Form->addError(Gdn::translate('Yaga.Error.ArchiveOpen'));
             return false;
         }
 
@@ -423,9 +418,9 @@ class YagaController extends DashboardController {
         $comment = $zipFile->comment;
         $metaData = unserialize($comment);
 
-        $result = $zipFile->extractTo(PATH_UPLOADS.DS.'import'.DS.'yaga');
+        $result = $zipFile->extractTo(PATH_UPLOADS.'/import/yaga');
         if ($result !== true) {
-            $this->Form->addError(t('Yaga.Error.ArchiveExtract'));
+            $this->Form->addError(Gdn::translate('Yaga.Error.ArchiveExtract'));
             return false;
         }
 
@@ -434,9 +429,8 @@ class YagaController extends DashboardController {
         // Validate checksum
         if ($this->_ValidateChecksum($metaData) === true) {
             return $metaData;
-        }
-        else {
-            $this->Form->addError(t('Yaga.Error.ArchiveChecksum'));
+        } else {
+            $this->Form->addError(Gdn::translate('Yaga.Error.ArchiveChecksum'));
             return false;
         }
     }
@@ -457,16 +451,16 @@ class YagaController extends DashboardController {
         }
 
         // Import Configs
-        $configs = unserialize(file_get_contents(PATH_UPLOADS.DS.'import'.DS.'yaga'.DS.$info->Config));
+        $configs = unserialize(file_get_contents(PATH_UPLOADS.'/import/yaga/'.$info->Config));
         $configurations = $this->_NestedToDotNotation($configs, 'Yaga');
         foreach ($configurations as $name => $value) {
-            saveToConfig($name, $value);
+            Gdn::config()->saveToConfig($name, $value);
         }
 
         // Import model data
         foreach ($include as $key => $value) {
             if ($value) {
-                $data = unserialize(file_get_contents(PATH_UPLOADS.DS.'import'.DS.'yaga'.DS.$info->$key));
+                $data = unserialize(file_get_contents(PATH_UPLOADS.'/import/yaga/'.$info->$key));
                 Gdn::sql()->emptyTable($key);
                 $modelName = $key.'Model';
                 $model = Yaga::$modelName();
@@ -478,8 +472,8 @@ class YagaController extends DashboardController {
         }
 
         // Import uploaded files
-        if (Gdn_FileSystem::copy(PATH_UPLOADS.DS.'import'.DS.'yaga'.DS.'images'.DS.'uploads'.DS, PATH_UPLOADS.DS) === false) {
-            $this->Form->addError(t('Yaga.Error.TransportCopy'));
+        if (Gdn_FileSystem::copy(PATH_UPLOADS.'/import/yaga/images/uploads/', PATH_UPLOADS.'/') === false) {
+            $this->Form->addError(Gdn::translate('Yaga.Error.TransportCopy'));
         }
 
         return true;
@@ -500,8 +494,7 @@ class YagaController extends DashboardController {
         foreach ($configs as $name => $value) {
             if (is_array($value)) {
                 $configStrings = array_merge($configStrings, $this->_NestedToDotNotation($value, "$prefix.$name"));
-            }
-            else {
+            } else {
                 $configStrings["$prefix.$name"] = $value;
             }
         }
@@ -520,23 +513,23 @@ class YagaController extends DashboardController {
         $hashes = [];
 
         // Hash the config file
-        $hashes[] = md5_file(PATH_UPLOADS.DS.'import'.DS.'yaga'.DS.$metaData->Config);
+        $hashes[] = md5_file(PATH_UPLOADS.'/import/yaga/'.$metaData->Config);
 
         // Hash the data files
         if (property_exists($metaData, 'Action')) {
-            $hashes[] = md5_file(PATH_UPLOADS.DS.'import'.DS.'yaga'.DS.$metaData->Action);
+            $hashes[] = md5_file(PATH_UPLOADS.'/import/yaga/'.$metaData->Action);
         }
 
         if (property_exists($metaData, 'Badge')) {
-            $hashes[] = md5_file(PATH_UPLOADS.DS.'import'.DS.'yaga'.DS.$metaData->Badge);
+            $hashes[] = md5_file(PATH_UPLOADS.'/import/yaga/'.$metaData->Badge);
         }
 
         if (property_exists($metaData, 'Rank')) {
-            $hashes[] = md5_file(PATH_UPLOADS.DS.'import'.DS.'yaga'.DS.$metaData->Rank);
+            $hashes[] = md5_file(PATH_UPLOADS.'/import/yaga/'.$metaData->Rank);
         }
 
         // Hash the image files
-		$files = $this->_GetFiles(PATH_UPLOADS.DS.'import'.DS.'yaga'.DS.'images');
+		$files = $this->_GetFiles(PATH_UPLOADS.'/import/yaga/images');
         $this->setData('ImageCount', count($files));
 		foreach($files as $file) {
 			$hashes[] = md5_file($file);

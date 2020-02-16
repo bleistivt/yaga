@@ -37,8 +37,7 @@ class BadgeAwardModel extends Gdn_Model {
     public function getCount($badgeID = false) {
         if ($badgeID) {
             $wheres = ['BadgeID' => $badgeID];
-        }
-        else {
+        } else {
             $wheres = [];
         }
         return $this->SQL->getCount('BadgeAward', $wheres);
@@ -109,7 +108,7 @@ class BadgeAwardModel extends Gdn_Model {
                         'RecordType' => 'Badge',
                         'RecordID' => $badgeID,
                         'Route' => '/yaga/badges/'.$badge->BadgeID.'/'.Gdn_Format::url($badge->Name),
-                        'HeadlineFormat' => t('Yaga.Badge.EarnedHeadlineFormat'),
+                        'HeadlineFormat' => Gdn::translate('Yaga.Badge.EarnedHeadlineFormat'),
                         'Data' => [
                                 'Name' => $badge->Name
                         ],
@@ -196,8 +195,7 @@ class BadgeAwardModel extends Gdn_Model {
     public function counts($column, $userID = null) {
         if ($userID) {
             $where = ['UserID' => $userID];
-        }
-        else {
+        } else {
             $where = null;
         }
 

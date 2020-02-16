@@ -15,8 +15,8 @@ class CommentMarathon implements YagaRule {
         $target = $criteria->Target;
         $targetDate = Gdn_Format::toDateTime(strtotime($criteria->Duration.' '.$criteria->Period.' ago'));
 
-        $sQL = Gdn::sql();
-        $count = $sQL->select('count(CommentID) as Count')
+        $sql = Gdn::sql();
+        $count = $sql->select('count(CommentID) as Count')
                  ->from('Comment')
                  ->where('InsertUserID', $user->UserID)
                  ->where('DateInserted >=', $targetDate)
@@ -25,17 +25,16 @@ class CommentMarathon implements YagaRule {
 
         if ($count->Count >= $target) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     public function form($form) {
         $lengths = [
-            'day' => t('Days'),
-            'week' => t('Weeks'),
-            'year' => t('Years')
+            'day' => Gdn::translate('Days'),
+            'week' => Gdn::translate('Weeks'),
+            'year' => Gdn::translate('Years')
         ];
 
         $string = $form->label('Yaga.Rules.CommentMarathon.Criteria.Head', 'CommentMarathon');
@@ -61,12 +60,12 @@ class CommentMarathon implements YagaRule {
     }
 
     public function description() {
-        $description = t('Yaga.Rules.CommentMarathon.Desc');
+        $description = Gdn::translate('Yaga.Rules.CommentMarathon.Desc');
         return wrap($description, 'div', ['class' => 'InfoMessage']);
     }
 
     public function name() {
-        return t('Yaga.Rules.CommentMarathon');
+        return Gdn::translate('Yaga.Rules.CommentMarathon');
     }
 
     public function interacts() {

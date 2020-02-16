@@ -45,7 +45,7 @@ class ActionController extends DashboardController {
         $this->permission('Yaga.Reactions.Manage');
         $this->setHighlightRoute('action/settings');
 
-        $this->title(t('Yaga.Actions.Manage'));
+        $this->title(Gdn::translate('Yaga.Actions.Manage'));
 
         // Get list of actions from the model and pass to the view
         $this->setData('Actions', $this->ActionModel->get());
@@ -64,12 +64,12 @@ class ActionController extends DashboardController {
         $this->Form->setModel($this->ActionModel);
 
         $edit = false;
-        $this->title(t('Yaga.Action.Add'));
+        $this->title(Gdn::translate('Yaga.Action.Add'));
         if ($actionID) {
             $this->Action = $this->ActionModel->getByID($actionID);
             $this->Form->addHidden('ActionID', $actionID);
             $edit = true;
-            $this->title(t('Yaga.Action.Edit'));
+            $this->title(Gdn::translate('Yaga.Action.Edit'));
         }
 
         // This is just a list of all the images in the action icons folder
@@ -86,12 +86,10 @@ class ActionController extends DashboardController {
         if ($this->Form->isPostBack() == false) {
             if (property_exists($this, 'Action')) {
                 $this->Form->setData($this->Action);
-            }
-            else {
+            } else {
                 $this->Form->setData(['Permission' => 'Yaga.Reactions.Add']);
             }
-        }
-        else {
+        } else {
             $newID = $this->Form->save();
             if ($newID) {
                 $action = $this->ActionModel->getByID($newID);
@@ -99,11 +97,10 @@ class ActionController extends DashboardController {
 
                 if ($edit) {
                     $this->jsonTarget('#ActionID_'.$this->Action->ActionID, $actionRow, 'ReplaceWith');
-                    $this->informMessage(t('Yaga.ActionUpdated'));
-                }
-                else {
+                    $this->informMessage(Gdn::translate('Yaga.ActionUpdated'));
+                } else {
                     $this->jsonTarget('#Actions', $actionRow, 'Append');
-                    $this->informMessage(t('Yaga.Action.Added'));
+                    $this->informMessage(Gdn::translate('Yaga.Action.Added'));
                 }
             }
         }
@@ -128,7 +125,7 @@ class ActionController extends DashboardController {
         $action = $this->ActionModel->getID($actionID);
 
         if (!$action) {
-            throw NotFoundException(t('Yaga.Action'));
+            throw NotFoundException(Gdn::translate('Yaga.Action'));
         }
 
         $this->permission('Yaga.Reactions.Manage');
@@ -151,7 +148,7 @@ class ActionController extends DashboardController {
 
             //$replacement
             if (!$this->ActionModel->deleteAction($actionID, $replacementID)) {
-                $this->Form->addError(sprintf(t('Yaga.Error.DeleteFailed'), t('Yaga.Action')));
+                $this->Form->addError(sprintf(Gdn::translate('Yaga.Error.DeleteFailed'), Gdn::translate('Yaga.Action')));
             }
 
             if ($this->Form->errorCount() == 0) {
@@ -164,7 +161,7 @@ class ActionController extends DashboardController {
         }
 
         $this->setHighlightRoute('action/settings');
-        $this->setData('Title', t('Yaga.Action.Delete'));
+        $this->setData('Title', Gdn::translate('Yaga.Action.Delete'));
         $this->render();
     }
 
@@ -183,8 +180,7 @@ class ActionController extends DashboardController {
                  $saves = $this->ActionModel->saveSort($sortArray);
                  $this->setData('Result', true);
                  $this->setData('Saves', $saves);
-            }
-            else {
+            } else {
                 $this->setData('Result', false);
             }
 

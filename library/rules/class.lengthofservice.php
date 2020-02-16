@@ -16,17 +16,16 @@ class LengthOfService implements YagaRule {
         $targetDate = strtotime($criteria->Duration.' '.$criteria->Period.' ago');
         if ($insertDate < $targetDate) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     public function form($form) {
         $lengths = [
-            'day' => t('Days'),
-            'week' => t('Weeks'),
-            'year' => t('Years')
+            'day' => Gdn::translate('Days'),
+            'week' => Gdn::translate('Weeks'),
+            'year' => Gdn::translate('Years')
         ];
 
         $string = $form->label('Yaga.Rules.LengthOfService.Criteria.Head', 'LengthOfService');
@@ -49,12 +48,12 @@ class LengthOfService implements YagaRule {
     }
 
     public function description() {
-        $description = t('Yaga.Rules.LengthOfService.Desc');
+        $description = Gdn::translate('Yaga.Rules.LengthOfService.Desc');
         return wrap($description, 'div', ['class' => 'InfoMessage']);
     }
 
     public function name() {
-        return t('Yaga.Rules.LengthOfService');
+        return Gdn::translate('Yaga.Rules.LengthOfService');
     }
 
     public function interacts() {

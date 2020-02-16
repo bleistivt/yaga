@@ -8,18 +8,18 @@ echo wrap($this->title(), 'h1');
 
 echo $this->ConfigurationModule->toString();
 
-echo wrap(t('Yaga.Transport'), 'h3');
+echo wrap(Gdn::translate('Yaga.Transport'), 'h3');
 
-echo wrap(t('Yaga.Transport.Desc'), 'div', ['class' => 'Wrap']);
+echo wrap(Gdn::translate('Yaga.Transport.Desc'), 'div', ['class' => 'Wrap']);
 
 echo wrap(
                 anchor(
-                                t('Import'),
+                                Gdn::translate('Import'),
                                 'yaga/import',
                                 ['class' => 'Button']
                                 ) .
                 anchor(
-                                t('Export'),
+                                Gdn::translate('Export'),
                                 'yaga/export',
                                 ['class' => 'Button']),
                 'div',

@@ -16,8 +16,7 @@ class DiscussionCategory implements YagaRule {
         $iD = ($discussion->CategoryID);
         if ($iD == $criteria->CategoryID) {
             return $discussion->InsertUserID;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -40,11 +39,11 @@ class DiscussionCategory implements YagaRule {
     }
 
     public function description() {
-        return wrap(t('Yaga.Rules.DiscussionCategory.Desc'), 'div', ['class' => 'InfoMessage']);
+        return wrap(Gdn::translate('Yaga.Rules.DiscussionCategory.Desc'), 'div', ['class' => 'InfoMessage']);
     }
 
     public function name() {
-        return t('Yaga.Rules.DiscussionCategory');
+        return Gdn::translate('Yaga.Rules.DiscussionCategory');
     }
 
     public function interacts() {

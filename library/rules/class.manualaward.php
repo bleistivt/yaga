@@ -29,12 +29,12 @@ class ManualAward implements YagaRule {
     }
 
     public function description() {
-        $description = t('Yaga.Rules.ManualAward.Desc');
+        $description = Gdn::translate('Yaga.Rules.ManualAward.Desc');
         return wrap($description, 'div', ['class' => 'AlertMessage']);
     }
 
     public function name() {
-        return t('Yaga.Rules.ManualAward');
+        return Gdn::translate('Yaga.Rules.ManualAward');
     }
 
     public function interacts() {

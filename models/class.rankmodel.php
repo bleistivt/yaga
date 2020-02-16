@@ -101,8 +101,7 @@ class RankModel extends Gdn_Model {
             $targetDate = time() - $rank->AgeReq;
             if ($points >= $rank->PointReq && $posts >= $rank->PostReq && $startDate <= $targetDate) {
                 $highestRank = $rank;
-            }
-            else {
+            } else {
                 // Don't continue if we do not qualify
                 break;
             }
@@ -196,10 +195,10 @@ class RankModel extends Gdn_Model {
                 'ActivityType' => 'RankPromotion',
                 'ActivityUserID' => $userID,
                 'RegardingUserID' => $userID,
-                'Photo' => c('Yaga.Ranks.Photo'),
+                'Photo' => Gdn::config('Yaga.Ranks.Photo'),
                 'RecordType' => 'Rank',
                 'RecordID' => $rank->RankID,
-                'HeadlineFormat' => t('Yaga.Rank.PromotedHeadlineFormat'),
+                'HeadlineFormat' => Gdn::translate('Yaga.Rank.PromotedHeadlineFormat'),
                 'Data' => [
                         'Name' => $rank->Name
                 ],

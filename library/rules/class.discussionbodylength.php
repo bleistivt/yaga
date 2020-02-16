@@ -9,7 +9,7 @@ use Yaga;
  * @since 1.0
  * @package Yaga
  */
-class DiscussionBodyLength implements YagaRule{
+class DiscussionBodyLength implements YagaRule {
 
     public function award($sender, $user, $criteria) {
         $discussion = $sender->EventArguments['Discussion'];
@@ -17,8 +17,7 @@ class DiscussionBodyLength implements YagaRule{
 
         if ($length >= $criteria->Length) {
             return $discussion->InsertUserID;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -41,12 +40,12 @@ class DiscussionBodyLength implements YagaRule{
     }
 
     public function description() {
-        $description = sprintf(t('Yaga.Rules.DiscussionBodyLength.Desc'), c('Vanilla.Comment.MaxLength'));
+        $description = sprintf(Gdn::translate('Yaga.Rules.DiscussionBodyLength.Desc'), Gdn::config('Vanilla.Comment.MaxLength'));
         return wrap($description, 'div', ['class' => 'InfoMessage']);
     }
 
     public function name() {
-        return t('Yaga.Rules.DiscussionBodyLength');
+        return Gdn::translate('Yaga.Rules.DiscussionBodyLength');
     }
 
     public function interacts() {

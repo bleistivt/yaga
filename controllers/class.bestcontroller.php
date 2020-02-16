@@ -52,7 +52,7 @@ class BestController extends Gdn_Controller {
      */
     public function index($page = 0) {
         list($offset, $limit) = $this->_TranslatePage($page);
-        $this->title(t('Yaga.BestContent.Recent'));
+        $this->title(Gdn::translate('Yaga.BestContent.Recent'));
         $this->_Content = $this->ActedModel->getRecent($limit, $offset);
         $this->_BuildPager($offset, $limit, '/best/%1$s/');
         $this->setData('ActiveFilter', 'Recent');
@@ -66,7 +66,7 @@ class BestController extends Gdn_Controller {
      */
     public function allTime($page = 0) {
         list($offset, $limit) = $this->_TranslatePage($page);
-        $this->title(t('Yaga.BestContent.AllTime'));
+        $this->title(Gdn::translate('Yaga.BestContent.AllTime'));
         $this->_Content = $this->ActedModel->getBest(null, $limit, $offset);
         $this->_BuildPager($offset, $limit, '/best/alltime/%1$s/');
         $this->setData('ActiveFilter', 'AllTime');
@@ -92,7 +92,7 @@ class BestController extends Gdn_Controller {
         }
 
         list($offset, $limit) = $this->_TranslatePage($page);
-        $this->title(sprintf(t('Yaga.BestContent.Action'), $action->Name));
+        $this->title(sprintf(Gdn::translate('Yaga.BestContent.Action'), $action->Name));
         $this->_Content = $this->ActedModel->getAction($iD, $limit, $offset);
         $this->_BuildPager($offset, $limit, '/best/action/'.$iD.'/%1$s/');
         $this->setData('ActiveFilter', $iD);
@@ -106,7 +106,7 @@ class BestController extends Gdn_Controller {
      * @return array An array containing the offset and limit
      */
     protected function _TranslatePage($page) {
-        list($offset, $limit) = offsetLimit($page, c('Yaga.BestContent.PerPage'));
+        list($offset, $limit) = offsetLimit($page, Gdn::config('Yaga.BestContent.PerPage'));
         if (!is_numeric($offset) || $offset < 0) {
             $offset = 0;
         }

@@ -14,8 +14,7 @@ class PhotoExists implements YagaRule {
     public function award($sender, $user, $criteria) {
         if ($user->Photo) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -33,12 +32,12 @@ class PhotoExists implements YagaRule {
     }
 
     public function description() {
-        $description = t('Yaga.Rules.PhotoExists.Desc');
+        $description = Gdn::translate('Yaga.Rules.PhotoExists.Desc');
         return wrap($description, 'div', ['class' => 'InfoMessage']);
     }
 
     public function name() {
-        return t('Yaga.Rules.PhotoExists');
+        return Gdn::translate('Yaga.Rules.PhotoExists');
     }
 
     public function interacts() {

@@ -90,8 +90,7 @@ class ActionModel extends Gdn_Model {
                     ->set('ActionID', $replacementID)
                     ->where('ActionID', $actionID)
                     ->put();
-            }
-            else {
+            } else {
                 $this->SQL->delete('Reaction', ['ActionID' => $actionID]);
             }
             return true;

@@ -29,12 +29,12 @@ class UnknownRule implements YagaRule {
     }
 
     public function description() {
-        $description = t('Yaga.Rules.UnknownRule.Desc');
+        $description = Gdn::translate('Yaga.Rules.UnknownRule.Desc');
         return wrap($description, 'div', ['class' => 'AlertMessage']);
     }
 
     public function name() {
-        return t('Yaga.Rules.UnknownRule');
+        return Gdn::translate('Yaga.Rules.UnknownRule');
     }
 
     public function interacts() {

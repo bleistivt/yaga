@@ -9,7 +9,7 @@ use Yaga;
  * @since 1.0
  * @package Yaga
  */
-class NewbieComment implements YagaRule{
+class NewbieComment implements YagaRule {
 
     public function award($sender, $user, $criteria) {
         $discussion = $sender->EventArguments['Discussion'];
@@ -23,8 +23,8 @@ class NewbieComment implements YagaRule{
         $currentDiscussionID = $discussion->DiscussionID;
         $targetDate = strtotime($criteria->Duration.' '.$criteria->Period.' ago');
 
-        $sQL = Gdn::sql();
-        $firstDiscussion = $sQL->select('DiscussionID, DateInserted')
+        $sql = Gdn::sql();
+        $firstDiscussion = $sql->select('DiscussionID, DateInserted')
             ->from('Discussion')
             ->where('InsertUserID', $newbUserID)
             ->orderBy('DateInserted')
@@ -36,17 +36,16 @@ class NewbieComment implements YagaRule{
         if ($currentDiscussionID == $firstDiscussion->DiscussionID
                         && $insertDate > $targetDate) {
             return $user->UserID;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     public function form($form) {
         $lengths = [
-            'day' => t('Days'),
-            'week' => t('Weeks'),
-            'year' => t('Years')
+            'day' => Gdn::translate('Days'),
+            'week' => Gdn::translate('Weeks'),
+            'year' => Gdn::translate('Years')
         ];
 
         $string = $form->label('Yaga.Rules.NewbieComment.Criteria.Head', 'NewbieComment');
@@ -69,12 +68,12 @@ class NewbieComment implements YagaRule{
     }
 
     public function description() {
-        $description = t('Yaga.Rules.NewbieComment.Desc');
+        $description = Gdn::translate('Yaga.Rules.NewbieComment.Desc');
         return wrap($description, 'div', ['class' => 'InfoMessage']);
     }
 
     public function name() {
-        return t('Yaga.Rules.NewbieComment');
+        return Gdn::translate('Yaga.Rules.NewbieComment');
     }
 
     public function interacts() {

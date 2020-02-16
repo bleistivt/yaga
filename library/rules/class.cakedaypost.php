@@ -27,8 +27,7 @@ class CakeDayPost implements YagaRule {
                         && $cakeDay == $todaysDay
                         && $cakeYear != $todaysYear) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -46,12 +45,12 @@ class CakeDayPost implements YagaRule {
     }
 
     public function description() {
-        $description = t('Yaga.Rules.CakeDayPost.Desc');
+        $description = Gdn::translate('Yaga.Rules.CakeDayPost.Desc');
         return wrap($description, 'div', ['class' => 'InfoMessage']);
     }
 
     public function name() {
-        return t('Yaga.Rules.CakeDayPost');
+        return Gdn::translate('Yaga.Rules.CakeDayPost');
     }
 
     public function interacts() {

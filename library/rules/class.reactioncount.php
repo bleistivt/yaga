@@ -9,7 +9,7 @@ use Yaga;
  * @since 1.0
  * @package Yaga
  */
-class ReactionCount implements YagaRule{
+class ReactionCount implements YagaRule {
 
     public function award($sender, $user, $criteria) {
         $actionID = $sender->EventArguments['ActionID'];
@@ -24,8 +24,7 @@ class ReactionCount implements YagaRule{
         if ($count >= $criteria->Target) {
             // Award the badge to the user that got the reaction
             return $sender->EventArguments['ParentUserID'];
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -58,12 +57,12 @@ class ReactionCount implements YagaRule{
     }
 
     public function description() {
-        $description = t('Yaga.Rules.ReactionCount.Desc');
+        $description = Gdn::translate('Yaga.Rules.ReactionCount.Desc');
         return wrap($description, 'div', ['class' => 'InfoMessage']);
     }
 
     public function name() {
-        return t('Yaga.Rules.ReactionCount');
+        return Gdn::translate('Yaga.Rules.ReactionCount');
     }
 
     public function interacts() {

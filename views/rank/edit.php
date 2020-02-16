@@ -48,7 +48,7 @@ echo $this->Form->errors();
     </li>
 </ul>
 <?php
-    echo wrap(t('Yaga.Perks'), 'h3');
+    echo wrap(Gdn::translate('Yaga.Perks'), 'h3');
 ?>
 <ul>
     <li>
@@ -60,15 +60,15 @@ echo $this->Form->errors();
     <li>
     <?php
     echo renderPerkConfigurationForm('Garden.EditContentTimeout', 'Yaga.Perks.EditTimeout', [
-        '0' => t('Authors may never edit'),
-        '350' => sprintf(t('Authors may edit for %s'), t('5 minutes')),
-        '900' => sprintf(t('Authors may edit for %s'), t('15 minutes')),
-        '3600' => sprintf(t('Authors may edit for %s'), t('1 hour')),
-        '14400' => sprintf(t('Authors may edit for %s'), t('4 hours')),
-        '86400' => sprintf(t('Authors may edit for %s'), t('1 day')),
-        '604800' => sprintf(t('Authors may edit for %s'), t('1 week')),
-        '2592000' => sprintf(t('Authors may edit for %s'), t('1 month')),
-        '-1' => t('Authors may always edit')
+        '0' => Gdn::translate('Authors may never edit'),
+        '350' => sprintf(Gdn::translate('Authors may edit for %s'), Gdn::translate('5 minutes')),
+        '900' => sprintf(Gdn::translate('Authors may edit for %s'), Gdn::translate('15 minutes')),
+        '3600' => sprintf(Gdn::translate('Authors may edit for %s'), Gdn::translate('1 hour')),
+        '14400' => sprintf(Gdn::translate('Authors may edit for %s'), Gdn::translate('4 hours')),
+        '86400' => sprintf(Gdn::translate('Authors may edit for %s'), Gdn::translate('1 day')),
+        '604800' => sprintf(Gdn::translate('Authors may edit for %s'), Gdn::translate('1 week')),
+        '2592000' => sprintf(Gdn::translate('Authors may edit for %s'), Gdn::translate('1 month')),
+        '-1' => Gdn::translate('Authors may always edit')
     ]);
     ?>
     </li>

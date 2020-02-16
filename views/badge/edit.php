@@ -33,7 +33,7 @@ echo $this->Form->errors();
         if ($photo) {
             echo img($photo);
             echo '<br />'.Anchor(
-                t('Delete Photo'),
+                Gdn::translate('Delete Photo'),
                 combinePaths(['badge/deletephoto', $this->Badge->BadgeID, Gdn::session()->transientKey()]),
                 'Button Danger PopConfirm'
             );

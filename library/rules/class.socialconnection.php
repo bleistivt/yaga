@@ -9,15 +9,14 @@ use Yaga;
  * @since 1.0
  * @package Yaga
  */
-class SocialConnection implements YagaRule{
+class SocialConnection implements YagaRule {
 
     public function award($sender, $user, $criteria) {
         $network = $sender->EventArguments['Provider'];
 
         if ($network == $criteria->SocialNetwork) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -46,12 +45,12 @@ class SocialConnection implements YagaRule{
     }
 
     public function description() {
-        $description = t('Yaga.Rules.SocialConnection.Desc');
+        $description = Gdn::translate('Yaga.Rules.SocialConnection.Desc');
         return wrap($description, 'div', ['class' => 'InfoMessage']);
     }
 
     public function name() {
-        return t('Yaga.Rules.SocialConnection');
+        return Gdn::translate('Yaga.Rules.SocialConnection');
     }
 
     public function interacts() {

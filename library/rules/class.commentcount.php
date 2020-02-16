@@ -9,7 +9,7 @@ use Yaga;
  * @since 1.0
  * @package Yaga
  */
-class CommentCount implements YagaRule{
+class CommentCount implements YagaRule {
 
     public function award($sender, $user, $criteria) {
         $result = false;
@@ -37,9 +37,9 @@ class CommentCount implements YagaRule{
 
     public function form($form) {
         $comparisons = [
-            'gt' => t('More than:'),
-            'lt' => t('Less than:'),
-            'gte' => t('More than or:')
+            'gt' => Gdn::translate('More than:'),
+            'lt' => Gdn::translate('Less than:'),
+            'gte' => Gdn::translate('More than or:')
         ];
 
         $string = $form->label('Yaga.Rules.CommentCount.Criteria.Head', 'CommentCount');
@@ -61,12 +61,12 @@ class CommentCount implements YagaRule{
     }
 
     public function description() {
-        $description = t('Yaga.Rules.CommentCount.Desc');
+        $description = Gdn::translate('Yaga.Rules.CommentCount.Desc');
         return wrap($description, 'div', ['class' => 'InfoMessage']);
     }
 
     public function name() {
-        return t('Yaga.Rules.CommentCount');
+        return Gdn::translate('Yaga.Rules.CommentCount');
     }
 
     public function interacts() {

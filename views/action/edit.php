@@ -4,10 +4,10 @@ use Yaga;
 
 /* Copyright 2013 Zachary Doll */
 if(property_exists($this, 'Action')) {
-    echo wrap(t('Yaga.Action.Edit'), 'h1');
+    echo wrap(Gdn::translate('Yaga.Action.Edit'), 'h1');
 }
 else {
-    echo wrap(t('Yaga.Action.Add'), 'h1');
+    echo wrap(Gdn::translate('Yaga.Action.Add'), 'h1');
 }
 
 $originalCssClass = $this->Form->getValue('CssClass');
@@ -31,7 +31,7 @@ echo $this->Form->errors();
             if ($originalCssClass == $class) {
                 $selected = 'Selected';
             }
-            echo img('plugins'.DS.'yaga'.DS.'design'.DS.'images'.DS.'action-icons'.DS.$icon.'.png', ['title' => $icon, 'data-class' => $class, 'class' => $selected]);
+            echo img('plugins/yaga/design/images/action-icons/'.$icon.'.png', ['title' => $icon, 'data-class' => $class, 'class' => $selected]);
         }
         ?>
     </li>
@@ -54,7 +54,7 @@ echo $this->Form->errors();
         ?>
     </li>
     <li id="AdvancedActionSettings">
-        <span><?php echo t('Advanced Settings'); ?></span>
+        <span><?php echo Gdn::translate('Advanced Settings'); ?></span>
         <div>
                 <?php
                 echo $this->Form->label('Css Class', 'CssClass');
@@ -64,7 +64,7 @@ echo $this->Form->errors();
             <div>
                 <?php
                 echo $this->Form->label('Permission', 'Permission');
-                echo wrap(t('Yaga.Action.PermDesc'), 'p');
+                echo wrap(Gdn::translate('Yaga.Action.PermDesc'), 'p');
                 echo $this->Form->dropdown('Permission', $this->data('Permissions'));
                 ?>
             </div>

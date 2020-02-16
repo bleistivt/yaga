@@ -77,8 +77,7 @@ class ReactionModel extends Gdn_Model {
         // try getting the record from the cache
         if (array_key_exists($type.$iD, self::$_reactions)) {
             return self::$_reactions[$type.$iD];
-        }
-        else {
+        } else {
             $result = $this->SQL
                 ->select('a.*, r.InsertUserID as UserID, r.DateInserted')
                 ->from('Action a')
@@ -189,8 +188,7 @@ class ReactionModel extends Gdn_Model {
                 $eventArgs['Exists'] = false;
                 $score = 0;
                 $points = -1 * $oldAction->AwardValue;
-            }
-            else {
+            } else {
                 // update the record
                 $reaction = $this->SQL
                     ->update('Reaction')
@@ -203,8 +201,7 @@ class ReactionModel extends Gdn_Model {
                 $eventArgs['Exists'] = true;
                 $points = -1 * ($oldAction->AwardValue - $points);
             }
-        }
-        else {
+        } else {
             // insert a record
             $reaction = $this->SQL
                 ->insert(
@@ -294,8 +291,7 @@ class ReactionModel extends Gdn_Model {
 
         if ($model) {
             return $model->setUserScore($iD, $userID, $score);
-        }
-        else {
+        } else {
             return false;
         }
     }

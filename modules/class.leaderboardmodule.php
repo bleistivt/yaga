@@ -53,20 +53,20 @@ class LeaderBoardModule extends Gdn_Module {
     public function getData() {
         switch(strtolower($this->SlotType)) {
             case 'w':
-                $this->Title = t('Yaga.LeaderBoard.Week');
+                $this->Title = Gdn::translate('Yaga.LeaderBoard.Week');
                 $slot = 'w';
                 break;
             case 'm':
-                $this->Title = t('Yaga.LeaderBoard.Month');
+                $this->Title = Gdn::translate('Yaga.LeaderBoard.Month');
                 $slot = 'm';
                 break;
             case 'y':
-                $this->Title = t('Yaga.LeaderBoard.Year');
+                $this->Title = Gdn::translate('Yaga.LeaderBoard.Year');
                 $slot = 'y';
                 break;
             default:
             case 'a':
-                $this->Title = t('Yaga.LeaderBoard.AllTime');
+                $this->Title = Gdn::translate('Yaga.LeaderBoard.AllTime');
                 $slot = 'a';
                 break;
         }
@@ -82,7 +82,7 @@ class LeaderBoardModule extends Gdn_Module {
             ->where('up.TimeSlot', gmdate('Y-m-d', Gdn_Statistics::timeSlotStamp($slot)))
             ->where('up.Source', 'Total')
             ->orderBy('up.Points', 'desc')
-            ->limit(c('Yaga.LeaderBoard.Limit', 10), 0)
+            ->limit(Gdn::config('Yaga.LeaderBoard.Limit', 10), 0)
             ->get()
             ->result();
 

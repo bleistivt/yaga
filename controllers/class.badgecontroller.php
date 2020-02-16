@@ -48,7 +48,7 @@ class BadgeController extends DashboardController {
         $this->permission('Yaga.Badges.Manage');
         $this->setHighlightRoute('badge/settings');
 
-        $this->title(t('Yaga.Badges.Manage'));
+        $this->title(Gdn::translate('Yaga.Badges.Manage'));
 
         // Get list of badges from the model and pass to the view
         list($offset, $limit) = offsetLimit($page, PagerModule::$defaultPageSize);
@@ -71,18 +71,17 @@ class BadgeController extends DashboardController {
 
         // Only allow editing if some rules exist
         if (!RulesController::getRules()) {
-            throw new Gdn_UserException(t('Yaga.Error.NoRules'));
+            throw new Gdn_UserException(Gdn::translate('Yaga.Error.NoRules'));
         }
 
         $edit = false;
         if ($badgeID) {
-            $this->title(t('Yaga.Badge.Edit'));
+            $this->title(Gdn::translate('Yaga.Badge.Edit'));
             $this->Badge = $this->BadgeModel->getByID($badgeID);
             $this->Form->addHidden('BadgeID', $badgeID);
             $edit = true;
-        }
-        else {
-            $this->title(t('Yaga.Badge.Add'));
+        } else {
+            $this->title(Gdn::translate('Yaga.Badge.Add'));
         }
 
         if ($this->Form->isPostBack() == false) {
@@ -94,8 +93,7 @@ class BadgeController extends DashboardController {
                 $data = array_merge($badgeArray, $criteria);
                 $this->Form->setData($data);
             }
-        }
-        else {
+        } else {
             // Handle the photo upload
             $upload = new Gdn_Upload();
             $tmpImage = $upload->validateUpload('PhotoUpload', false);
@@ -106,15 +104,14 @@ class BadgeController extends DashboardController {
                 $imageBaseName = pathinfo($targetImage, PATHINFO_BASENAME);
 
                 // Save the uploaded image
-                $parts = $upload->saveAs($tmpImage, 'yaga'.DS.$imageBaseName);
+                $parts = $upload->saveAs($tmpImage, 'yaga/'.$imageBaseName);
                 $assetRoot = Gdn::request()->urlDomain(true).Gdn::request()->assetRoot();
                 $relativeUrl = stringBeginsWith($parts['Url'], $assetRoot, true, true);
 
                 $this->Form->setFormValue('Photo', $relativeUrl);
-            }
-            else if (!$edit) {
+            } elseif (!$edit) {
                 // Use default photo from config if this is a new badge
-                $this->Form->setFormValue('Photo', c('Yaga.Badges.DefaultPhoto'));
+                $this->Form->setFormValue('Photo', Gdn::config('Yaga.Badges.DefaultPhoto'));
             }
 
             // Find the rule criteria
@@ -131,10 +128,9 @@ class BadgeController extends DashboardController {
             $this->Form->setFormValue('RuleCriteria', $serializedCriteria);
             if ($this->Form->save()) {
                 if ($edit) {
-                    $this->informMessage(t('Yaga.Badge.Updated'));
-                }
-                else {
-                    $this->informMessage(t('Yaga.Badge.Added'));
+                    $this->informMessage(Gdn::translate('Yaga.Badge.Updated'));
+                } else {
+                    $this->informMessage(Gdn::translate('Yaga.Badge.Added'));
                 }
                 redirectTo('/badge/settings');
             }
@@ -160,14 +156,14 @@ class BadgeController extends DashboardController {
         $badge = $this->BadgeModel->getByID($badgeID);
 
         if (!$badge) {
-            throw NotFoundException(t('Yaga.Badge'));
+            throw NotFoundException(Gdn::translate('Yaga.Badge'));
         }
 
         $this->permission('Yaga.Badges.Manage');
 
         if ($this->Form->isPostBack()) {
             if (!$this->BadgeModel->deleteID($badgeID)) {
-                $this->Form->addError(sprintf(t('Yaga.Error.DeleteFailed'), t('Yaga.Badge')));
+                $this->Form->addError(sprintf(Gdn::translate('Yaga.Error.DeleteFailed'), Gdn::translate('Yaga.Badge')));
             }
 
             if ($this->Form->errorCount() == 0) {
@@ -180,7 +176,7 @@ class BadgeController extends DashboardController {
         }
 
         $this->setHighlightRoute('badge/settings');
-        $this->setData('Title', t('Yaga.Badge.Delete'));
+        $this->setData('Title', Gdn::translate('Yaga.Badge.Delete'));
         $this->render();
     }
 
@@ -192,7 +188,7 @@ class BadgeController extends DashboardController {
      */
     public function toggle($badgeID) {
         if (!$this->Request->isPostBack()) {
-            throw new Gdn_UserException(t('Yaga.Error.NeedJS'));
+            throw new Gdn_UserException(Gdn::translate('Yaga.Error.NeedJS'));
         }
         $this->permission('Yaga.Badges.Manage');
         $this->setHighlightRoute('badge/settings');
@@ -201,12 +197,11 @@ class BadgeController extends DashboardController {
 
         if ($badge->Enabled) {
             $enable = false;
-            $toggleText = t('Disabled');
+            $toggleText = Gdn::translate('Disabled');
             $activeClass = 'InActive';
-        }
-        else {
+        } else {
             $enable = true;
-            $toggleText = t('Enabled');
+            $toggleText = Gdn::translate('Enabled');
             $activeClass = 'Active';
         }
 
@@ -229,8 +224,8 @@ class BadgeController extends DashboardController {
             $redirectUrl = 'badge/edit/'.$badgeID;
 
             if (Gdn::session()->validateTransientKey($transientKey)) {
-                 $this->BadgeModel->setField($badgeID, 'Photo', c('Yaga.Badges.DefaultPhoto'));
-                 $this->informMessage(t('Yaga.Badge.PhotoDeleted'));
+                 $this->BadgeModel->setField($badgeID, 'Photo', Gdn::config('Yaga.Badges.DefaultPhoto'));
+                 $this->informMessage(Gdn::translate('Yaga.Badge.PhotoDeleted'));
             }
 
             if ($this->_DeliveryType == DELIVERY_TYPE_ALL) {
@@ -256,7 +251,7 @@ class BadgeController extends DashboardController {
 
         // Only allow awarding if some badges exist
         if (!$this->BadgeModel->getCount()) {
-            throw new Gdn_UserException(t('Yaga.Error.NoBadges'));
+            throw new Gdn_UserException(Gdn::translate('Yaga.Error.NoBadges'));
         }
 
         $userModel = Gdn::userModel();
@@ -274,15 +269,14 @@ class BadgeController extends DashboardController {
         if ($this->Form->isPostBack() == false) {
             // Add the user id field
             $this->Form->addHidden('UserID', $user->UserID);
-        }
-        else {
+        } else {
             $validation = new Gdn_Validation();
             $validation->applyRule('UserID', 'ValidateRequired');
             $validation->applyRule('BadgeID', 'ValidateRequired');
             if ($validation->validate($this->Request->post())) {
                 $formValues = $this->Form->formValues();
                 if ($this->BadgeAwardModel->exists($formValues['UserID'], $formValues['BadgeID'])) {
-                    $this->Form->addError(sprintf(t('Yaga.Badge.AlreadyAwarded'), $user->Name), 'BadgeID');
+                    $this->Form->addError(sprintf(Gdn::translate('Yaga.Badge.AlreadyAwarded'), $user->Name), 'BadgeID');
                     // Need to respecify the user id
                     $this->Form->addHidden('UserID', $user->UserID);
                 }
@@ -292,16 +286,13 @@ class BadgeController extends DashboardController {
 
                     if ($this->Request->get('Target')) {
                         $this->RedirectUrl = $this->Request->get('Target');
-                    }
-                    elseif ($this->deliveryType() == DELIVERY_TYPE_ALL) {
+                    } elseif ($this->deliveryType() == DELIVERY_TYPE_ALL) {
                         $this->RedirectUrl = url(userUrl($user));
-                    }
-                    else {
+                    } else {
                         $this->jsonTarget('', '', 'Refresh');
                     }
                 }
-            }
-            else {
+            } else {
                 $this->Form->setValidationResults($validation->results());
             }
         }
@@ -326,8 +317,7 @@ class BadgeController extends DashboardController {
                 $saves = $this->BadgeModel->saveSort($sortArray);
                 $this->setData('Result', true);
                 $this->setData('Saves', $saves);
-            }
-            else {
+            } else {
                 $this->setData('Result', false);
             }
 

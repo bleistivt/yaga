@@ -13,7 +13,7 @@ if(!isset($explicit)) {
 }
 
 $database = Gdn::database();
-$sQL = $database->sQL(); // To run queries.
+$sql = $database->sQL(); // To run queries.
 $construct = $database->structure(); // To modify and add database tables.
 $px = $database->DatabasePrefix;
 
@@ -28,9 +28,9 @@ $construct->table('Reaction')
                 ->column('DateInserted', 'datetime')
                 ->set($explicit, $drop);
 
-$result = $sQL->query("SHOW INDEX FROM ${Px}Reaction WHERE Key_name = 'IX_ParentID_ParentType'")->result(); 
+$result = $sql->query("SHOW INDEX FROM ${Px}Reaction WHERE Key_name = 'IX_ParentID_ParentType'")->result(); 
 if(!$result && !$construct->CaptureOnly) {
-    $sQL->query("ALTER TABLE ${Px}Reaction ADD INDEX IX_ParentID_ParentType (ParentID, ParentType)");
+    $sql->query("ALTER TABLE ${Px}Reaction ADD INDEX IX_ParentID_ParentType (ParentID, ParentType)");
 }
 
 // Describes actions that can be taken on a comment, discussion or activity
@@ -89,7 +89,7 @@ $construct->table('User')
                 ->set();
 
 // Add activity types for Badge and Rank awards
-if ($sQL->getWhere('ActivityType', ['Name' => 'BadgeAward'])->numRows() == 0)
-     $sQL->insert('ActivityType', ['AllowComments' => '1', 'Name' => 'BadgeAward', 'FullHeadline' => '%1$s earned a badge.', 'ProfileHeadline' => '%1$s earned a badge.', 'Notify' => 1]);
-if ($sQL->getWhere('ActivityType', ['Name' => 'RankPromotion'])->numRows() == 0)
-     $sQL->insert('ActivityType', ['AllowComments' => '1', 'Name' => 'RankPromotion', 'FullHeadline' => '%1$s was promoted.', 'ProfileHeadline' => '%1$s was promoted.', 'Notify' => 1]);
+if ($sql->getWhere('ActivityType', ['Name' => 'BadgeAward'])->numRows() == 0)
+     $sql->insert('ActivityType', ['AllowComments' => '1', 'Name' => 'BadgeAward', 'FullHeadline' => '%1$s earned a badge.', 'ProfileHeadline' => '%1$s earned a badge.', 'Notify' => 1]);
+if ($sql->getWhere('ActivityType', ['Name' => 'RankPromotion'])->numRows() == 0)
+     $sql->insert('ActivityType', ['AllowComments' => '1', 'Name' => 'RankPromotion', 'FullHeadline' => '%1$s was promoted.', 'ProfileHeadline' => '%1$s was promoted.', 'Notify' => 1]);

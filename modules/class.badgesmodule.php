@@ -24,16 +24,14 @@ class BadgesModule extends Gdn_Module {
         if (property_exists($sender, 'User')
                         && $sender->User) {
             $userID = $sender->User->UserID;
-        }
-        else {
+        } else {
             $userID = Gdn::session()->UserID;
         }
 
         if (Gdn::session()->UserID == $userID) {
-            $this->Title = t('Yaga.Badges.Mine');
-        }
-        else {
-            $this->Title = t('Yaga.Badges');
+            $this->Title = Gdn::translate('Yaga.Badges.Mine');
+        } else {
+            $this->Title = Gdn::translate('Yaga.Badges');
         }
 
         $badgeAwardModel = Yaga::badgeAwardModel();

@@ -9,7 +9,7 @@ use Yaga;
  * @since 1.0
  * @package Yaga
  */
-class DiscussionCount implements YagaRule{
+class DiscussionCount implements YagaRule {
 
     public function award($sender, $user, $criteria) {
         $result = false;
@@ -37,9 +37,9 @@ class DiscussionCount implements YagaRule{
 
     public function form($form) {
         $comparisons = [
-            'gt' => t('More than:'),
-            'lt' => t('Less than:'),
-            'gte' => t('More than or:')
+            'gt' => Gdn::translate('More than:'),
+            'lt' => Gdn::translate('Less than:'),
+            'gte' => Gdn::translate('More than or:')
         ];
 
         $string = $form->label('Yaga.Rules.DiscussionCount.Criteria.Head', 'DiscussionCount');
@@ -62,12 +62,12 @@ class DiscussionCount implements YagaRule{
     }
 
     public function description() {
-        $description = t('Yaga.Rules.DiscussionCount.Desc');
+        $description = Gdn::translate('Yaga.Rules.DiscussionCount.Desc');
         return wrap($description, 'div', ['class' => 'InfoMessage']);
     }
 
     public function name() {
-        return t('Yaga.Rules.DiscussionCount');
+        return Gdn::translate('Yaga.Rules.DiscussionCount');
     }
 
     public function interacts() {

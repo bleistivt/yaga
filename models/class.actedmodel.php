@@ -29,7 +29,7 @@ class ActedModel extends Gdn_Model {
     private function baseSQL($table = 'Discussion') {
         switch($table) {
             case 'Comment':
-                $sQL = Gdn::sql()
+                $sql = Gdn::sql()
                     ->select('c.Score, c.CommentID, c.InsertUserID, c.DiscussionID, c.DateInserted')
                     ->from('Comment c')
                     ->where('c.Score is not null')
@@ -37,14 +37,14 @@ class ActedModel extends Gdn_Model {
                 break;
             default:
             case 'Discussion':
-                $sQL = Gdn::sql()
+                $sql = Gdn::sql()
                     ->select('d.Score, d.DiscussionID, d.InsertUserID, d.CategoryID, d.DateInserted')
                     ->from('Discussion d')
                     ->where('d.Score is not null')
                     ->orderBy('d.Score', 'DESC');
                 break;
         }
-        return $sQL;
+        return $sql;
     }
 
     /**
@@ -236,17 +236,17 @@ class ActedModel extends Gdn_Model {
         $content = Gdn::cache()->get($cacheKey);
 
         if ($content == Gdn_Cache::CACHEOP_FAILURE) {
-            $sQL = $this->baseSQL('Discussion');
+            $sql = $this->baseSQL('Discussion');
             if (!is_null($userID)) {
-                $sQL = $sQL->where('d.InsertUserID', $userID);
+                $sql = $sql->where('d.InsertUserID', $userID);
             }
-            $discussions = $sQL->get()->resultArray();
+            $discussions = $sql->get()->resultArray();
 
-            $sQL = $this->baseSQL('Comment');
+            $sql = $this->baseSQL('Comment');
             if (!is_null($userID)) {
-                $sQL = $sQL->where('c.InsertUserID', $userID);
+                $sql = $sql->where('c.InsertUserID', $userID);
             }
-            $comments = $sQL->get()->resultArray();
+            $comments = $sql->get()->resultArray();
 
             $this->joinCategory($comments);
 

@@ -53,7 +53,7 @@ function writeModuleDiscussion($discussion, $px = 'Bookmark') {
 function writePromotedContent($content, $sender) {
      static $userPhotoFirst = null;
      if ($userPhotoFirst === null) {
-            $userPhotoFirst = c('Vanilla.Comment.UserPhotoFirst', true);
+            $userPhotoFirst = Gdn::config('Vanilla.Comment.UserPhotoFirst', true);
      }
 
      $contentType = val('ItemType', $content);
@@ -100,7 +100,7 @@ function writePromotedContent($content, $sender) {
                  <?php
                  // Include source if one was set
                  if ($source = val('Source', $content)) {
-                        echo wrap(sprintf(t('via %s'), t($source.' Source', $source)), 'span', ['class' => 'MItem Source']);
+                        echo wrap(sprintf(Gdn::translate('via %s'), Gdn::translate($source.' Source', $source)), 'span', ['class' => 'MItem Source']);
                  }
 
                  $sender->fireEvent('ContentInfo');
