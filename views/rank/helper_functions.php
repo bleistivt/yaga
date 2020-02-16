@@ -10,7 +10,7 @@ use Yaga;
  * @copyright (c) 2014, Zachary Doll
  */
 
-if(!function_exists('AgeArray')) {
+if (!function_exists('AgeArray')) {
     /**
      * Defines the age options array for use in ranks
      * 

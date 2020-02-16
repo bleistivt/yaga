@@ -50,18 +50,17 @@ foreach($this->data('Ranks') as $rank) {
     $readClass = ($user->RankID == $rank->RankID) ? ' ' : ' Read';
 
     // TODO: Add rank photos
-    //if($rank->Photo) {
+    //if ($rank->Photo) {
     //    $row .= img($rank->Photo, ['class' => 'RankPhoto']);
-    //}
-    //else {
+    //} else {
         $row .= img('plugins/yaga/design/images/default_promotion.png', ['class' => 'RankPhoto']);
     //}
 
     $row .= wrap(
                     wrap(
                                     $rank->Name, 'div', ['class' => 'Title']
-                    ) .
-                    wrap($rank->Description, 'div', ['class' => 'Description']) .
+                    ).
+                    wrap($rank->Description, 'div', ['class' => 'Description']).
                     wrap(
                                     wrapIf($metaString, 'span', ['class' => 'MItem RankRequirements']),
                                     'div',

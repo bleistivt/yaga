@@ -15,16 +15,16 @@ echo wrap($this->title(), 'h1');
 echo wrap(wrap(sprintf(Gdn::translate("Yaga.$transportType.Success"), $filename), 'div'), 'div', ['class' => 'Wrap']);
 
 $string = '';
-if($actionCount) {
+if ($actionCount) {
     $string .= wrap(Gdn::translate('Yaga.Reactions').': '.$actionCount, 'li');
 }
-if($badgeCount) {
+if ($badgeCount) {
     $string .= wrap(Gdn::translate('Yaga.Badges').': '.$badgeCount, 'li');
 }
-if($rankCount) {
+if ($rankCount) {
     $string .= wrap(Gdn::translate('Yaga.Ranks').': '.$rankCount, 'li');
 }
-if($imageCount) {
+if ($imageCount) {
     $string .= wrap(Gdn::translate('Image Files').': '.$imageCount, 'li');
 }
 

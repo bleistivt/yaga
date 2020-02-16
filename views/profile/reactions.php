@@ -23,15 +23,15 @@ foreach ($contents as $content) {
          <div class="Item-Header">
              <div class="AuthorWrap">
                  <span class="Author">
-                        <?php
-                        if ($userPhotoFirst) {
-                             echo userPhoto($author);
-                             echo userAnchor($author, 'Username');
-                        } else {
-                             echo userAnchor($author, 'Username');
-                             echo userPhoto($author);
-                        }
-                        ?>
+                    <?php
+                    if ($userPhotoFirst) {
+                         echo userPhoto($author);
+                         echo userAnchor($author, 'Username');
+                    } else {
+                         echo userAnchor($author, 'Username');
+                         echo userPhoto($author);
+                    }
+                    ?>
                  </span>
             </div>
             <div class="Meta">

@@ -17,7 +17,7 @@ echo wrap(
                                 Gdn::translate('Import'),
                                 'yaga/import',
                                 ['class' => 'Button']
-                                ) .
+                                ).
                 anchor(
                                 Gdn::translate('Export'),
                                 'yaga/export',

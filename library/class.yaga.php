@@ -61,11 +61,11 @@ class Yaga {
      * @return ActedModel
      */
     public static function actedModel() {
-            if (is_null(self::$_actedModel)) {
-                 self::$_actedModel = new ActedModel();
-            }
-            return self::$_actedModel;
-     }
+        if (is_null(self::$_actedModel)) {
+            self::$_actedModel = new ActedModel();
+        }
+        return self::$_actedModel;
+    }
 
     /**
      * Get a reference to the action model
@@ -73,11 +73,11 @@ class Yaga {
      * @return ActionModel
      */
     public static function actionModel() {
-            if (is_null(self::$_actionModel)) {
-                 self::$_actionModel = new ActionModel();
-            }
-            return self::$_actionModel;
-     }
+        if (is_null(self::$_actionModel)) {
+            self::$_actionModel = new ActionModel();
+        }
+        return self::$_actionModel;
+    }
 
     /**
      * Get a reference to the reaction model
@@ -85,11 +85,11 @@ class Yaga {
      * @return ReactionModel
      */
     public static function reactionModel() {
-            if (is_null(self::$_reactionModel)) {
-                 self::$_reactionModel = new ReactionModel();
-            }
-            return self::$_reactionModel;
-     }
+        if (is_null(self::$_reactionModel)) {
+            self::$_reactionModel = new ReactionModel();
+        }
+        return self::$_reactionModel;
+    }
 
     /**
      * Get a reference to the badge model
@@ -97,11 +97,11 @@ class Yaga {
      * @return BadgeModel
      */
     public static function badgeModel() {
-            if (is_null(self::$_badgeModel)) {
-                 self::$_badgeModel = new BadgeModel();
-            }
-            return self::$_badgeModel;
-     }
+        if (is_null(self::$_badgeModel)) {
+            self::$_badgeModel = new BadgeModel();
+        }
+        return self::$_badgeModel;
+    }
 
      /**
      * Get a reference to the badge award model
@@ -109,11 +109,11 @@ class Yaga {
      * @return BadgeAwardModel
      */
     public static function badgeAwardModel() {
-            if (is_null(self::$_badgeAwardModel)) {
-                 self::$_badgeAwardModel = new BadgeAwardModel();
-            }
-            return self::$_badgeAwardModel;
-     }
+        if (is_null(self::$_badgeAwardModel)) {
+            self::$_badgeAwardModel = new BadgeAwardModel();
+        }
+        return self::$_badgeAwardModel;
+    }
 
     /**
      * Get a reference to the rank model
@@ -121,29 +121,29 @@ class Yaga {
      * @return RankModel
      */
     public static function rankModel() {
-            if (is_null(self::$_rankModel)) {
-                 self::$_rankModel = new RankModel();
-            }
-            return self::$_rankModel;
-     }
+        if (is_null(self::$_rankModel)) {
+            self::$_rankModel = new RankModel();
+        }
+        return self::$_rankModel;
+    }
 
-     /**
-        * Alias for UserModel::givePoints()
-        * 
-        * May be expanded in future versions.
-        * 
-        * @since 1.1
-        * @param int $userID
-        * @param int $value
-        * @param string $source
-        * @param int $timestamp
-        */
-     public static function givePoints($userID, $value, $source = 'Other', $timestamp = false) {
-         if ($userID == Gdn::userModel()->getSystemUserID()) {
-                 return;
-         }
-         UserModel::givePoints($userID, $value, $source, $timestamp);
-     }
+    /**
+     * Alias for UserModel::givePoints()
+     * 
+     * May be expanded in future versions.
+     * 
+     * @since 1.1
+     * @param int $userID
+     * @param int $value
+     * @param string $source
+     * @param int $timestamp
+     */
+    public static function givePoints($userID, $value, $source = 'Other', $timestamp = false) {
+        if ($userID == Gdn::userModel()->getSystemUserID()) {
+            return;
+        }
+        UserModel::givePoints($userID, $value, $source, $timestamp);
+    }
 
      /**
      * This is the dispatcher to check badge awards
@@ -156,7 +156,7 @@ class Yaga {
      public static function executeBadgeHooks($sender, $handler) {
         $session = Gdn::session();
         if (!Gdn::config('Yaga.Badges.Enabled') || !$session->isValid()) {
-            return;
+        return;
         }
 
         // Let's us use __FUNCTION__ in the original hook
@@ -173,8 +173,10 @@ class Yaga {
         $rules = [];
         foreach ($badges as $badge) {
             // The badge award needs to be processed
-            if (($badge->Enabled && $badge->UserID != $userID)
-                 || array_key_exists($badge->RuleClass, $interactionRules)) {
+            if (
+                ($badge->Enabled && $badge->UserID != $userID)
+                || array_key_exists($badge->RuleClass, $interactionRules)
+            ) {
                 // Create a rule object if needed
                 $class = $badge->RuleClass;
                 if (!in_array($class, $rules) && class_exists($class)) {
@@ -182,7 +184,7 @@ class Yaga {
                     $rules[$class] = $rule;
                 } else {
                     if (!array_key_exists('UnknownRule', $rules)) {
-                        $rules['UnkownRule'] = new UnknownRule();
+                    $rules['UnkownRule'] = new UnknownRule();
                     }
                     $rules[$class] = $rules['UnkownRule'];
                 }
@@ -207,7 +209,7 @@ class Yaga {
                         $systemUserID = Gdn::userModel()->getSystemUserID();
                         foreach ($awardedUserIDs as $awardedUserID) {
                             if ($awardedUserID == $systemUserID) {
-                                    continue;
+                                continue;
                             }
                             $badgeAwardModel->award($badge->BadgeID, $awardedUserID, $userID);
                         }

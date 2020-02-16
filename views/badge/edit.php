@@ -9,14 +9,13 @@ $rules = RulesController::getRules();
 $ruleClass = key($rules);
 
 // Use the defined rule class if we are editing
-if(property_exists($this, 'Badge')) {
+if (property_exists($this, 'Badge')) {
     $ruleClass = $this->Badge->RuleClass;
 }
 
-if(class_exists($ruleClass)) {
+if (class_exists($ruleClass)) {
     $rule = new $ruleClass();
-}
-else {
+} else {
     $rule = new UnknownRule();
 }
 

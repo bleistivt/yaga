@@ -7,7 +7,7 @@ use Yaga;
 $photoString = '';
 $delButton = '';
 $photo = Gdn::config('Yaga.Ranks.Photo', false);
-if($photo) {
+if ($photo) {
     $photoString = img($photo);
     $delButton = anchor(Gdn::translate('Delete Photo'), combinePaths(['rank/deletephoto', Gdn::session()->transientKey()]), 'Button Danger PopConfirm');
 }
@@ -17,24 +17,25 @@ echo wrap($this->title(), 'h1');
 
 echo wrap(
     $photoString.
-        $this->Form->open(['enctype' => 'multipart/form-data', 'class' => 'Rank']) .
-        $this->Form->errors() .
+    $this->Form->open(['enctype' => 'multipart/form-data', 'class' => 'Rank']).
+    $this->Form->errors().
+    wrap(
         wrap(
-            wrap(
-                $this->Form->label('Photo', 'PhotoUpload') .
-                    wrap(Gdn::translate('Yaga.Rank.Photo.Desc'), 'div', ['class' => 'Info']) .
-                    $delButton .
-                    $this->Form->input('PhotoUpload', 'file') .
-                    $this->Form->button('Save', ['class' => 'Button']), 'li'),
-            'ul'
-        ).$this->Form->close('', ' '),
+        $this->Form->label('Photo', 'PhotoUpload').
+        wrap(Gdn::translate('Yaga.Rank.Photo.Desc'), 'div', ['class' => 'Info']).
+        $delButton .
+        $this->Form->input('PhotoUpload', 'file').
+        $this->Form->button('Save', ['class' => 'Button']), 'li'),
+        'ul'
+    ).
+    $this->Form->close('', ' '),
     'div',
     ['class' => 'Aside']
 );
 
 echo wrap(
     wrap(Gdn::translate('Yaga.Ranks.Desc'), 'p').
-    wrap(Gdn::translate('Yaga.Ranks.Settings.Desc'), 'p') .
+    wrap(Gdn::translate('Yaga.Ranks.Settings.Desc'), 'p').
     wrap(anchor(Gdn::translate('Yaga.Rank.Add'), 'rank/add', ['class' => 'Button']), 'p'),
     'div',
     ['class' => 'Wrap']
@@ -55,7 +56,7 @@ echo wrap(
     <tbody>
         <?php
         $alt = 'Alt';
-        foreach ($this->data('Ranks') as $rank) {
+        foreach ($this->data('Ranks') as $rank).
             $alt = $alt ? '' : 'Alt';
             $row = '';
             $row .= wrap($rank->Name, 'td');

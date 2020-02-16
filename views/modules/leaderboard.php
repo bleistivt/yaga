@@ -14,13 +14,15 @@ foreach($this->Data as $leader) {
         break;
     }
     echo wrap(
-                    userPhoto($leader).' ' .
-                    userAnchor($leader).' ' .
-                    wrap(
-                                    wrap(plural($leader->YagaPoints, '%s Point', '%s Points'), 'span', ['class' => 'Count']),
-                                    'span',
-                                    ['class' => 'Aside']),
-                'li');
+        userPhoto($leader).' '.
+        userAnchor($leader).' '.
+        wrap(
+            wrap(plural($leader->YagaPoints, '%s Point', '%s Points'), 'span', ['class' => 'Count']),
+            'span',
+            ['class' => 'Aside']
+        ),
+        'li'
+    );
 }
 echo '</ul>';
 echo '</div>';

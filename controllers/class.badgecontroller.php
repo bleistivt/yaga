@@ -308,19 +308,19 @@ class BadgeController extends DashboardController {
      * @since 1.1
      */
     public function sort() {
-            // Check permission
-            $this->permission('Yaga.Badges.Manage');
+        // Check permission
+        $this->permission('Yaga.Badges.Manage');
 
-            $request = Gdn::request();
-            if ($request->isPostBack()) {
-                $sortArray = $request->getValue('SortArray', null);
-                $saves = $this->BadgeModel->saveSort($sortArray);
-                $this->setData('Result', true);
-                $this->setData('Saves', $saves);
-            } else {
-                $this->setData('Result', false);
-            }
+        $request = Gdn::request();
+        if ($request->isPostBack()) {
+            $sortArray = $request->getValue('SortArray', null);
+            $saves = $this->BadgeModel->saveSort($sortArray);
+            $this->setData('Result', true);
+            $this->setData('Saves', $saves);
+        } else {
+            $this->setData('Result', false);
+        }
 
-            $this->renderData();
-     }
+        $this->renderData();
+    }
 }

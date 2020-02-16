@@ -23,8 +23,8 @@ class SocialConnection implements YagaRule {
 
     public function form($form) {
         $socialNetworks = [
-                'Twitter' => 'Twitter',
-                'Facebook' => 'Facebook'
+            'Twitter' => 'Twitter',
+            'Facebook' => 'Facebook'
         ];
 
         $string = $form->label('Yaga.Rules.SocialConnection.Criteria.Head', 'SocialConnection');

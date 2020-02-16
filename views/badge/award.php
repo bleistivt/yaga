@@ -16,14 +16,14 @@ echo $this->Form->errors();
 
 echo wrap(
     wrap(
-        $this->Form->label('Yaga.Badge', 'BadgeID') .
+        $this->Form->label('Yaga.Badge', 'BadgeID').
         $this->Form->dropdown('BadgeID', $badges),
-        'li') .
+        'li').
 
     wrap(
-        $this->Form->label('Yaga.Badge.Reason', 'Reason') .
+        $this->Form->label('Yaga.Badge.Reason', 'Reason').
         $this->Form->textBox('Reason', ['Multiline' => true]),
-        'li') .
+        'li').
     wrap(
         anchor(Gdn::translate('Cancel'), 'badge/settings'),
         'li'),

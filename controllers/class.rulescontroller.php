@@ -65,7 +65,7 @@ class RulesController extends Gdn_Controller {
             asort($tempRules);
             if (empty($tempRules)) {
                 $rules = serialize(false);
-            } else{
+            } else {
                 $rules = serialize($tempRules);
             }
             Gdn::cache()->store('Yaga.Badges.Rules', $rules, [Gdn_Cache::FEATURE_EXPIRY => Gdn::config('Yaga.Rules.CacheExpire', 86400)]);
@@ -96,7 +96,7 @@ class RulesController extends Gdn_Controller {
                 }
                 if (empty($tempRules)) {
                     $rules = serialize(false);
-                } else{
+                } else {
                     $rules = serialize($tempRules);
                 }
 

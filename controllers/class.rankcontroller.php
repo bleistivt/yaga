@@ -112,23 +112,21 @@ class RankController extends DashboardController {
             // Find the perk options
             $perkOptions = array_intersect_key(
                 $this->Form->formValues(),
-                array_flip(
-                    [
-                        'ConfGarden.EditContentTimeout',
-                        'ConfGarden.Format.MeActions',
-                        'ConfPlugins.Emotify.FormatEmoticons',
-                        'ConfYaga.Perks.EditTimeout',
-                        'ConfYaga.Perks.Emoticons',
-                        'ConfYaga.Perks.MeActions',
-                        'PermGarden.Curation.Manage',
-                        'PermPlugins.Signatures.Edit',
-                        'PermPlugins.Tagging.Add',
-                        'PermYaga.Perks.Curation',
-                        'PermYaga.Perks.Signatures',
-                        'PermYaga.Perks.Tags',
-                        'Role'
-                    ]
-                )
+                array_flip([
+                    'ConfGarden.EditContentTimeout',
+                    'ConfGarden.Format.MeActions',
+                    'ConfPlugins.Emotify.FormatEmoticons',
+                    'ConfYaga.Perks.EditTimeout',
+                    'ConfYaga.Perks.Emoticons',
+                    'ConfYaga.Perks.MeActions',
+                    'PermGarden.Curation.Manage',
+                    'PermPlugins.Signatures.Edit',
+                    'PermPlugins.Tagging.Add',
+                    'PermYaga.Perks.Curation',
+                    'PermYaga.Perks.Signatures',
+                    'PermYaga.Perks.Tags',
+                    'Role'
+                ])
             );
 
             // Fire event for validating perk options
@@ -237,16 +235,16 @@ class RankController extends DashboardController {
 
             if (Gdn::session()->validateTransientKey($transientKey)) {
                  Gdn::config()->saveToConfig('Yaga.Ranks.Photo', null, ['RemoveEmpty' => true]);
-                 $this->informMessage(Gdn::translate('Yaga.Rank.PhotoDeleted'));
+                $this->informMessage(Gdn::translate('Yaga.Rank.PhotoDeleted'));
             }
 
             if ($this->_DeliveryType == DELIVERY_TYPE_ALL) {
-                    redirectTo($redirectUrl);
+                redirectTo($redirectUrl);
             } else {
-                 $this->ControllerName = 'Home';
-                 $this->View = 'FileNotFound';
-                 $this->RedirectUrl = url($redirectUrl);
-                 $this->render();
+                $this->ControllerName = 'Home';
+                $this->View = 'FileNotFound';
+                $this->RedirectUrl = url($redirectUrl);
+                $this->render();
             }
      }
 
@@ -312,19 +310,19 @@ class RankController extends DashboardController {
      * Renders the Save tree and/or the Result of the sort update.
      */
     public function sort() {
-            // Check permission
-            $this->permission('Yaga.Ranks.Manage');
+        // Check permission
+        $this->permission('Yaga.Ranks.Manage');
 
-            $request = Gdn::request();
-            if ($request->isPostBack()) {
-                 $sortArray = $request->getValue('SortArray', null);
-                 $saves = $this->RankModel->saveSort($sortArray);
-                 $this->setData('Result', true);
-                 $this->setData('Saves', $saves);
-            } else {
-                $this->setData('Result', false);
-            }
+        $request = Gdn::request();
+        if ($request->isPostBack()) {
+            $sortArray = $request->getValue('SortArray', null);
+            $saves = $this->RankModel->saveSort($sortArray);
+            $this->setData('Result', true);
+            $this->setData('Saves', $saves);
+        } else {
+            $this->setData('Result', false);
+        }
 
-            $this->renderData();
-     }
+        $this->renderData();
+    }
 }

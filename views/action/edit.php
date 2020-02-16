@@ -3,10 +3,9 @@
 use Yaga;
 
 /* Copyright 2013 Zachary Doll */
-if(property_exists($this, 'Action')) {
+if (property_exists($this, 'Action')) {
     echo wrap(Gdn::translate('Yaga.Action.Edit'), 'h1');
-}
-else {
+} else {
     echo wrap(Gdn::translate('Yaga.Action.Add'), 'h1');
 }
 

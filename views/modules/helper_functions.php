@@ -20,23 +20,23 @@ function writeModuleDiscussion($discussion, $px = 'Bookmark') {
 ?>
 <li id="<?php echo "{$px}_{$discussion->DiscussionID}"; ?>" class="<?php echo cssClass($discussion); ?>">
      <span class="Options">
-            <?php
+        <?php
 //            echo optionsList($discussion);
-            echo bookmarkButton($discussion);
-            ?>
+        echo bookmarkButton($discussion);
+        ?>
      </span>
      <div class="Title"><?php
-            echo anchor(Gdn_Format::text($discussion->Name, false), discussionUrl($discussion).($discussion->CountCommentWatch > 0 ? '#Item_'.$discussion->CountCommentWatch : ''), 'DiscussionLink');
+        echo anchor(Gdn_Format::text($discussion->Name, false), discussionUrl($discussion).($discussion->CountCommentWatch > 0 ? '#Item_'.$discussion->CountCommentWatch : ''), 'DiscussionLink');
      ?></div>
      <div class="Meta">
             <?php
-                 $last = new stdClass();
-                 $last->UserID = $discussion->LastUserID;
-                 $last->Name = $discussion->LastName;
+                $last = new stdClass();
+                $last->UserID = $discussion->LastUserID;
+                $last->Name = $discussion->LastName;
 
-                 echo newComments($discussion);
+                echo newComments($discussion);
 
-                 echo '<span class="MItem">'.Gdn_Format::date($discussion->LastDate, 'html').UserAnchor($last).'</span>';
+                echo '<span class="MItem">'.Gdn_Format::date($discussion->LastDate, 'html').UserAnchor($last).'</span>';
             ?>
      </div>
 </li>
@@ -51,23 +51,23 @@ function writeModuleDiscussion($discussion, $px = 'Bookmark') {
  * @param mixed $sender calling object.
  */
 function writePromotedContent($content, $sender) {
-     static $userPhotoFirst = null;
-     if ($userPhotoFirst === null) {
-            $userPhotoFirst = Gdn::config('Vanilla.Comment.UserPhotoFirst', true);
-     }
+    static $userPhotoFirst = null;
+    if ($userPhotoFirst === null) {
+        $userPhotoFirst = Gdn::config('Vanilla.Comment.UserPhotoFirst', true);
+    }
 
-     $contentType = val('ItemType', $content);
-     $contentID = val("{$contentType}ID", $content);
-     $author = val('Author', $content);
+    $contentType = val('ItemType', $content);
+    $contentID = val("{$contentType}ID", $content);
+    $author = val('Author', $content);
 
-     switch (strtolower($contentType)) {
-            case 'comment':
-                 $contentURL = commentUrl($content);
-                 break;
-            case 'discussion':
-                 $contentURL = discussionUrl($content);
-                 break;
-     }
+    switch (strtolower($contentType)) {
+        case 'comment':
+            $contentURL = commentUrl($content);
+            break;
+        case 'discussion':
+            $contentURL = discussionUrl($content);
+            break;
+    }
      $sender->EventArgs['Content'] = $content;
      $sender->EventArgs['ContentUrl'] = $contentURL;
 ?>
@@ -76,11 +76,11 @@ function writePromotedContent($content, $sender) {
                  <span class="Author">
                         <?php
                         if ($userPhotoFirst) {
-                             echo userPhoto($author);
-                             echo userAnchor($author, 'Username');
+                            echo userPhoto($author);
+                            echo userAnchor($author, 'Username');
                         } else {
-                             echo userAnchor($author, 'Username');
-                             echo userPhoto($author);
+                            echo userAnchor($author, 'Username');
+                            echo userPhoto($author);
                         }
                         $sender->fireEvent('AuthorPhoto');
                         ?>
@@ -94,23 +94,23 @@ function writePromotedContent($content, $sender) {
                  </span>
             </div>
             <div class="Meta CommentMeta CommentInfo">
-                 <span class="MItem DateCreated">
-                        <?php echo anchor(Gdn_Format::date($content['DateInserted'], 'html'), $contentURL, 'Permalink', ['rel' => 'nofollow']); ?>
-                 </span>
-                 <?php
-                 // Include source if one was set
-                 if ($source = val('Source', $content)) {
-                        echo wrap(sprintf(Gdn::translate('via %s'), Gdn::translate($source.' Source', $source)), 'span', ['class' => 'MItem Source']);
-                 }
+                <span class="MItem DateCreated">
+                    <?php echo anchor(Gdn_Format::date($content['DateInserted'], 'html'), $contentURL, 'Permalink', ['rel' => 'nofollow']); ?>
+                </span>
+                <?php
+                // Include source if one was set
+                if ($source = val('Source', $content)) {
+                   echo wrap(sprintf(Gdn::translate('via %s'), Gdn::translate($source.' Source', $source)), 'span', ['class' => 'MItem Source']);
+                }
 
-                 $sender->fireEvent('ContentInfo');
-                 ?>
+                $sender->fireEvent('ContentInfo');
+                ?>
             </div>
             <div class="Title"><?php echo anchor(Gdn_Format::text($content['Name'], false), $contentURL, 'DiscussionLink'); ?></div>
             <div class="Body">
             <?php
-                 echo anchor(strip_tags(Gdn_Format::to($content['Body'], $content['Format'])), $contentURL, 'BodyLink');
-                 $sender->fireEvent('AfterBody'); // seperate event to account for less space.
+                echo anchor(strip_tags(Gdn_Format::to($content['Body'], $content['Format'])), $contentURL, 'BodyLink');
+                $sender->fireEvent('AfterBody'); // seperate event to account for less space.
             ?>
             </div>
      </div>

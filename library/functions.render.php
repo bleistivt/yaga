@@ -9,7 +9,7 @@ use Yaga;
  * @since 1.0
  * @copyright (c) 2013-2014, Zachary Doll
  */
-if(!function_exists('RenderReactionList')) {
+if (!function_exists('RenderReactionList')) {
 
     /**
      * Renders a list of available actions that also contains the current count of
@@ -28,12 +28,13 @@ if(!function_exists('RenderReactionList')) {
             if (checkPermission($action->Permission)) {
                 $countString = ($showCount && $action->Count) ? $action->Count : '';
                 $actionsString .= anchor(
-                                wrap('&nbsp;', 'span', ['class' => 'ReactSprite React-'.$action->ActionID.' '.$action->CssClass]) .
-                                wrapIf($countString, 'span', ['class' => 'Count']) .
-                                wrap($action->Name, 'span', ['class' => 'ReactLabel']), 'react/'.$type.'/'.$iD.'/'.$action->ActionID,
-                                [
-                                    'class' => 'Hijack ReactButton',
-                                    'title' => $action->Tooltip]
+                    wrap('&nbsp;', 'span', ['class' => 'ReactSprite React-'.$action->ActionID.' '.$action->CssClass]) .
+                    wrapIf($countString, 'span', ['class' => 'Count']) .
+                    wrap($action->Name, 'span', ['class' => 'ReactLabel']), 'react/'.$type.'/'.$iD.'/'.$action->ActionID,
+                    [
+                        'class' => 'Hijack ReactButton',
+                        'title' => $action->Tooltip
+                    ]
                 );
             }
         }
@@ -43,7 +44,7 @@ if(!function_exists('RenderReactionList')) {
 
 }
 
-if(!function_exists('RenderReactionRecord')) {
+if (!function_exists('RenderReactionRecord')) {
 
     /**
      * Renders the reaction record for a specific item
@@ -80,7 +81,7 @@ if(!function_exists('RenderReactionRecord')) {
 
 }
 
-if(!function_exists('RenderActionRow')) {
+if (!function_exists('RenderActionRow')) {
 
     /**
      * Renders an action row used to construct the action admin screen
@@ -91,21 +92,34 @@ if(!function_exists('RenderActionRow')) {
      */
     function renderActionRow($action) {
         return wrap(
-                        wrap(
-                                        anchor(Gdn::translate('Edit'), 'action/edit/'.$action->ActionID, ['class' => 'Popup Button']).anchor(Gdn::translate('Delete'), 'action/delete/'.$action->ActionID, ['class' => 'Popup Button']), 'div', ['class' => 'Tools']) .
-                        wrap(
-                                        wrap($action->Name, 'h4') .
-                                        wrap(
-                                                        wrap($action->Description, 'span').' ' .
-                                                        wrap(plural($action->AwardValue, '%s Point', '%s Points'), 'span'), 'div', ['class' => 'Meta']) .
-                                        wrap(
-                                                        wrap('&nbsp;', 'span', ['class' => 'ReactSprite React-'.$action->ActionID.' '.$action->CssClass]) .
-                                                        wrapIf(rand(0, 18), 'span', ['class' => 'Count']) .
-                                                        wrap($action->Name, 'span', ['class' => 'ReactLabel']), 'div', ['class' => 'Preview Reactions']), 'div', ['class' => 'Action']), 'li', ['id' => 'ActionID_'.$action->ActionID]);
+            wrap(
+                anchor(Gdn::translate('Edit'), 'action/edit/'.$action->ActionID, ['class' => 'Popup Button']).
+                anchor(Gdn::translate('Delete'), 'action/delete/'.$action->ActionID, ['class' => 'Popup Button']),
+                'div',
+                ['class' => 'Tools']
+            ).
+            wrap(
+                wrap($action->Name, 'h4').
+                wrap(
+                    wrap($action->Description, 'span').' ' .
+                    wrap(plural($action->AwardValue, '%s Point', '%s Points'), 'span'), 'div', ['class' => 'Meta']).
+                wrap(
+                    wrap('&nbsp;', 'span', ['class' => 'ReactSprite React-'.$action->ActionID.' '.$action->CssClass]).
+                    wrapIf(rand(0, 18), 'span', ['class' => 'Count']) .
+                    wrap($action->Name, 'span', ['class' => 'ReactLabel']),
+                    'div',
+                    ['class' => 'Preview Reactions']
+                ),
+                'div',
+                ['class' => 'Action']
+            ),
+            'li',
+            ['id' => 'ActionID_'.$action->ActionID]
+        );
     }
 }
 
-if(!function_exists('RenderPerkPermissionForm')) {
+if (!function_exists('RenderPerkPermissionForm')) {
 
     /**
      * Render a simple permission perk form
@@ -129,7 +143,7 @@ if(!function_exists('RenderPerkPermissionForm')) {
     }
 }
 
-if(!function_exists('RenderPerkConfigurationForm')) {
+if (!function_exists('RenderPerkConfigurationForm')) {
 
     /**
      * Render a perk form for the specified configuration
@@ -143,9 +157,9 @@ if(!function_exists('RenderPerkConfigurationForm')) {
         if (is_null($options)) {
             // Default to a true/false/default array
             $options = [
-                    '' => Gdn::translate('Default'),
-                    1 => Gdn::translate('Enabled'),
-                    0 => Gdn::translate('Disabled')
+                '' => Gdn::translate('Default'),
+                1 => Gdn::translate('Enabled'),
+                0 => Gdn::translate('Disabled')
             ];
         }
         // Add a default option

@@ -340,17 +340,17 @@ class YagaPlugin extends Gdn_Plugin {
         if (Gdn::session()->isValid()) {
             if (Gdn::config('Yaga.Badges.Enabled') && checkPermission('Yaga.Badges.Add')) {
                 $sender->EventArguments['ProfileOptions'][] = [
-                        'Text' => sprite('SpBadge', 'SpMod Sprite').' '.Gdn::translate('Yaga.Badge.Award'),
-                        'Url' => '/badge/award/'.$sender->User->UserID,
-                        'CssClass' => 'Popup'
+                    'Text' => sprite('SpBadge', 'SpMod Sprite').' '.Gdn::translate('Yaga.Badge.Award'),
+                    'Url' => '/badge/award/'.$sender->User->UserID,
+                    'CssClass' => 'Popup'
                 ];
             }
 
             if (Gdn::config('Yaga.Ranks.Enabled') && checkPermission('Yaga.Ranks.Add')) {
                 $sender->EventArguments['ProfileOptions'][] = [
-                        'Text' => sprite('SpMod').' '.Gdn::translate('Yaga.Rank.Promote'),
-                        'Url' => '/rank/promote/'.$sender->User->UserID,
-                        'CssClass' => 'Popup'
+                    'Text' => sprite('SpMod').' '.Gdn::translate('Yaga.Rank.Promote'),
+                    'Url' => '/rank/promote/'.$sender->User->UserID,
+                    'CssClass' => 'Popup'
                 ];
             }
         }

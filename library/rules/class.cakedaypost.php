@@ -23,9 +23,11 @@ class CakeDayPost implements YagaRule {
         $todaysMonth = date('n');
         $todaysDay = date('j');
 
-        if ($cakeMonth == $todaysMonth
-                        && $cakeDay == $todaysDay
-                        && $cakeYear != $todaysYear) {
+        if (
+            $cakeMonth == $todaysMonth
+            && $cakeDay == $todaysDay
+            && $cakeYear != $todaysYear
+        ) {
             return true;
         } else {
             return false;

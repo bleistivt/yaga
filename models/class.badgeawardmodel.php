@@ -101,18 +101,18 @@ class BadgeAwardModel extends Gdn_Model {
                 $activityModel = new ActivityModel();
 
                 $activity = [
-                        'ActivityType' => 'BadgeAward',
-                        'ActivityUserID' => $userID,
-                        'RegardingUserID' => $insertUserID,
-                        'Photo' => url($badge->Photo, true),
-                        'RecordType' => 'Badge',
-                        'RecordID' => $badgeID,
-                        'Route' => '/yaga/badges/'.$badge->BadgeID.'/'.Gdn_Format::url($badge->Name),
-                        'HeadlineFormat' => Gdn::translate('Yaga.Badge.EarnedHeadlineFormat'),
-                        'Data' => [
-                                'Name' => $badge->Name
-                        ],
-                        'Story' => $badge->Description
+                    'ActivityType' => 'BadgeAward',
+                    'ActivityUserID' => $userID,
+                    'RegardingUserID' => $insertUserID,
+                    'Photo' => url($badge->Photo, true),
+                    'RecordType' => 'Badge',
+                    'RecordID' => $badgeID,
+                    'Route' => '/yaga/badges/'.$badge->BadgeID.'/'.Gdn_Format::url($badge->Name),
+                    'HeadlineFormat' => Gdn::translate('Yaga.Badge.EarnedHeadlineFormat'),
+                    'Data' => [
+                            'Name' => $badge->Name
+                    ],
+                    'Story' => $badge->Description
                 ];
 
                 // Create a public record
