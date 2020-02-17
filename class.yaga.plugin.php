@@ -781,7 +781,7 @@ class YagaPlugin extends Gdn_Plugin {
      protected function deleteUserData($userID, $options = [], &$data = null) {
         $sql = Gdn::sql();
 
-        $deleteMethod = val('DeleteMethod', $options, 'delete');
+        $deleteMethod = $options['DeleteMethod'] ?? 'delete';
         if ($deleteMethod == 'delete') {
             // Remove neutral/negative reactions
             $actions = Yaga::actionModel()->getWhere(['AwardValue <' => 1])->result();
@@ -824,8 +824,8 @@ class YagaPlugin extends Gdn_Plugin {
         * @param UserModel $sender UserModel.
         */
      public function userModel_beforeDeleteUser_handler(\UserModel $sender) {
-            $userID = val('UserID', $sender->EventArguments);
-            $options = val('Options', $sender->EventArguments, []);
+            $userID = $sender->EventArguments['UserID'];
+            $options = $sender->EventArguments['Options'];
             $options = is_array($options) ? $options : [];
             $content =& $sender->EventArguments['Content'];
 

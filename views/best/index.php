@@ -11,9 +11,9 @@ foreach ($contents as $content) {
         $userPhotoFirst = Gdn::config('Vanilla.Comment.UserPhotoFirst', true);
     }
 
-    $contentType = val('ItemType', $content);
-    $contentID = val("{$contentType}ID", $content);
-    $author = val('Author', $content);
+    $contentType = $content['ItemType'];
+    $contentID = $content["{$contentType}ID"];
+    $author = $content['Author'] ?? false;
 
 ?>
     <li id="<?php echo "{$contentType}_{$contentID}"; ?>" class="Item">
@@ -38,7 +38,8 @@ foreach ($contents as $content) {
                 </span>
                 <?php
                 // Include source if one was set
-                if ($source = val('Source', $content)) {
+                $source = $content['Source'] ?? false;
+                if ($source) {
                     echo wrap(sprintf(Gdn::translate('via %s'), Gdn::translate($source.' Source', $source)), 'span', ['class' => 'MItem Source']);
                 }
                 ?>

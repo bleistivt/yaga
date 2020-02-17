@@ -369,8 +369,7 @@ class ActedModel extends Gdn_Model {
                 continue;
 
             foreach ($section as $item) {
-                $itemField = val($field, $item);
-                $interleaved[$itemField] = array_merge($item, ['ItemType' => $sectionType]);
+                $interleaved[$item[$field]] = array_merge($item, ['ItemType' => $sectionType]);
             }
         }
 
@@ -387,7 +386,7 @@ class ActedModel extends Gdn_Model {
     protected function prepare(&$content) {
 
         foreach ($content as &$contentItem) {
-            $contentType = strtolower(val('ItemType', $contentItem));
+            $contentType = strtolower($contentItem['ItemType']);
             $itemID = $contentItem[ucfirst($contentType).'ID'];
 
             $contentItem = array_merge($contentItem, $this->getRecord($contentType, $itemID));
@@ -418,7 +417,7 @@ class ActedModel extends Gdn_Model {
             }
 
             // Attach User
-            $userID = val('InsertUserID', $contentItem);
+            $userID = $contentItem['InsertUserID'] ?? false;
             $user = Gdn::userModel()->getID($userID);
             $contentItem['Author'] = $user;
         }
@@ -442,13 +441,13 @@ class ActedModel extends Gdn_Model {
      * @return boolean Whether or not the user can see the content item
      */
     protected function securityFilter($contentItem) {
-        $categoryID = val('CategoryID', $contentItem, null);
+        $categoryID = $contentItem['CategoryID'] ?? null;
         if (is_null($categoryID) || $categoryID === false) {
             return false;
         }
 
         $category = CategoryModel::categories($categoryID);
-        $canView = val('PermsDiscussionsView', $category);
+        $canView = $category['PermsDiscussionsView'] ?? false;
         if (!$canView) {
             return false;
         }

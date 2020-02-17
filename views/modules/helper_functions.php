@@ -54,9 +54,9 @@ function writePromotedContent($content, $sender) {
         $userPhotoFirst = Gdn::config('Vanilla.Comment.UserPhotoFirst', true);
     }
 
-    $contentType = val('ItemType', $content);
-    $contentID = val("{$contentType}ID", $content);
-    $author = val('Author', $content);
+    $contentType = $content['ItemType'];
+    $contentID = $content["{$contentType}ID"];
+    $author = $content['Author'] ?? false;
 
     switch (strtolower($contentType)) {
         case 'comment':
@@ -71,25 +71,25 @@ function writePromotedContent($content, $sender) {
 ?>
      <div id="<?php echo "Promoted_{$contentType}_{$contentID}"; ?>" class="<?php echo cssClass($content); ?>">
             <div class="AuthorWrap">
-                 <span class="Author">
-                        <?php
-                        if ($userPhotoFirst) {
-                            echo userPhoto($author);
-                            echo userAnchor($author, 'Username');
-                        } else {
-                            echo userAnchor($author, 'Username');
-                            echo userPhoto($author);
-                        }
-                        $sender->fireEvent('AuthorPhoto');
-                        ?>
-                 </span>
-                 <span class="AuthorInfo">
-                        <?php
-                        echo ' '.WrapIf(htmlspecialchars(val('Title', $author)), 'span', ['class' => 'MItem AuthorTitle']);
-                        echo ' '.WrapIf(htmlspecialchars(val('Location', $author)), 'span', ['class' => 'MItem AuthorLocation']);
-                        $sender->fireEvent('AuthorInfo');
-                        ?>
-                 </span>
+                <span class="Author">
+                    <?php
+                    if ($userPhotoFirst) {
+                        echo userPhoto($author);
+                        echo userAnchor($author, 'Username');
+                    } else {
+                        echo userAnchor($author, 'Username');
+                        echo userPhoto($author);
+                    }
+                    $sender->fireEvent('AuthorPhoto');
+                    ?>
+                </span>
+                <span class="AuthorInfo">
+                    <?php
+                    echo ' '.WrapIf(htmlspecialchars($author['Title'] ?? ''), 'span', ['class' => 'MItem AuthorTitle']);
+                    echo ' '.WrapIf(htmlspecialchars($author['Location'] ?? ''), 'span', ['class' => 'MItem AuthorLocation']);
+                    $sender->fireEvent('AuthorInfo');
+                    ?>
+                </span>
             </div>
             <div class="Meta CommentMeta CommentInfo">
                 <span class="MItem DateCreated">
@@ -97,7 +97,8 @@ function writePromotedContent($content, $sender) {
                 </span>
                 <?php
                 // Include source if one was set
-                if ($source = val('Source', $content)) {
+                $source = $content['Source'] ?? false;
+                if ($source) {
                    echo wrap(sprintf(Gdn::translate('via %s'), Gdn::translate($source.' Source', $source)), 'span', ['class' => 'MItem Source']);
                 }
 

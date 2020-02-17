@@ -457,9 +457,12 @@ class YagaController extends DashboardController {
 
         // Import model data
         foreach ($include as $key => $value) {
+            // Trim "Yaga" prefix to make old imports work.
+            $key = StringBeginsWith($key, 'Yaga', false, true);
+
             if ($value) {
                 $data = unserialize(file_get_contents(PATH_UPLOADS.'/import/yaga/'.$info->$key));
-                Gdn::sql()->emptyTable($key);
+                Gdn::sql()->emptyTable('Yaga'.$key);
                 $modelName = $key.'Model';
                 $model = Yaga::$modelName();
                 foreach ($data as $datum) {

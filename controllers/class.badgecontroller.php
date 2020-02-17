@@ -49,7 +49,7 @@ class BadgeController extends DashboardController {
         $this->title(Gdn::translate('Yaga.Badges.Manage'));
 
         // Get list of badges from the model and pass to the view
-        list($offset, $limit) = offsetLimit($page, PagerModule::$defaultPageSize);
+        list($offset, $limit) = offsetLimit($page, PagerModule::$DefaultPageSize);
         $this->setData('Badges', $this->BadgeModel->getLimit($limit, $offset));
         $this->setData('Rules', RulesController::getRules());
 
