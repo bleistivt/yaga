@@ -87,9 +87,14 @@ $construct->table('User')
     ->set();
 
 // Add activity types for Badge and Rank awards
-if ($sql->getWhere('ActivityType', ['Name' => 'BadgeAward'])->numRows() == 0) {
+if ($sql->getWhere('ActivityType', ['Name' => 'BadgeAward'])->numRows() == 0  && !$construct->CaptureOnly) {
     $sql->insert('ActivityType', ['AllowComments' => '1', 'Name' => 'BadgeAward', 'FullHeadline' => '%1$s earned a badge.', 'ProfileHeadline' => '%1$s earned a badge.', 'Notify' => 1]);
 }
-if ($sql->getWhere('ActivityType', ['Name' => 'RankPromotion'])->numRows() == 0) {
+if ($sql->getWhere('ActivityType', ['Name' => 'RankPromotion'])->numRows() == 0 && !$construct->CaptureOnly) {
     $sql->insert('ActivityType', ['AllowComments' => '1', 'Name' => 'RankPromotion', 'FullHeadline' => '%1$s was promoted.', 'ProfileHeadline' => '%1$s was promoted.', 'Notify' => 1]);
+}
+
+// Correct the url of the old default badge icon.
+if (!$construct->CaptureOnly) {
+    $sql->update('Badge', ['Photo' => 'plugins/yaga/design/images/default_badge.png'], ['Photo' => 'applications/yaga/design/images/default_badge.png'])->put();
 }

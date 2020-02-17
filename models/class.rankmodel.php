@@ -189,7 +189,7 @@ class RankModel extends Gdn_Model {
                 'RecordID' => $rank->RankID,
                 'HeadlineFormat' => Gdn::translate('Yaga.Rank.PromotedHeadlineFormat'),
                 'Data' => [
-                        'Name' => $rank->Name
+                    'Name' => $rank->Name
                 ],
                 'Story' => $rank->Description
             ];

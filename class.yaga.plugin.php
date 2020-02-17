@@ -82,7 +82,11 @@ class YagaPlugin extends Gdn_Plugin {
             return false;
         }
 
-        echo wrap(anchor(sprite('SpBestOf', 'SpMod Sprite').' '.Gdn::translate('Yaga.BestContent'), '/best'), 'li', ['class' => $sender->ControllerName == 'bestcontroller' ? 'Best Active' : 'Best']);
+        echo wrap(
+            anchor(sprite('SpBestOf', 'SpMod Sprite').' '.Gdn::translate('Yaga.BestContent'), '/best'),
+            'li',
+            ['class' => $sender->ControllerName == 'bestcontroller' ? 'Best Active' : 'Best']
+        );
     }
 
     /**
@@ -110,10 +114,27 @@ class YagaPlugin extends Gdn_Plugin {
         foreach ($actions as $action) {
             $selected = ($actionID == $action->ActionID) ? ' Selected' : '';
             $count = $reactionModel->getUserCount($user->UserID, $action->ActionID);
-            $tempString = wrap(wrap(Gdn_Format::bigNumber($count), 'span', ['title' => $count]), 'span', ['class' => 'Yaga_ReactionCount CountTotal']);
+            
+            $tempString = wrap(
+                wrap(Gdn_Format::bigNumber($count), 'span', ['title' => $count]),
+                'span',
+                ['class' => 'Yaga_ReactionCount CountTotal']
+            );
             $tempString .= wrap($action->Name, 'span', ['class' => 'Yaga_ReactionName CountLabel']);
 
-            $string .= wrap(wrap(anchor($tempString, '/profile/reactions/'.$user->UserID.'/'.Gdn_Format::url($user->Name).'/'.$action->ActionID, ['class' => 'Yaga_Reaction TextColor', 'title' => $action->Description]), 'span', ['class' => 'CountItem'.$selected]), 'span', ['class' => 'CountItemWrap']);
+            $string .= wrap(
+                wrap(
+                    anchor(
+                        $tempString,
+                        '/profile/reactions/'.$user->UserID.'/'.Gdn_Format::url($user->Name).'/'.$action->ActionID,
+                        ['class' => 'Yaga_Reaction TextColor', 'title' => $action->Description]
+                    ),
+                    'span',
+                    ['class' => 'CountItem'.$selected]
+                ),
+                'span',
+                ['class' => 'CountItemWrap']
+            );
         }
 
         echo wrap($string, 'div', ['class' => 'DataCounts']);
@@ -267,9 +288,12 @@ class YagaPlugin extends Gdn_Plugin {
      * @param ProfileController $sender
      */
     public function profileController_AddProfileTabs_handler(\ProfileController $sender) {
-        // Only show this to users who are signed in as this may be duplicate content to crawlers (pioc92).
-        if (is_object($sender->User) && $sender->User->UserID > 0 && Gdn::session()->isValid()) {
-            $sender->addProfileTab(sprite('SpBestOf', 'SpMod Sprite').' '.Gdn::translate('Yaga.BestContent'), 'profile/best/'.$sender->User->UserID.'/'.urlencode($sender->User->Name), 'Best');
+        if (is_object($sender->User) && $sender->User->UserID > 0) {
+            $sender->addProfileTab(
+                sprite('SpBestOf', 'SpMod Sprite').' '.Gdn::translate('Yaga.BestContent'),
+                'profile/best/'.$sender->User->UserID.'/'.urlencode($sender->User->Name),
+                'Best'
+            );
         }
     }
 
