@@ -55,7 +55,7 @@ class ActedModel extends Gdn_Model {
      * @param int $offset
      * @return array
      */
-    public function get($userID, $actionID, $limit = null, $offset = 0) {
+    public function getReceived($userID, $actionID, $limit = null, $offset = 0) {
         $cacheKey = "yaga.profile.reactions.{$userID}.{$actionID}";
         $content = Gdn::cache()->get($cacheKey);
 

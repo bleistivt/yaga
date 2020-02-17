@@ -61,14 +61,6 @@ class BadgeModel extends Gdn_Model {
     }
 
     /**
-     * Total number of badges in the system
-     * @return int
-     */
-    public function getCount($wheres = '') {
-        return count($this->get());
-    }
-
-    /**
      * Returns data for a specific badge
      *
      * @param int $badgeID
@@ -91,14 +83,14 @@ class BadgeModel extends Gdn_Model {
      * @param bool $enable
      */
     public function enable($badgeID, $enable) {
-        $enable = (!$enable) ? false : true;
+        $enable = (!$enable) ? 0 : 1;
         $this->SQL
             ->update('Badge')
             ->set('Enabled', $enable)
             ->where('BadgeID', $badgeID)
             ->put();
         $this->EventArguments['BadgeID'] = $badgeID;
-        $this->EventArguments['Enable'] = $enable;
+        $this->EventArguments['Enable'] = (bool)$enable;
         $this->fireEvent('BadgeEnable');
     }
 

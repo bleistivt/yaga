@@ -27,21 +27,6 @@ class BadgeAwardModel extends Gdn_Model {
     }
 
     /**
-     * Gets the number of badges that have been awarded with a specific ID
-     *
-     * @param int $badgeID
-     * @return int
-     */
-    public function getCount($badgeID = false) {
-        if ($badgeID) {
-            $wheres = ['BadgeID' => $badgeID];
-        } else {
-            $wheres = [];
-        }
-        return $this->SQL->getCount('BadgeAward', $wheres);
-    }
-
-    /**
      * Gets recently awarded badges with a specific ID
      *
      * @param int $badgeID
@@ -200,7 +185,13 @@ class BadgeAwardModel extends Gdn_Model {
         $result = ['Complete' => true];
         switch($column) {
             case 'CountBadges':
-                Gdn::database()->query(DBAModel::getCountSQL('count', 'User', 'BadgeAward', 'CountBadges', 'BadgeAwardID', 'UserID', 'UserID', $where));
+                Gdn::database()->query(DBAModel::getCountSQL(
+                    'count',
+                    'User', 'BadgeAward',
+                    'CountBadges', 'BadgeAwardID',
+                    'UserID', 'UserID',
+                    $where
+                ));
                 break;
             default:
                 throw new Gdn_UserException("Unknown column $column");

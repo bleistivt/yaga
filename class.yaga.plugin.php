@@ -165,7 +165,7 @@ class YagaPlugin extends Gdn_Plugin {
         $sender->addDefinition('CollapseText', Gdn::translate('(less)'));
 
         $model = Yaga::actedModel();
-        $data = $model->get($sender->User->UserID, $actionID, $limit, $offset);
+        $data = $model->getReceived($sender->User->UserID, $actionID, $limit, $offset);
 
         $sender->setData('Content', $data->Content);
 

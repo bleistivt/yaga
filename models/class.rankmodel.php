@@ -50,15 +50,6 @@ class RankModel extends Gdn_Model {
     }
 
     /**
-     * Gets the number of ranks currently specified in the database.
-     *
-     * @return int
-     */
-    public function getCount($wheres = '') {
-        return count($this->get());
-    }
-
-    /**
      * Returns data for a specific rank
      *
      * @param int $rankID
@@ -160,7 +151,7 @@ class RankModel extends Gdn_Model {
      * @param bool $enable
      */
     public function enable($rankID, $enable) {
-        $enable = (!$enable) ? false : true;
+        $enable = (!$enable) ? 0 : 1;
         $this->SQL
             ->update('Rank')
             ->set('Enabled', $enable)

@@ -175,7 +175,7 @@ class YagaController extends DashboardController {
 
         $userID = Gdn::session()->UserID;
         $badgeAwardModel = Yaga::badgeAwardModel();
-        $awardCount = $badgeAwardModel->getCount($badgeID);
+        $awardCount = $badgeAwardModel->getCount(['BadgeID' => $badgeID]);
         $userBadgeAward = $badgeAwardModel->exists($userID, $badgeID);
         $recentAwards = $badgeAwardModel->getRecent($badgeID);
 
