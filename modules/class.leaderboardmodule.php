@@ -25,14 +25,6 @@ class LeaderBoardModule extends Gdn_Module {
      */
     public $slotType = 'a';
 
-
-    /**
-     * Set the application folder on construct.
-     */
-    public function __construct($sender = '') {
-        parent::__construct($sender, 'yaga');
-    }
-
     /**
      * Specifies the asset this module should be rendered to.
      * 
@@ -49,7 +41,7 @@ class LeaderBoardModule extends Gdn_Module {
      * Monthly, 'y': Yearly
      */
     public function getData() {
-        switch(strtolower($this->SlotType)) {
+        switch(strtolower($this->slotType)) {
             case 'w':
                 $this->Title = Gdn::translate('Yaga.LeaderBoard.Week');
                 $slot = 'w';

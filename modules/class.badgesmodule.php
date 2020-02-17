@@ -53,7 +53,7 @@ class BadgesModule extends Gdn_Module {
     public function toString() {
         if ($this->Data) {
             if ($this->Visible) {
-                $viewPath = $this->fetchViewLocation('badges', 'yaga');
+                $viewPath = $this->fetchViewLocation('badges', 'plugins/yaga');
                 $string = '';
                 ob_start();
                 include ($viewPath);

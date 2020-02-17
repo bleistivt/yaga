@@ -14,7 +14,7 @@ class ReactController extends Gdn_Controller {
      * @var array These objects will be created on instantiation and available via
      * $this->ObjectName
      */
-    public $uses = ['ActionModel', 'ReactionModel'];
+    public $Uses = ['ActionModel', 'ReactionModel'];
 
     /**
      * All requests to this controller must be made via JS.

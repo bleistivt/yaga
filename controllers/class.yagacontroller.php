@@ -14,7 +14,7 @@ class YagaController extends DashboardController {
      * @var array These objects will be created on instantiation and available via
      * $this->ObjectName
      */
-    public $uses = ['Form'];
+    public $Uses = ['Form'];
 
     /**
      * Make this look like a dashboard page and add the resources
@@ -304,12 +304,12 @@ class YagaController extends DashboardController {
         if (is_null($path)) {
             $path = PATH_UPLOADS.'/export'.date('Y-m-d-His').'.yaga.zip';
         }
-        $fH = new ZipArchive();
+        $fh = new ZipArchive();
         $images = [];
         $hashes = [];
 
-        if ($fH->open($path, ZipArchive::CREATE) !== true) {
-            $this->Form->addError(sprintf(Gdn::translate('Yaga.Error.ArchiveCreate'), $fH->getStatusString()));
+        if ($fh->open($path, ZipArchive::CREATE) !== true) {
+            $this->Form->addError(sprintf(Gdn::translate('Yaga.Error.ArchiveCreate'), $fh->getStatusString()));
             return false;
         }
 
@@ -318,7 +318,7 @@ class YagaController extends DashboardController {
         $configs = Gdn::config('Yaga', []);
         unset($configs['Version']);
         $configData = serialize($configs);
-        $fH->addFromString('configs.yaga', $configData);
+        $fh->addFromString('configs.yaga', $configData);
         $hashes[] = md5($configData);
 
         // Add actions
@@ -327,7 +327,7 @@ class YagaController extends DashboardController {
             $actions = Yaga::actionModel()->get('Sort', 'asc');
             $this->setData('ActionCount', count($actions));
             $actionData = serialize($actions);
-            $fH->addFromString('actions.yaga', $actionData);
+            $fh->addFromString('actions.yaga', $actionData);
             $hashes[] = md5($actionData);
         }
 
@@ -337,7 +337,7 @@ class YagaController extends DashboardController {
             $ranks = Yaga::rankModel()->get('Level', 'asc');
             $this->setData('RankCount', count($ranks));
             $rankData = serialize($ranks);
-            $fH->addFromString('ranks.yaga', $rankData);
+            $fh->addFromString('ranks.yaga', $rankData);
             array_push($images, Gdn::config('Yaga.Ranks.Photo'), null);
             $hashes[] = md5($rankData);
         }
@@ -348,7 +348,7 @@ class YagaController extends DashboardController {
             $badges = Yaga::badgeModel()->get();
             $this->setData('BadgeCount', count($badges));
             $badgeData = serialize($badges);
-            $fH->addFromString('badges.yaga', $badgeData);
+            $fh->addFromString('badges.yaga', $badgeData);
             $hashes[] = md5($badgeData);
             foreach ($badges as $badge) {
                 array_push($images, $badge->Photo);
@@ -360,12 +360,12 @@ class YagaController extends DashboardController {
         $imageCount = count($filteredImages);
         $this->setData('ImageCount', $imageCount);
         if ($imageCount > 0) {
-            $fH->addEmptyDir('images');
+            $fh->addEmptyDir('images');
         }
 
         foreach ($filteredImages as $image) {
-            if ($fH->addFile('.'.$image, 'images/'.$image) === false) {
-                $this->Form->addError(sprintf(Gdn::translate('Yaga.Error.AddFile'), $fH->getStatusString()));
+            if ($fh->addFile('.'.$image, 'images/'.$image) === false) {
+                $this->Form->addError(sprintf(Gdn::translate('Yaga.Error.AddFile'), $fh->getStatusString()));
                 //return false;
             }
             $hashes[] = md5_file('.'.$image);
@@ -383,11 +383,11 @@ class YagaController extends DashboardController {
 
         $info->ElapsedTime = sprintf('%02d:%02.2f', $m, $s);
 
-        $fH->setArchiveComment(serialize($info));
-        if ($fH->close()) {
+        $fh->setArchiveComment(serialize($info));
+        if ($fh->close()) {
             return $path;
         } else {
-            $this->Form->addError(sprintf(Gdn::translate('Yaga.Error.ArchiveSave'), $fH->getStatusString()));
+            $this->Form->addError(sprintf(Gdn::translate('Yaga.Error.ArchiveSave'), $fh->getStatusString()));
             return false;
         }
     }

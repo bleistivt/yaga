@@ -14,7 +14,7 @@ class RankController extends DashboardController {
      * @var array These objects will be created on instantiation and available via
      * $this->ObjectName
      */
-    public $uses = ['Form', 'RankModel'];
+    public $Uses = ['Form', 'RankModel'];
 
     /**
      * Make this look like a dashboard page and add the resources

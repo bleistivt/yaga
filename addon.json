@@ -12,16 +12,16 @@
     "type": "addon",
     "priority": 10,
     "registerPermissions": {
-            "Yaga.Reactions.Add": 0,
-            "Yaga.Reactions.Manage": 0,
-            "Yaga.Reactions.View": 1,
-            "Yaga.Reactions.Edit": 0,
-            "Yaga.Badges.Add": 0,
-            "Yaga.Badges.Manage": 0,
-            "Yaga.Badges.View": 1,
-            "Yaga.Ranks.Add": 0,
-            "Yaga.Ranks.Manage": 0,
-            "Yaga.Ranks.View": 1
+        "Yaga.Reactions.Add": 0,
+        "Yaga.Reactions.Manage": 0,
+        "Yaga.Reactions.View": 1,
+        "Yaga.Reactions.Edit": 0,
+        "Yaga.Badges.Add": 0,
+        "Yaga.Badges.Manage": 0,
+        "Yaga.Badges.View": 1,
+        "Yaga.Ranks.Add": 0,
+        "Yaga.Ranks.Manage": 0,
+        "Yaga.Ranks.View": 1
     },
     "authors": [
         {

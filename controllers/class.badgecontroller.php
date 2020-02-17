@@ -14,7 +14,7 @@ class BadgeController extends DashboardController {
      * @var array These objects will be created on instantiation and available via
      * $this->ObjectName
      */
-    public $uses = ['Form', 'BadgeModel', 'BadgeAwardModel'];
+    public $Uses = ['Form', 'BadgeModel', 'BadgeAwardModel'];
 
     private $editFormFields = ['TransientKey', 'hpt', 'BadgeID', 'Name', 'Description', 'RuleClass', 'AwardValue', 'Checkboxes', 'Save', 'Enabled'];
 

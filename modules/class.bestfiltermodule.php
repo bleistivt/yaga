@@ -22,9 +22,9 @@ class BestFilterModule extends Gdn_Module {
         $actions = $actionModel->get();
 
         foreach ($actions as $index => $action) {
-                if ($action->AwardValue < 0) {
-                        unset($actions[$index]);
-                }
+            if ($action->AwardValue < 0) {
+                unset($actions[$index]);
+            }
         }
 
         $this->Data = $actions;

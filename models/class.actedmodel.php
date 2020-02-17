@@ -16,7 +16,7 @@ class ActedModel extends Gdn_Model {
      * How long in seconds this table should be cached. Defaults to 10 minutes
      * @var int
      */
-    protected $_expiry = 600;
+    protected $_Expiry = 600;
 
     /**
      * Convenience function to save some typing. Gets the basic 'best' query set
@@ -148,13 +148,13 @@ class ActedModel extends Gdn_Model {
 
             // Interleave
             $content = $this->union('DateInserted', array_merge([
-                    'Discussion' => $discussions,
-                    'Comment' => $comments
+                'Discussion' => $discussions,
+                'Comment' => $comments
             ], $this->EventArguments['CustomSections']));
 
             // Add result to cache
             Gdn::cache()->store($cacheKey, $content, [
-                    Gdn_Cache::FEATURE_EXPIRY => $this->_Expiry
+                Gdn_Cache::FEATURE_EXPIRY => $this->_Expiry
             ]);
         }
 
@@ -204,13 +204,13 @@ class ActedModel extends Gdn_Model {
 
             // Interleave
             $content = $this->union('DateInserted', array_merge([
-                    'Discussion' => $discussions,
-                    'Comment' => $comments
+                'Discussion' => $discussions,
+                'Comment' => $comments
             ], $this->EventArguments['CustomSections']));
 
             // Add result to cache
             Gdn::cache()->store($cacheKey, $content, [
-                    Gdn_Cache::FEATURE_EXPIRY => $this->_Expiry
+                Gdn_Cache::FEATURE_EXPIRY => $this->_Expiry
             ]);
         }
 

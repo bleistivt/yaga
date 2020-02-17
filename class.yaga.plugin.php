@@ -153,13 +153,14 @@ class YagaPlugin extends Gdn_Plugin {
         }
 
         $sender->editMode(false);
+        $view = $sender->View;
 
         // Tell the ProfileController what tab to load
         $sender->getUserInfo($userReference, $username);
-        $sender->setTabView(Gdn::translate('Yaga.Reactions'), 'reactions', 'profile', 'Yaga');
+        $sender->setTabView(Gdn::translate('Yaga.Reactions'), 'reactions', 'profile', 'plugins/yaga');
 
         $sender->addJsFile('jquery.expander.js');
-        $sender->addJsFile('reactions.js', 'yaga');
+        $sender->addJsFile('reactions.js', 'plugins/yaga');
         $sender->addDefinition('ExpandText', Gdn::translate('(more)'));
         $sender->addDefinition('CollapseText', Gdn::translate('(less)'));
 
@@ -184,7 +185,10 @@ class YagaPlugin extends Gdn_Plugin {
         $sender->Pager = $pagerFactory->getPager('Pager', $sender);
         $sender->Pager->ClientID = 'Pager';
         $sender->Pager->configure(
-                        $offset, $limit, $data->TotalRecords, $baseUrl.'/%1$s/'
+            $offset,
+            $limit,
+            $data->TotalRecords,
+            $baseUrl.'/%1$s/'
         );
 
         // Add the specific action to the breadcrumbs
@@ -216,14 +220,15 @@ class YagaPlugin extends Gdn_Plugin {
         }
 
         $sender->editMode(false);
+        $view = $sender->View;
 
         // Tell the ProfileController what tab to load
         $sender->getUserInfo($userReference, $username);
         $sender->_SetBreadcrumbs(Gdn::translate('Yaga.BestContent'), userUrl($sender->User, '', 'best'));
-        $sender->setTabView(Gdn::translate('Yaga.BestContent'), 'best', 'profile', 'Yaga');
+        $sender->setTabView(Gdn::translate('Yaga.BestContent'), 'best', 'profile', 'plugins/yaga');
 
         $sender->addJsFile('jquery.expander.js');
-        $sender->addJsFile('reactions.js', 'yaga');
+        $sender->addJsFile('reactions.js', 'plugins/yaga');
         $sender->addDefinition('ExpandText', Gdn::translate('(more)'));
         $sender->addDefinition('CollapseText', Gdn::translate('(less)'));
 
@@ -247,7 +252,10 @@ class YagaPlugin extends Gdn_Plugin {
         $sender->Pager = $pagerFactory->getPager('Pager', $sender);
         $sender->Pager->ClientID = 'Pager';
         $sender->Pager->configure(
-                        $offset, $limit, $data->TotalRecords, 'profile/best/'.$sender->User->UserID.'/'.Gdn_Format::url($sender->User->Name).'/%1$s/'
+            $offset,
+            $limit,
+            $data->TotalRecords,
+            'profile/best/'.$sender->User->UserID.'/'.Gdn_Format::url($sender->User->Name).'/%1$s/'
         );
 
         // Render the ProfileController
@@ -418,9 +426,9 @@ class YagaPlugin extends Gdn_Plugin {
     /**
      * Add the action list to any activity items that can be commented on
      *
-     * @param ActivityController $sender
+     * @param ActivityController|ProfileController $sender
      */
-    public function activityController_afterActivityBody_handler(\ActivityController $sender) {
+    public function activityController_afterActivityBody_handler(\Gdn_Controller $sender) {
         if (!Gdn::config('Yaga.Reactions.Enabled')) {
             return;
         }
@@ -727,7 +735,7 @@ class YagaPlugin extends Gdn_Plugin {
      * @param Gdn_Controller $sender
      */
     private function addResources($sender) {
-        $sender->addCssFile('reactions.css', 'yaga');
+        $sender->addCssFile('reactions.css', 'plugins/yaga');
     }
 
     /**
@@ -737,7 +745,7 @@ class YagaPlugin extends Gdn_Plugin {
      */
     public function base_render_before($sender) {
         if ($sender->MasterView == 'admin') {
-            $sender->addCssFile('yaga.css', 'yaga');
+            $sender->addCssFile('yaga.css', 'plugins/yaga');
         } else {
             if (Gdn::session()->isValid() && is_object($sender->Menu) && Gdn::config('Yaga.MenuLinks.Show')) {
                 $this->addMenuLinks($sender->Menu);
@@ -849,7 +857,11 @@ class YagaPlugin extends Gdn_Plugin {
      * enabled.
      */
     public function setup() {
-        $config = Gdn::factory(Gdn::AliasConfig);
+        if (Gdn::config('EnabledApplications.Yaga')) {
+            throw new Gdn_UserExeption('Please disable your old Yaga installation under "Applications" before enabling this plugin.');
+        }
+
+        $config = Gdn::config();
         $drop = false;
         $explicit = true;
         include(PATH_PLUGINS.'/yaga/settings/structure.php');

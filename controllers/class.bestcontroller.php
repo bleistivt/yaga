@@ -20,7 +20,7 @@ class BestController extends Gdn_Controller {
      * @var array These objects will be created on instantiation and available via
      * $this->ObjectName
      */
-    public $uses = ['ActedModel'];
+    public $Uses = ['ActedModel'];
 
     /**
      * Initializes a frontend controller with the Best Filter, New Discussion, and
