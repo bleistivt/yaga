@@ -33,7 +33,7 @@
     cursor: pointer;
 }
 
-#Actions tr {
+#Actions tbody tr {
     cursor: move;
 }
 
@@ -72,11 +72,20 @@
 }
 
 /* Badges Settings */
-#Badges tr {
+#Badges tbody tr {
     cursor: move;
 }
 
+#Rule-Criteria input, #Rule-Criteria input {
+    display: block;
+    margin: 5px 0;
+}
+
 /* Rank Settings */
+#Ranks tbody tr {
+    cursor: move;
+}
+
 .Rank .Aside {
     border: medium none;
     padding: 10px 20px 0px 20px;

@@ -42,7 +42,7 @@ class CommentCount implements YagaRule {
 
         $string = $form->label('Yaga.Rules.CommentCount.Criteria.Head', 'CommentCount');
         $string .= $form->dropDown('Comparison', $comparisons).' ';
-        $string .= $form->textbox('Target', ['class' => 'SmallInput']);
+        $string .= $form->textbox('Target');
 
         return $string;
     }

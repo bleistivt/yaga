@@ -43,7 +43,7 @@ class PostCount implements YagaRule {
 
         $string = $form->label('Yaga.Rules.PostCount.Criteria.Head', 'PostCount');
         $string .= $form->dropDown('Comparison', $comparisons).' ';
-        $string .= $form->textbox('Target', ['class' => 'SmallInput']);
+        $string .= $form->textbox('Target');
 
         return $string;
     }

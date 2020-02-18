@@ -31,7 +31,7 @@ class ReflexComment implements YagaRule {
 
     public function form($form) {
         $string = $form->label('Yaga.Rules.ReflexComment.Criteria.Head', 'ReflexComment');
-        $string .= $form->textbox('Seconds', ['class' => 'SmallInput']);
+        $string .= $form->textbox('Seconds');
 
         return $string;
     }

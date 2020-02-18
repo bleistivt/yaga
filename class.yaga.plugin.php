@@ -398,21 +398,21 @@ class YagaPlugin extends Gdn_Plugin {
             return;
         }
         $type = 'discussion';
-        $iD = $sender->DiscussionID;
-        echo renderReactionRecord($iD, $type);
+        $id = $sender->DiscussionID;
+        echo renderReactionRecord($id, $type);
     }
 
     /**
      * Display a record of reactions after comments
-     * @param DiscussionController $sender
+     * @param DiscussionController|PostController $sender
      */
-    public function discussionController_afterCommentBody_handler(\DiscussionController $sender) {
+    public function discussionController_afterCommentBody_handler(\Gdn_Controller $sender) {
         if (!Gdn::session()->checkPermission('Yaga.Reactions.View') || !Gdn::config('Yaga.Reactions.Enabled')) {
             return;
         }
         $type = 'comment';
-        $iD = $sender->EventArguments['Comment']->CommentID;
-        echo renderReactionRecord($iD, $type);
+        $id = $sender->EventArguments['Comment']->CommentID;
+        echo renderReactionRecord($id, $type);
     }
 
     /**
@@ -431,7 +431,7 @@ class YagaPlugin extends Gdn_Plugin {
 
         // Users shouldn't be able to react to their own content
         $type = $sender->EventArguments['RecordType'];
-        $iD = $sender->EventArguments['RecordID'];
+        $id = $sender->EventArguments['RecordID'];
 
         if (array_key_exists('Author', $sender->EventArguments)) {
             $author = $sender->EventArguments['Author'];
@@ -443,7 +443,7 @@ class YagaPlugin extends Gdn_Plugin {
 
         // Users shouldn't be able to react to their own content
         if (Gdn::session()->UserID != $authorID) {
-            echo renderReactionList($iD, $type);
+            echo renderReactionList($id, $type);
         }
     }
 
@@ -459,7 +459,7 @@ class YagaPlugin extends Gdn_Plugin {
         $activity = $sender->EventArguments['Activity'];
         $currentUserID = Gdn::session()->UserID;
         $type = 'activity';
-        $iD = $activity->ActivityID;
+        $id = $activity->ActivityID;
 
         // Only allow reactions on activities that allow comments
         if (!property_exists($activity, 'AllowComments') || $activity->AllowComments == 0) {
@@ -474,7 +474,7 @@ class YagaPlugin extends Gdn_Plugin {
         if ($currentUserID == $activity->RegardingUserID) {
             // The current user made this activity item happen
         } else {
-            echo wrap(renderReactionList($iD, $type), 'div', ['class' => 'Reactions']);
+            echo wrap(renderReactionList($id, $type), 'div', ['class' => 'Reactions']);
         }
     }
 

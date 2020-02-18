@@ -11,8 +11,8 @@ class DiscussionCategory implements YagaRule {
 
     public function award($sender, $user, $criteria) {
         $discussion = $sender->EventArguments['Discussion'];
-        $iD = ($discussion->CategoryID);
-        if ($iD == $criteria->CategoryID) {
+        $id = ($discussion->CategoryID);
+        if ($id == $criteria->CategoryID) {
             return $discussion->InsertUserID;
         } else {
             return false;

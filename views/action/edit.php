@@ -33,7 +33,10 @@ echo $this->Form->errors();
                 if ($originalCssClass == $class) {
                     $selected = 'Selected';
                 }
-                echo img('plugins/yaga/design/images/action-icons/'.$icon.'.png', ['title' => $icon, 'data-class' => $class, 'class' => $selected]);
+                echo img(
+                    'plugins/yaga/design/images/action-icons/'.$icon.'.png',
+                    ['title' => $icon, 'data-class' => $class, 'class' => $selected]
+                );
             }
             ?>
         </div>

@@ -19,8 +19,7 @@ var Cache = {
 };
 
 jQuery(document).ready(function($) {
-    
-    $('#Badges').sortable({
+    $('#Badges tbody').sortable({
         axis: 'y',
         containment: 'parent',
         cursor: 'move',
@@ -31,10 +30,6 @@ jQuery(document).ready(function($) {
         opacity: .6,
         tolerance: 'pointer',
         update: function() {
-            // Update the alt classes
-            $('#Badges tbody tr:nth-child(odd)').removeClass('Alt');
-            $('#Badges tbody tr:nth-child(even)').addClass('Alt');
-            
             $.post(
                 gdn.url('badge/sort.json'),
                 {
@@ -86,8 +81,7 @@ jQuery(document).ready(function($) {
             $('#Rule-Description').fadeOut(function() {
                 $(this).html(Cache.get(NewRule).Description).fadeIn();
             });
-        }
-        else {
+        } else {
             // Grab the form via ajax
             var url = gdn.url('/rules/getcriteriaform/' + NewRule);
             $.ajax({
@@ -97,7 +91,7 @@ jQuery(document).ready(function($) {
                 data: { 'DeliveryMethod' : 'JSON' },
                 dataType: 'json',
                 success: function(data) {
-                    Cache.set(NewRule, {'Form' : data.CriteriaForm, 'Description' : data.Description});
+                    Cache.set(NewRule, {'Form': data.CriteriaForm, 'Description': data.Description});
                     $('#Rule-Criteria').fadeOut(function() {
                         $(this).html(Cache.get(NewRule).Form).fadeIn();
                     });

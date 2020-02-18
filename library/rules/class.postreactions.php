@@ -52,7 +52,7 @@ class PostReactions implements YagaRule {
 
         $actionList = '';
         foreach ($actions as $action) {
-            $actionList .= wrap(sprintf(Gdn::translate('Yaga.Rules.PostReactions.LabelFormat'), $action->Name).' '.$form->textbox('ActionID_'.$action->ActionID, ['class' => 'SmallInput']), 'li');
+            $actionList .= wrap(sprintf(Gdn::translate('Yaga.Rules.PostReactions.LabelFormat'), $action->Name).' '.$form->textbox('ActionID_'.$action->ActionID), 'li');
         }
 
         if ($actionList == '') {

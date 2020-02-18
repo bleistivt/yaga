@@ -23,62 +23,80 @@ echo $this->Form->open(['enctype' => 'multipart/form-data', 'class' => 'Badge'])
 echo $this->Form->errors();
 ?>
 <ul>
-    <li>
-        <?php
-        echo $this->Form->label('Photo', 'PhotoUpload');
-        $photo = $this->Form->getValue('Photo');
-        if ($photo) {
-            echo img($photo);
-            echo '<br />'.Anchor(
-                Gdn::translate('Delete Photo'),
-                combinePaths(['badge/deletephoto', $this->Badge->BadgeID, Gdn::session()->transientKey()]),
-                'Button Danger PopConfirm'
-            );
-        }
-        echo $this->Form->input('PhotoUpload', 'file');
-        ?>
+    <li class="form-group">
+        <div class="label-wrap">
+            <?php
+            echo $this->Form->label('Photo', 'PhotoUpload');
+            $photo = $this->Form->getValue('Photo');
+            if ($photo) {
+                echo '<br />';
+                echo img($photo);
+                echo '<br />'.anchor(
+                    Gdn::translate('Delete Photo'),
+                    combinePaths(['badge/deletephoto', $this->Badge->BadgeID, Gdn::session()->transientKey()]),
+                    'btn btn-primary js-modal-confirm',
+                    ['data-body' => sprintf(Gdn::translate('Are you sure you want to delete this %s?'), Gdn::translate('Photo'))]
+                );
+            }
+            ?>
+        </div>
+        <div class="input-wrap">
+            <?php echo $this->Form->input('PhotoUpload', 'file'); ?>
+        </div>
     </li>
-    <li>
-        <?php
-        echo $this->Form->label('Name', 'Name');
-        echo $this->Form->textBox('Name');
-        ?>
+    <li class="form-group">
+        <div class="label-wrap">
+            <?php echo $this->Form->label('Name', 'Name'); ?>
+        </div>
+        <div class="input-wrap">
+            <?php echo $this->Form->textBox('Name'); ?>
+        </div>
     </li>
-    <li>
-        <?php
-        echo $this->Form->label('Description', 'Description');
-        echo $this->Form->textBox('Description', ['multiline' => true]);
-        ?>
+    <li class="form-group">
+        <div class="label-wrap">
+            <?php echo $this->Form->label('Description', 'Description'); ?>
+        </div>
+        <div class="input-wrap">
+            <?php echo $this->Form->textBox('Description', ['multiline' => true]); ?>
+        </div>
     </li>
-    <li>
-        <?php
-        echo $this->Form->label('Rule', 'RuleClass');
-        echo $this->Form->dropdown('RuleClass', $rules);
-        ?>
+    <li class="form-group">
+        <div class="label-wrap">
+            <?php echo $this->Form->label('Rule', 'RuleClass'); ?>
+        </div>
+        <div class="input-wrap">
+            <?php echo $this->Form->dropdown('RuleClass', $rules); ?>
+        </div>
     </li>
-    <li id="Rule-Description">
-        <?php
-        echo $rule->description();
-        ?>
+    <li class="form-group">
+        <div class="label-wrap">
+            <div id="Rule-Description">
+                <?php echo $rule->description(); ?>
+            </div>
+        </div>
+        <div class="input-wrap">
+            <div id="Rule-Criteria">
+                <?php echo $rule->form($this->Form); ?>
+            </div>
+        </div>
     </li>
-    <li id="Rule-Criteria">
-        <?php
-        echo $rule->form($this->Form);
-        ?>
+    <li class="form-group">
+        <div class="label-wrap">
+            <?php echo $this->Form->label('Award Value', 'AwardValue'); ?>
+        </div>
+        <div class="input-wrap">
+            <?php echo $this->Form->textBox('AwardValue'); ?>
+        </div>
     </li>
-    <li>
-        <?php
-        echo $this->Form->label('Award Value', 'AwardValue');
-        echo $this->Form->textBox('AwardValue');
-        ?>
+    <li class="form-group">
+        <div class="label-wrap">
+            <?php echo $this->Form->label('Automatically Award', 'Enabled'); ?>
+        </div>
+        <div class="input-wrap">
+            <?php echo $this->Form->checkBox('Enabled'); ?>
+        </div>
     </li>
-    <li>
-        <?php
-        echo $this->Form->label('Automatically Award', 'Enabled');
-        echo $this->Form->checkBox('Enabled');
-        ?>
-    </li>
-
 </ul>
+
 <?php
 echo $this->Form->close('Save');

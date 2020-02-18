@@ -2,7 +2,7 @@
 
 /**
  * Contains render functions that can be used cross controller
- * 
+ *
  * @package Yaga
  * @since 1.0
  * @copyright (c) 2013-2014, Zachary Doll
@@ -14,12 +14,12 @@ if (!function_exists('renderReactionList')) {
      * reactions an item has received if allowed
      *
      * @since 1.0
-     * @param int $iD
+     * @param int $id
      * @param string $type 'discussion', 'activity', or 'comment'
      * @return string Rendered list of actions available
      */
-    function renderReactionList($iD, $type) {
-        $reactions = Yaga::reactionModel()->getList($iD, $type);
+    function renderReactionList($id, $type) {
+        $reactions = Yaga::reactionModel()->getList($id, $type);
         $showCount = Gdn::session()->checkPermission('Yaga.Reactions.View');
         $actionsString = '';
         foreach ($reactions as $action) {
@@ -28,7 +28,7 @@ if (!function_exists('renderReactionList')) {
                 $actionsString .= anchor(
                     wrap('&nbsp;', 'span', ['class' => 'ReactSprite React-'.$action->ActionID.' '.$action->CssClass]) .
                     wrapIf($countString, 'span', ['class' => 'Count']) .
-                    wrap($action->Name, 'span', ['class' => 'ReactLabel']), 'react/'.$type.'/'.$iD.'/'.$action->ActionID,
+                    wrap($action->Name, 'span', ['class' => 'ReactLabel']), 'react/'.$type.'/'.$id.'/'.$action->ActionID,
                     [
                         'class' => 'Hijack ReactButton',
                         'title' => $action->Tooltip
@@ -46,14 +46,14 @@ if (!function_exists('renderReactionRecord')) {
 
     /**
      * Renders the reaction record for a specific item
-     * 
+     *
      * @since 1.0
-     * @param int $iD
+     * @param int $id
      * @param string $type 'discussion', 'activity', or 'comment'
      * @return string Rendered list of existing reactions
      */
-    function renderReactionRecord($iD, $type) {
-        $reactions = Yaga::reactionModel()->getRecord($iD, $type);
+    function renderReactionRecord($id, $type) {
+        $reactions = Yaga::reactionModel()->getRecord($id, $type);
         $limit = Gdn::config('Yaga.Reactions.RecordLimit');
         $reactionCount = count($reactions);
         $recordsString = '';
@@ -83,7 +83,7 @@ if (!function_exists('renderActionRow')) {
 
     /**
      * Renders an action row used to construct the action admin screen
-     * 
+     *
      * @since 1.0
      * @param stdClass $action
      * @return string
@@ -92,11 +92,11 @@ if (!function_exists('renderActionRow')) {
         $tr = '<tr id="ActionID_'.$action->ActionID.'">';
 
         $tr .= '<td><strong>'.$action->Name.'</strong></td>';
-        
+
         $tr .= '<td>'.$action->Description.'</td>';
-        
+
         $tr .= '<td>'.plural($action->AwardValue, '%s Point', '%s Points').'</td>';
-        
+
         $tr .= '<td>';
         $tr .= wrap(
             wrap('&nbsp;', 'span', ['class' => 'ReactSprite React-'.$action->ActionID.' '.$action->CssClass])
@@ -107,20 +107,9 @@ if (!function_exists('renderActionRow')) {
         );
         $tr .= '</td>';
 
-        $tr .= '<td class="options"><div class="btn-group">';
-        $tr .= anchor(
-            dashboardSymbol('edit'),
-            'action/edit/'.$action->ActionID,
-            'js-modal btn btn-icon',
-            ['title' => Gdn::translate('Edit')]
-        );
-        $tr .= anchor(
-            dashboardSymbol('delete'),
-            'action/delete/'.$action->ActionID,
-            'js-modal-confirm btn btn-icon',
-            ['title' => Gdn::translate('Delete')]
-        );
-        $tr .= '</div></td>';
+        $tr .= '<td class="options">';
+        $tr .= renderYagaOptionButtons('action/edit/'.$action->ActionID, 'action/delete/'.$action->ActionID);
+        $tr .= '</td>';
 
         $tr .= '</tr>';
 
@@ -132,7 +121,7 @@ if (!function_exists('renderPerkPermissionForm')) {
 
     /**
      * Render a simple permission perk form
-     * 
+     *
      * @since 1.0
      * @param string $perm The permission you want to grant/revoke
      * @param string $label Translation code used on the form
@@ -156,7 +145,7 @@ if (!function_exists('renderPerkConfigurationForm')) {
 
     /**
      * Render a perk form for the specified configuration
-     * 
+     *
      * @since 1.0
      * @param string $config The configuration you want to override (i.e. 'Vanilla.EditTimeout')
      * @param string $label Translation code used on the form
@@ -187,7 +176,7 @@ if (!function_exists('renderYagaToggle')) {
 
     /**
      * Renders a toggle slider to toggle badges or ranks.
-     * 
+     *
      * @since 2.0
      * @param string $url The url to POST to.
      * @param bool $enabled The sliders state.
@@ -208,5 +197,42 @@ if (!function_exists('renderYagaToggle')) {
         $slider .= '</div>';
 
         return $slider;
+    }
+}
+
+if (!function_exists('renderYagaOptionButtons')) {
+
+    /**
+     * Renders the edit/delete buttons for Yaga dashboard pages.
+     *
+     * @since 2.0
+     * @param string $editUrl The url to the edit page.
+     * @param string $deleteUrl The url to the delete page.
+     * @param bool $editPopup Should the edit page open in a popup?
+     */
+    function renderYagaOptionButtons($editUrl = '', $deleteUrl = '', $editPopup = true) {
+        $options = '<div class="btn-group">';
+
+        if ($editUrl) {
+            $options .= anchor(
+                dashboardSymbol('edit'),
+                $editUrl,
+                ($editPopup ? 'js-modal ': '').'btn btn-icon',
+                ['title' => Gdn::translate('Edit')]
+            );
+        }
+
+        if ($deleteUrl) {
+            $options .= anchor(
+                dashboardSymbol('delete'),
+                $deleteUrl,
+                'js-modal-confirm btn btn-icon',
+                ['title' => Gdn::translate('Delete')]
+            );
+        }
+
+        $options .= '</div>';
+
+        return $options;
     }
 }

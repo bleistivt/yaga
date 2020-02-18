@@ -93,7 +93,7 @@ class BadgeAwardModel extends Gdn_Model {
                     'Route' => '/yaga/badges/'.$badge->BadgeID.'/'.Gdn_Format::url($badge->Name),
                     'HeadlineFormat' => Gdn::translate('Yaga.Badge.EarnedHeadlineFormat'),
                     'Data' => [
-                            'Name' => $badge->Name
+                        'Name' => $badge->Name
                     ],
                     'Story' => $badge->Description
                 ];

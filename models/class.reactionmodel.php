@@ -28,18 +28,18 @@ class ReactionModel extends Gdn_Model {
 
     /**
      * Returns all available actions along with the current count specified by
-     * the $iD and $type of content.
+     * the $id and $type of content.
      *
-     * @param int $iD
+     * @param int $id
      * @param string $type
      * @return DataSet
      */
-    public function getList($iD, $type) {
+    public function getList($id, $type) {
         $px = $this->Database->DatabasePrefix;
 
         // try getting the record count from the cache
-        if (array_key_exists($type.$iD, self::$_reactions)) {
-            $reactions = self::$_reactions[$type.$iD];
+        if (array_key_exists($type.$id, self::$_reactions)) {
+            $reactions = self::$_reactions[$type.$id];
             $actions = Yaga::actionModel()->get();
             // add the count
             foreach ($actions as &$action) {
@@ -61,31 +61,31 @@ class ReactionModel extends Gdn_Model {
            ."from {$px}Action AS a "
            ."order by a.Sort";
 
-        return $this->Database->query($sql, [':ParentID' => $iD, ':ParentType' => $type])->result();
+        return $this->Database->query($sql, [':ParentID' => $id, ':ParentType' => $type])->result();
     }
 
     /**
      * Returns the reaction records associated with the specified user content.
      *
-     * @param int $iD
+     * @param int $id
      * @param string $type is the kind of ID. Valid: comment, discussion, activity
      * @return mixed DataSet if it exists, null otherwise
      */
-    public function getRecord($iD, $type) {
+    public function getRecord($id, $type) {
         // try getting the record from the cache
-        if (array_key_exists($type.$iD, self::$_reactions)) {
-            return self::$_reactions[$type.$iD];
+        if (array_key_exists($type.$id, self::$_reactions)) {
+            return self::$_reactions[$type.$id];
         } else {
             $result = $this->SQL
                 ->select('a.*, r.InsertUserID as UserID, r.DateInserted')
                 ->from('Action a')
                 ->join('Reaction r', 'a.ActionID = r.ActionID')
-                ->where('r.ParentID', $iD)
+                ->where('r.ParentID', $id)
                 ->where('r.ParentType', $type)
                 ->orderBy('r.DateInserted')
                 ->get()
                 ->result();
-            self::$_reactions[$type.$iD] = $result;
+            self::$_reactions[$type.$id] = $result;
             return $result;
         }
     }
@@ -93,16 +93,16 @@ class ReactionModel extends Gdn_Model {
     /**
      * Return a list of reactions a user has received
      *
-     * @param int $iD
+     * @param int $id
      * @param string $type activity, comment, discussion
      * @param int $userID
      * @return DataSet
      */
-    public function getByUser($iD, $type, $userID) {
+    public function getByUser($id, $type, $userID) {
         return $this->SQL
             ->select()
             ->from('Reaction')
-            ->where('ParentID', $iD)
+            ->where('ParentID', $id)
             ->where('ParentType', $type)
             ->where('InsertUserID', $userID)
             ->get()
@@ -150,22 +150,22 @@ class ReactionModel extends Gdn_Model {
      *
      * Events: AfterReactionSave
      *
-     * @param int $iD
+     * @param int $id
      * @param string $type activity, comment, discussion
      * @param int $authorID
      * @param int $userID
      * @param int $actionID
      * @return DataSet
      */
-    public function set($iD, $type, $authorID, $userID, $actionID) {
+    public function set($id, $type, $authorID, $userID, $actionID) {
         // clear the cache
-        unset(self::$_reactions[$type.$iD]);
+        unset(self::$_reactions[$type.$id]);
 
-        $eventArgs = ['ParentID' => $iD, 'ParentType' => $type, 'ParentUserID' => $authorID, 'InsertUserID' => $userID, 'ActionID' => $actionID];
+        $eventArgs = ['ParentID' => $id, 'ParentType' => $type, 'ParentUserID' => $authorID, 'InsertUserID' => $userID, 'ActionID' => $actionID];
         $actionModel = Yaga::actionModel();
         $newAction = $actionModel->getByID($actionID);
         $points = $score = $newAction->AwardValue;
-        $currentReaction = $this->getByUser($iD, $type, $userID);
+        $currentReaction = $this->getByUser($id, $type, $userID);
         $eventArgs['CurrentReaction'] = $currentReaction;
         $this->fireEvent('BeforeReactionSave', $eventArgs);
 
@@ -177,7 +177,7 @@ class ReactionModel extends Gdn_Model {
                 $reaction = $this->SQL->delete(
                     'Reaction',
                     [
-                        'ParentID' => $iD,
+                        'ParentID' => $id,
                         'ParentType' => $type,
                         'InsertUserID' => $userID,
                         'ActionID' => $actionID
@@ -192,7 +192,7 @@ class ReactionModel extends Gdn_Model {
                     ->update('Reaction')
                     ->set('ActionID', $actionID)
                     ->set('DateInserted', Gdn_Format::toDateTime())
-                    ->where('ParentID', $iD)
+                    ->where('ParentID', $id)
                     ->where('ParentType', $type)
                     ->where('InsertUserID', $userID)
                     ->put();
@@ -206,7 +206,7 @@ class ReactionModel extends Gdn_Model {
                     'Reaction',
                     [
                         'ActionID' => $actionID,
-                        'ParentID' =>    $iD,
+                        'ParentID' =>    $id,
                         'ParentType' => $type,
                         'ParentAuthorID' => $authorID,
                         'InsertUserID' => $userID,
@@ -217,7 +217,7 @@ class ReactionModel extends Gdn_Model {
         }
 
         // Update the parent item score
-        $totalScore = $this->setUserScore($iD, $type, $userID, $score);
+        $totalScore = $this->setUserScore($id, $type, $userID, $score);
         $eventArgs['TotalScore'] = $totalScore;
         // Give the user points commesurate with reaction activity
         Yaga::givePoints($authorID, $points, 'Reaction');
@@ -231,26 +231,26 @@ class ReactionModel extends Gdn_Model {
      *
      * @since 1.1
      * @param string $type
-     * @param array $iDs
+     * @param array $ids
      */
-    public function prefetch($type, $iDs) {
-        if (!is_array($iDs)) {
-                $iDs = (array)$iDs;
+    public function prefetch($type, $ids) {
+        if (!is_array($ids)) {
+                $ids = (array)$ids;
         }
 
-        if (!empty($iDs)) {
+        if (!empty($ids)) {
             $result = $this->SQL
                 ->select('a.*, r.InsertUserID as UserID, r.DateInserted, r.ParentID')
                 ->from('Action a')
                 ->join('Reaction r', 'a.ActionID = r.ActionID')
-                ->whereIn('r.ParentID', $iDs)
+                ->whereIn('r.ParentID', $ids)
                 ->where('r.ParentType', $type)
                 ->orderBy('r.DateInserted')
                 ->get()
                 ->result();
 
-            foreach ($iDs as $iD) {
-                self::$_reactions[$type.$iD] = [];
+            foreach ($ids as $id) {
+                self::$_reactions[$type.$id] = [];
             }
 
             $userIDs = [];
@@ -268,13 +268,13 @@ class ReactionModel extends Gdn_Model {
     /**
      * This updates the items score for future use in ranking and a best of controller
      *
-     * @param int $iD The items ID
+     * @param int $id The items ID
      * @param string $type The type of the item (only supports 'discussion' and 'comment'
      * @param int $userID The user that is scoring the item
      * @param int $score What they give it
      * @return int Total score if request was successful, false if not.
      */
-    private function setUserScore($iD, $type, $userID, $score) {
+    private function setUserScore($id, $type, $userID, $score) {
         $model = false;
         switch($type) {
             default:
@@ -288,7 +288,7 @@ class ReactionModel extends Gdn_Model {
         }
 
         if ($model) {
-            return $model->setUserScore($iD, $userID, $score);
+            return $model->setUserScore($id, $userID, $score);
         } else {
             return false;
         }

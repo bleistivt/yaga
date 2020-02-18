@@ -47,7 +47,7 @@ class NewbieComment implements YagaRule {
         ];
 
         $string = $form->label('Yaga.Rules.NewbieComment.Criteria.Head', 'NewbieComment');
-        $string .= $form->textbox('Duration', ['class' => 'SmallInput']).' ';
+        $string .= $form->textbox('Duration').' ';
         $string .= $form->dropDown('Period', $lengths);
 
         return $string;

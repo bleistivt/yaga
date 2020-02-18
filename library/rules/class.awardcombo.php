@@ -41,9 +41,9 @@ class AwardCombo implements YagaRule {
         ];
 
         $string = $form->label('Yaga.Rules.AwardCombo.Criteria.Head', 'AwardCombo');
-        $string .= $form->textbox('Target', ['class' => 'SmallInput']);
+        $string .= $form->textbox('Target');
         $string .= $form->label('Time Frame');
-        $string .= $form->textbox('Duration', ['class' => 'SmallInput']).' ';
+        $string .= $form->textbox('Duration').' ';
         $string .= $form->dropDown('Period', $lengths);
 
         return $string;

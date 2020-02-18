@@ -45,20 +45,13 @@ echo wrap(Gdn::translate('Yaga.Badges.Settings.Desc'), 'div', ['class' => 'padde
 
                 $tr .= wrap(renderYagaToggle('badge/toggle/'.$badge->BadgeID, $badge->Enabled, $badge->BadgeID), 'td');
 
-                $tr .= '<td class="options"><div class="btn-group">';
-                $tr .= anchor(
-                    dashboardSymbol('edit'),
+                $tr .= '<td class="options">';
+                $tr .= renderYagaOptionButtons(
                     'badge/edit/'.$badge->BadgeID,
-                    'btn btn-icon',
-                    ['title' => Gdn::translate('Edit')]
-                );
-                $tr .= anchor(
-                    dashboardSymbol('delete'),
                     'badge/delete/'.$badge->BadgeID,
-                    'js-modal-confirm btn btn-icon',
-                    ['title' => Gdn::translate('Delete')]
+                    false
                 );
-                $tr .= '</div></td>';
+                $tr .= '</td>';
 
                 $tr .= '</tr>';
 

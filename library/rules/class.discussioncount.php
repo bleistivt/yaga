@@ -42,7 +42,7 @@ class DiscussionCount implements YagaRule {
 
         $string = $form->label('Yaga.Rules.DiscussionCount.Criteria.Head', 'DiscussionCount');
         $string .= $form->dropDown('Comparison', $comparisons).' ';
-        $string .= $form->textbox('Target', ['class' => 'SmallInput']);
+        $string .= $form->textbox('Target');
 
         return $string;
     }

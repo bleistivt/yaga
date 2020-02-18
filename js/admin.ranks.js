@@ -1,6 +1,6 @@
 /* Copyright 2013 Zachary Doll */
 jQuery(document).ready(function($) {
-    $('#Ranks').sortable({
+    $('#Ranks tbody').sortable({
         axis: 'y',
         containment: 'parent',
         cursor: 'move',
@@ -11,10 +11,6 @@ jQuery(document).ready(function($) {
         opacity: .6,
         tolerance: 'pointer',
         update: function() {
-            // Update the alt classes
-            $('#Ranks tbody tr:nth-child(odd)').removeClass('Alt');
-            $('#Ranks tbody tr:nth-child(even)').addClass('Alt');
-
             // Save the current sort method
             $.post(
                 gdn.url('rank/sort.json'),

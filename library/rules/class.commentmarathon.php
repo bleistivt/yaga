@@ -36,9 +36,9 @@ class CommentMarathon implements YagaRule {
         ];
 
         $string = $form->label('Yaga.Rules.CommentMarathon.Criteria.Head', 'CommentMarathon');
-        $string .= $form->textbox('Target', ['class' => 'SmallInput']);
+        $string .= $form->textbox('Target');
         $string .= $form->label('Time Frame');
-        $string .= $form->textbox('Duration', ['class' => 'SmallInput']).' ';
+        $string .= $form->textbox('Duration').' ';
         $string .= $form->dropDown('Period', $lengths);
 
         return $string;

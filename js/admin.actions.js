@@ -1,6 +1,6 @@
 /* Copyright 2013 Zachary Doll */
 jQuery(document).ready(function ($) {
-    $('#Actions').sortable({
+    $('#Actions tbody').sortable({
         axis: 'y',
         containment: 'parent',
         cursor: 'move',

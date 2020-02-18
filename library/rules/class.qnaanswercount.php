@@ -42,7 +42,7 @@ class QnAAnserCount implements YagaRule {
 
         $string = $form->label('Yaga.Rules.QnAAnserCount.Criteria.Head', 'QnAAnserCount');
         $string .= $form->dropDown('Comparison', $comparisons).' ';
-        $string .= $form->textbox('Target', ['class' => 'SmallInput']);
+        $string .= $form->textbox('Target');
 
         return $string;
     }

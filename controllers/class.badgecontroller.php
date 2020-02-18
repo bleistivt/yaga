@@ -217,17 +217,15 @@ class BadgeController extends DashboardController {
             $redirectUrl = 'badge/edit/'.$badgeID;
 
             if (Gdn::session()->validateTransientKey($transientKey)) {
-                 $this->BadgeModel->setField($badgeID, 'Photo', Gdn::config('Yaga.Badges.DefaultPhoto'));
-                 $this->informMessage(Gdn::translate('Yaga.Badge.PhotoDeleted'));
+                $this->BadgeModel->setField($badgeID, 'Photo', Gdn::config('Yaga.Badges.DefaultPhoto'));
+                $this->informMessage(Gdn::translate('Yaga.Badge.PhotoDeleted'));
             }
 
             if ($this->_DeliveryType == DELIVERY_TYPE_ALL) {
-                    redirectTo($redirectUrl);
+                redirectTo($redirectUrl);
             } else {
-                 $this->ControllerName = 'Home';
-                 $this->View = 'FileNotFound';
-                 $this->RedirectUrl = url($redirectUrl);
-                 $this->render();
+                $this->RedirectUrl = url($redirectUrl);
+                $this->render('blank', 'utility', 'dashboard');
             }
      }
 

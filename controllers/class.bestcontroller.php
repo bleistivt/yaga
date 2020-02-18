@@ -74,16 +74,16 @@ class BestController extends Gdn_Controller {
     /**
      * Get the latest promoted content
      *
-     * @param int $iD Filter on a specific action ID
+     * @param int $id Filter on a specific action ID
      * @param int $page What page of content should be shown
      */
-    public function action($iD = null, $page = 0) {
-        if (is_null($iD) || !is_numeric($iD)) {
+    public function action($id = null, $page = 0) {
+        if (is_null($id) || !is_numeric($id)) {
             $this->index($page);
             return;
         }
         $actionModel = Yaga::actionModel();
-        $action = $actionModel->getByID($iD);
+        $action = $actionModel->getByID($id);
         if (!$action) {
             $this->index($page);
             return;
@@ -91,9 +91,9 @@ class BestController extends Gdn_Controller {
 
         list($offset, $limit) = $this->_TranslatePage($page);
         $this->title(sprintf(Gdn::translate('Yaga.BestContent.Action'), $action->Name));
-        $this->_Content = $this->ActedModel->getAction($iD, $limit, $offset);
-        $this->_BuildPager($offset, $limit, '/best/action/'.$iD.'/%1$s/');
-        $this->setData('ActiveFilter', $iD);
+        $this->_Content = $this->ActedModel->getAction($id, $limit, $offset);
+        $this->_BuildPager($offset, $limit, '/best/action/'.$id.'/%1$s/');
+        $this->setData('ActiveFilter', $id);
         $this->render('index');
     }
 

@@ -25,7 +25,7 @@ class DiscussionPageCount implements YagaRule {
 
     public function form($form) {
         $string = $form->label('Yaga.Rules.DiscussionPageCount.Criteria.Head', 'DiscussionPageCount');
-        $string .= $form->textbox('Pages', ['class' => 'SmallInput']);
+        $string .= $form->textbox('Pages');
         return $string;
     }
 

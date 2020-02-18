@@ -22,7 +22,7 @@ class DiscussionBodyLength implements YagaRule {
 
     public function form($form) {
         $string = $form->label('Yaga.Rules.DiscussionBodyLength.Criteria.Head', 'DiscussionBodyLength');
-        $string .= $form->textbox('Length', ['class' => 'SmallInput']);
+        $string .= $form->textbox('Length');
         return $string;
     }
 

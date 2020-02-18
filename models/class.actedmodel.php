@@ -471,15 +471,15 @@ class ActedModel extends Gdn_Model {
      *
      * @since 1.1
      * @param string $recordType
-     * @param int $iD
+     * @param int $id
      * @return array
      */
-    protected function getRecord($recordType, $iD) {
+    protected function getRecord($recordType, $id) {
         if (in_array($recordType, ['discussion', 'comment', 'activity'])) {
-            return getRecord($recordType, $iD);
+            return getRecord($recordType, $id);
         } else {
             $this->EventArguments['Type'] = $recordType;
-            $this->EventArguments['ID'] = $iD;
+            $this->EventArguments['ID'] = $id;
             $this->EventArguments['Record'] = false;
             $this->fireEvent('GetCustomRecord');
             return $this->EventArguments['Record'];
