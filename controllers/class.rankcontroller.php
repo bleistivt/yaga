@@ -203,19 +203,11 @@ class RankController extends DashboardController {
 
         $rank = $this->RankModel->getByID($rankID);
 
-        if ($rank->Enabled) {
-            $enable = false;
-            $toggleText = Gdn::translate('Disabled');
-            $activeClass = 'InActive';
-        } else {
-            $enable = true;
-            $toggleText = Gdn::translate('Enabled');
-            $activeClass = 'Active';
-        }
+        $rank->Enabled = !$rank->Enabled;
+        $this->RankModel->enable($rank->RankID, $rank->Enabled);
 
-        $slider = wrap(wrap(anchor($toggleText, 'rank/toggle/'.$rank->RankID, 'Hijack Button'), 'span', ['class' => "ActivateSlider ActivateSlider-{$activeClass}"]), 'td');
-        $this->RankModel->enable($rankID, $enable);
-        $this->jsonTarget('#RankID_'.$rankID.' td:nth-child(6)', $slider, 'ReplaceWith');
+        $slider = renderYagaToggle('rank/toggle/'.$rank->RankID, $rank->Enabled, $rank->RankID);
+        $this->jsonTarget('#toggle-'.$rank->RankID, $slider, 'ReplaceWith');
         $this->render('blank', 'utility', 'dashboard');
     }
 
@@ -226,33 +218,31 @@ class RankController extends DashboardController {
      * @param string $transientKey
      */
     public function deletePhoto($transientKey = '') {
-            // Check permission
-            $this->permission('Yaga.Ranks.Manage');
+        // Check permission
+        $this->permission('Yaga.Ranks.Manage');
 
-            $redirectUrl = 'rank/settings';
+        $redirectUrl = 'rank/settings';
 
-            if (Gdn::session()->validateTransientKey($transientKey)) {
-                 Gdn::config()->saveToConfig('Yaga.Ranks.Photo', null, ['RemoveEmpty' => true]);
-                $this->informMessage(Gdn::translate('Yaga.Rank.PhotoDeleted'));
-            }
+        if (Gdn::session()->validateTransientKey($transientKey)) {
+            Gdn::config()->saveToConfig('Yaga.Ranks.Photo', null, ['RemoveEmpty' => true]);
+            $this->informMessage(Gdn::translate('Yaga.Rank.PhotoDeleted'));
+        }
 
-            if ($this->_DeliveryType == DELIVERY_TYPE_ALL) {
-                redirectTo($redirectUrl);
-            } else {
-                $this->ControllerName = 'Home';
-                $this->View = 'FileNotFound';
-                $this->RedirectUrl = url($redirectUrl);
-                $this->render();
-            }
+        if ($this->_DeliveryType == DELIVERY_TYPE_ALL) {
+            redirectTo($redirectUrl);
+        } else {
+            $this->RedirectUrl = url($redirectUrl);
+            $this->render('blank', 'utility', 'dashboard');
+        }
      }
 
-     /**
-        * You can manually award ranks to users for special cases
-        *
-        * @param int $userID
-        * @throws Gdn_UserException
-        */
-     public function promote($userID) {
+    /**
+     * You can manually award ranks to users for special cases
+     *
+     * @param int $userID
+     * @throws Gdn_UserException
+     */
+    public function promote($userID) {
         // Check permission
         $this->permission('Yaga.Ranks.Add');
         $this->setHighlightRoute('rank/settings');

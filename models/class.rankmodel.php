@@ -222,11 +222,6 @@ class RankModel extends Gdn_Model {
      */
     public function saveSort($sortArray) {
         foreach ($sortArray as $index => $rank) {
-            // skip the header row
-            if ($index == 0) {
-                continue;
-            }
-
             // remove the 'RankID_' prefix
             $rankID = substr($rank, 7);
             $this->setField($rankID, 'Sort', $index);

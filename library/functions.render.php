@@ -130,12 +130,15 @@ if (!function_exists('renderPerkPermissionForm')) {
         $form = Gdn::controller()->Form;
         $fieldname = 'Perm'.$perm;
 
-        $string = $form->label($label, $fieldname);
+        $string = '<div class="label-wrap">';
+        $string .= $form->label($label, $fieldname);
+        $string .= '</div><div class="input-wrap">';
         $string .= $form->dropdown($fieldname, [
             '' => Gdn::translate('Default'),
             'grant' => Gdn::translate('Grant'),
             'revoke' => Gdn::translate('Revoke')
         ]);
+        $string .= '</div>';
 
         return $string;
     }
@@ -165,8 +168,11 @@ if (!function_exists('renderPerkConfigurationForm')) {
         $form = Gdn::controller()->Form;
         $fieldname = 'Conf'.$config;
 
-        $string = $form->label($label, $fieldname);
+        $string = '<div class="label-wrap">';
+        $string .= $form->label($label, $fieldname);
+        $string .= '</div><div class="input-wrap">';
         $string .= $form->dropdown($fieldname, $options);
+        $string .= '</div>';
 
         return $string;
     }

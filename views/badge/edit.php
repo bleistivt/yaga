@@ -22,6 +22,7 @@ echo heading($this->title());
 echo $this->Form->open(['enctype' => 'multipart/form-data', 'class' => 'Badge']);
 echo $this->Form->errors();
 ?>
+
 <ul>
     <li class="form-group">
         <div class="label-wrap">

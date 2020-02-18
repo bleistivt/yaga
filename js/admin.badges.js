@@ -33,7 +33,7 @@ jQuery(document).ready(function($) {
             $.post(
                 gdn.url('badge/sort.json'),
                 {
-                    'SortArray': $('table.Sortable').sortable('toArray'),
+                    'SortArray': $('#Badges tbody').sortable('toArray'),
                     'TransientKey': gdn.definition('TransientKey')
                 },
                 function(response) {

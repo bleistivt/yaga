@@ -5,6 +5,8 @@
 $ranks = $this->data('Ranks');
 $username = $this->data('Username', 'Unknown');
 
+$this->Form->setStyles('legacy');
+
 echo '<div id="UserRankForm">';
 echo wrap(sprintf(Gdn::translate('Yaga.Rank.Promote.Format'), $username), 'h1');
 echo $this->Form->open();
@@ -24,10 +26,6 @@ echo wrap(
     wrap(
         $this->Form->label('Yaga.Rank.Progression', 'RankProgression').
         $this->Form->checkBox('RankProgression', 'Yaga.Rank.Progression.Desc', ['Value' => 1, 'Checked' => 'checked']),
-        'li'
-    ).
-    wrap(
-        anchor(Gdn::translate('Cancel'), 'rank/settings'),
         'li'
     ),
     'ul'

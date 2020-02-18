@@ -10,6 +10,7 @@ $Definition['Automatically Award'] = 'Automatically Award';
 $Definition['Award Value'] = 'Award Value';
 $Definition['Css Class'] = 'Css Class';
 $Definition['Days'] = 'Days';
+$Definition['Delete Photo'] = 'Delete Photo';
 $Definition['Description'] = 'Description';
 $Definition['Export'] = 'Export';
 $Definition['Grant'] = 'Grant';

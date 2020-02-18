@@ -15,7 +15,7 @@ jQuery(document).ready(function($) {
             $.post(
                 gdn.url('rank/sort.json'),
                 {
-                    'SortArray': $('table.Sortable').sortable('toArray'),
+                    'SortArray': $('#Ranks tbody').sortable('toArray'),
                     'TransientKey': gdn.definition('TransientKey')
                 },
                 function(response) {

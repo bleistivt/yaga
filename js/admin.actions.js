@@ -14,7 +14,7 @@ jQuery(document).ready(function ($) {
             $.post(
                 gdn.url('action/sort.json'),
                 {
-                    'SortArray': $('table.Sortable').sortable('toArray'),
+                    'SortArray': $('#Actions tbody').sortable('toArray'),
                     'TransientKey': gdn.definition('TransientKey')
                 },
                 function (response) {
