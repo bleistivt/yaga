@@ -14,7 +14,7 @@ class YagaPlugin extends Gdn_Plugin {
      * Redirect any old links to proper settings page permanently
      * @param SettingsController $sender
      */
-    public function settingsController_yaga_Create(\SettingsController $sender) {
+    public function settingsController_yaga_Create($sender) {
         redirectTo('yaga/settings', 301);
     }
 
@@ -22,7 +22,7 @@ class YagaPlugin extends Gdn_Plugin {
      * Add Simple stats page to dashboard index
      * @param SettingsController $sender
      */
-    public function settingsController_afterRenderAsset_handler(\SettingsController $sender) {
+    public function settingsController_afterRenderAsset_handler($sender) {
         $eventArguments = $sender->EventArguments;
         if ($eventArguments['AssetName'] == 'Content' && $sender->OriginalRequestMethod == 'index') {
             //echo 'Sweet sweet stats!';
@@ -55,7 +55,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param Object $sender
      */
-    public function base_GetAppSettingsMenuItems_handler($sender) {
+    public function base_getAppSettingsMenuItems_handler($sender) {
         $menu = $sender->EventArguments['SideMenu'];
         $section = 'Gamification';
         $menu->addItem($section, $section);
@@ -93,7 +93,7 @@ class YagaPlugin extends Gdn_Plugin {
      * Display the reaction counts on the profile page
      * @param ProfileController $sender
      */
-    public function profileController_afterUserInfo_handler(\ProfileController $sender) {
+    public function profileController_afterUserInfo_handler($sender) {
         if (!Gdn::config('Yaga.Reactions.Enabled')) {
             return;
         }
@@ -146,7 +146,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param UserInfoModule $sender
      */
-    public function userInfoModule_OnBasicInfo_handler(\UserInfoModule $sender) {
+    public function userInfoModule_onBasicInfo_handler($sender) {
         if (Gdn::config('Yaga.Badges.Enabled')) {
             echo '<dt class="Badges">'.Gdn::translate('Yaga.Badges', 'Badges').'</dt> ';
             echo '<dd class="Badges">'.$sender->User->CountBadges.'</dd>';
@@ -163,7 +163,7 @@ class YagaPlugin extends Gdn_Plugin {
      * @param int $actionID
      * @param int $page
      */
-    public function profileController_Reactions_Create(\ProfileController $sender, $userReference = '', $username = '', $actionID = '', $page = 0) {
+    public function profileController_reactions_create($sender, $userReference = '', $username = '', $actionID = '', $page = 0) {
         if (!Gdn::config('Yaga.Reactions.Enabled')) {
             throw notFoundException();
         }
@@ -230,7 +230,7 @@ class YagaPlugin extends Gdn_Plugin {
      * @param string $username
      * @param int $page
      */
-    public function profileController_Best_Create(\ProfileController $sender, $userReference = '', $username = '', $page = 0) {
+    public function profileController_best_create($sender, $userReference = '', $username = '', $page = 0) {
         if (!Gdn::config('Yaga.Reactions.Enabled')) {
             return;
         }
@@ -287,7 +287,7 @@ class YagaPlugin extends Gdn_Plugin {
      * Add a best content tab on a user's profile
      * @param ProfileController $sender
      */
-    public function profileController_AddProfileTabs_handler(\ProfileController $sender) {
+    public function profileController_addProfileTabs_handler($sender) {
         if (is_object($sender->User) && $sender->User->UserID > 0) {
             $sender->addProfileTab(
                 sprite('SpBestOf', 'SpMod Sprite').' '.Gdn::translate('Yaga.BestContent'),
@@ -302,7 +302,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param UserModel $sender
      */
-    public function userModel_afterSetField_handler(\UserModel $sender) {
+    public function userModel_afterSetField_handler($sender) {
         // Don't check for promotions if we aren't using ranks
         if (!Gdn::config('Yaga.Ranks.Enabled')) {
             return;
@@ -351,7 +351,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param ProfileController $sender
      */
-    public function profileController_afterPreferencesDefined_handler(\ProfileController $sender) {
+    public function profileController_afterPreferencesDefined_handler($sender) {
         if (Gdn::config('Yaga.Badges.Enabled')) {
             $sender->Preferences['Notifications']['Email.BadgeAward'] = Gdn::translate('Yaga.Badges.Notify');
             $sender->Preferences['Notifications']['Popup.BadgeAward'] = Gdn::translate('Yaga.Badges.Notify');
@@ -368,7 +368,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param ProfileController $sender
      */
-    public function profileController_beforeProfileOptions_handler(\ProfileController $sender) {
+    public function profileController_beforeProfileOptions_handler($sender) {
         if (Gdn::session()->isValid()) {
             if (Gdn::config('Yaga.Badges.Enabled') && checkPermission('Yaga.Badges.Add')) {
                 $sender->EventArguments['ProfileOptions'][] = [
@@ -393,7 +393,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param DiscussionController $sender
      */
-    public function discussionController_afterDiscussionBody_handler(\DiscussionController $sender) {
+    public function discussionController_afterDiscussionBody_handler($sender) {
         if (!Gdn::session()->checkPermission('Yaga.Reactions.View') || !Gdn::config('Yaga.Reactions.Enabled')) {
             return;
         }
@@ -406,7 +406,7 @@ class YagaPlugin extends Gdn_Plugin {
      * Display a record of reactions after comments
      * @param DiscussionController|PostController $sender
      */
-    public function discussionController_afterCommentBody_handler(\Gdn_Controller $sender) {
+    public function discussionController_afterCommentBody_handler($sender) {
         if (!Gdn::session()->checkPermission('Yaga.Reactions.View') || !Gdn::config('Yaga.Reactions.Enabled')) {
             return;
         }
@@ -419,7 +419,7 @@ class YagaPlugin extends Gdn_Plugin {
      * Add action list to discussion items
      * @param DiscussionController $sender
      */
-    public function discussionController_afterReactions_handler(\DiscussionController $sender) {
+    public function discussionController_afterReactions_handler($sender) {
         if (Gdn::config('Yaga.Reactions.Enabled') == false) {
             return;
         }
@@ -452,7 +452,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param ActivityController|ProfileController $sender
      */
-    public function activityController_afterActivityBody_handler(\Gdn_Controller $sender) {
+    public function activityController_afterActivityBody_handler($sender) {
         if (!Gdn::config('Yaga.Reactions.Enabled')) {
             return;
         }
@@ -482,7 +482,7 @@ class YagaPlugin extends Gdn_Plugin {
      * Apply any applicable rank perks when the session first starts.
      * @param UserModel $sender
      */
-    public function userModel_afterGetSession_handler(\UserModel $sender) {
+    public function userModel_afterGetSession_handler($sender) {
         if (!Gdn::config('Yaga.Ranks.Enabled')) {
             return;
         }
@@ -580,7 +580,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param ProfileController $sender
      */
-    public function profileController_render_before(\ProfileController $sender) {
+    public function profileController_render_before($sender) {
         $this->addResources($sender);
 
         if (Gdn::config('Yaga.Badges.Enabled')) {
@@ -593,7 +593,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param DiscussionController|PostController $sender
      */
-    public function discussionController_render_before(\Gdn_Controller $sender) {
+    public function discussionController_render_before($sender) {
         $this->addResources($sender);
         if (Gdn::config('Yaga.Reactions.Enabled')) {
             if ($sender->data('Discussion')) {
@@ -614,7 +614,7 @@ class YagaPlugin extends Gdn_Plugin {
      * @since 1.1
      * @param DiscussionsController $sender
      */
-    public function discussionsController_render_before(\DiscussionsController $sender) {
+    public function discussionsController_render_before($sender) {
         $this->addResources($sender);
     }
 
@@ -623,7 +623,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param CommentController $sender
      */
-    public function commentController_render_before(\CommentController $sender) {
+    public function commentController_render_before($sender) {
         $this->addResources($sender);
     }
 
@@ -632,7 +632,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param ActivityController $sender
      */
-    public function activityController_render_before(\ActivityController $sender) {
+    public function activityController_render_before($sender) {
         $this->addResources($sender);
 
         if (Gdn::config('Yaga.LeaderBoard.Enabled', false)) {
@@ -650,7 +650,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param Gdn_Dispatcher $sender
      */
-    public function gdn_Dispatcher_appStartup_handler(\Gdn_Dispatcher $sender) {
+    public function gdn_dispatcher_appStartup_handler($sender) {
         Yaga::executeBadgeHooks($sender, __FUNCTION__);
     }
 
@@ -668,7 +668,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param CommentModel $sender
      */
-    public function commentModel_afterSaveComment_handler(\CommentModel $sender) {
+    public function commentModel_afterSaveComment_handler($sender) {
         Yaga::executeBadgeHooks($sender, __FUNCTION__);
     }
 
@@ -677,7 +677,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param DiscussionModel $sender
      */
-    public function discussionModel_afterSaveDiscussion_handler(\DiscussionModel $sender) {
+    public function discussionModel_afterSaveDiscussion_handler($sender) {
         Yaga::executeBadgeHooks($sender, __FUNCTION__);
     }
 
@@ -686,7 +686,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param ActivityModel $sender
      */
-    public function activityModel_beforeSaveComment_handler(\ActivityModel $sender) {
+    public function activityModel_beforeSaveComment_handler($sender) {
         Yaga::executeBadgeHooks($sender, __FUNCTION__);
     }
 
@@ -695,7 +695,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param CommentModel $sender
      */
-    public function commentModel_beforeNotification_handler(\CommentModel $sender) {
+    public function commentModel_beforeNotification_handler($sender) {
         Yaga::executeBadgeHooks($sender, __FUNCTION__);
     }
 
@@ -704,7 +704,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param DiscussionModel $sender
      */
-    public function discussionModel_beforeNotification_handler(\DiscussionModel $sender) {
+    public function discussionModel_beforeNotification_handler($sender) {
         Yaga::executeBadgeHooks($sender, __FUNCTION__);
     }
 
@@ -722,7 +722,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param UserModel $sender
      */
-    public function userModel_afterSave_handler(\UserModel $sender) {
+    public function userModel_afterSave_handler($sender) {
         Yaga::executeBadgeHooks($sender, __FUNCTION__);
     }
 
@@ -731,7 +731,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param ReactionModel $sender
      */
-    public function reactionModel_afterReactionSave_handler(\ReactionModel $sender) {
+    public function reactionModel_afterReactionSave_handler($sender) {
         Yaga::executeBadgeHooks($sender, __FUNCTION__);
     }
 
@@ -740,7 +740,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param BadgeAwardModel $sender
      */
-    public function badgeAwardModel_afterBadgeAward_handler(\BadgeAwardModel $sender) {
+    public function badgeAwardModel_afterBadgeAward_handler($sender) {
         Yaga::executeBadgeHooks($sender, __FUNCTION__);
     }
 
@@ -758,7 +758,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param Gdn_Controller $sender
      */
-    private function addResources(\Gdn_Controller $sender) {
+    private function addResources($sender) {
         $sender->addCssFile('reactions.css', 'plugins/yaga');
     }
 
@@ -767,7 +767,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param Gdn_Controller $sender
      */
-    public function base_render_before(\Gdn_Controller $sender) {
+    public function base_render_before($sender) {
         if ($sender->MasterView == 'admin') {
             $sender->addCssFile('yaga.css', 'plugins/yaga');
         } else {
@@ -847,7 +847,7 @@ class YagaPlugin extends Gdn_Plugin {
         *
         * @param UserModel $sender UserModel.
         */
-     public function userModel_beforeDeleteUser_handler(\UserModel $sender) {
+     public function userModel_beforeDeleteUser_handler($sender) {
             $userID = $sender->EventArguments['UserID'];
             $options = $sender->EventArguments['Options'];
             $options = is_array($options) ? $options : [];
@@ -861,7 +861,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param DbaController $sender
      */
-    public function dbaController_CountJobs_handler(\DbaController $sender) {
+    public function dbaController_countJobs_handler($sender) {
         $counts = [
             'BadgeAward' => ['CountBadges']
         ];
@@ -903,7 +903,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @return void.
      */
-    public function settingsController_render_before(\SettingsController $sender) {
+    public function settingsController_render_before($sender) {
         // If Ranks feature isn't used, there's nothing to do here.
         if (!Gdn::config('Yaga.Ranks.Enabled') == true) {
             return;

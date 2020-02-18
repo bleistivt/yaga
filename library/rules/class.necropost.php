@@ -34,7 +34,7 @@ class NecroPost implements YagaRule {
         ];
 
         $string = $form->label('Yaga.Rules.NecroPost.Criteria.Head', 'NecroPost');
-        $string .= $form->textbox('Duration').' ';
+        $string .= $form->textbox('Duration');
         $string .= $form->dropDown('Period', $lengths);
 
         return $string;

@@ -31,12 +31,14 @@ echo $this->Form->errors();
             if ($photo) {
                 echo '<br />';
                 echo img($photo);
-                echo '<br />'.anchor(
-                    Gdn::translate('Delete Photo'),
-                    combinePaths(['badge/deletephoto', $this->Badge->BadgeID, Gdn::session()->transientKey()]),
-                    'btn btn-primary js-modal-confirm',
-                    ['data-body' => sprintf(Gdn::translate('Are you sure you want to delete this %s?'), Gdn::translate('Photo'))]
-                );
+                if ($photo !== Gdn::config('Yaga.Badges.DefaultPhoto')) {
+                    echo '<br />'.anchor(
+                        Gdn::translate('Delete Photo'),
+                        combinePaths(['badge/deletephoto', $this->Badge->BadgeID, Gdn::session()->transientKey()]),
+                        'btn btn-primary js-modal-confirm',
+                        ['data-body' => sprintf(Gdn::translate('Are you sure you want to delete this %s?'), Gdn::translate('Photo'))]
+                    );
+                }
             }
             ?>
         </div>

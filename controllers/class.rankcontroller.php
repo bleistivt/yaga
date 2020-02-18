@@ -100,8 +100,8 @@ class RankController extends DashboardController {
 
         if ($this->Form->isPostBack() != true) {
             if (property_exists($this, 'Rank')) {
-                $perkOptions = (array) unserialize($this->Rank->Perks);
-                $rankArray = (array) $this->Rank;
+                $perkOptions = (array)unserialize($this->Rank->Perks);
+                $rankArray = (array)$this->Rank;
 
                 $data = array_merge($rankArray, $perkOptions);
                 $this->Form->setData($data);

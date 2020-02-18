@@ -16,7 +16,17 @@ class BadgeController extends DashboardController {
      */
     public $Uses = ['Form', 'BadgeModel', 'BadgeAwardModel'];
 
-    private $editFormFields = ['TransientKey', 'hpt', 'BadgeID', 'Name', 'Description', 'RuleClass', 'AwardValue', 'Checkboxes', 'Save', 'Enabled'];
+    private $editFormFields = [
+        'TransientKey',
+        'BadgeID',
+        'Name',
+        'Description',
+        'RuleClass',
+        'AwardValue',
+        'Checkboxes',
+        'Save',
+        'Enabled'
+    ];
 
     /**
      * Make this look like a dashboard page and add the resources
@@ -35,6 +45,8 @@ class BadgeController extends DashboardController {
         $this->addJsFile('admin.badges.js');
         $this->addCssFile('badges.css');
         $this->removeCssFile('magnific-popup.css');
+
+        $this->editFormFields[] = Gdn::config('Garden.Forms.HoneypotName');
     }
 
     /**
@@ -88,8 +100,8 @@ class BadgeController extends DashboardController {
         if ($this->Form->isPostBack() == false) {
             if (property_exists($this, 'Badge')) {
                 // Manually merge the criteria into the badge object
-                $criteria = (array) unserialize($this->Badge->RuleCriteria);
-                $badgeArray = (array) $this->Badge;
+                $criteria = (array)unserialize($this->Badge->RuleCriteria);
+                $badgeArray = (array)$this->Badge;
 
                 $data = array_merge($badgeArray, $criteria);
                 $this->Form->setData($data);

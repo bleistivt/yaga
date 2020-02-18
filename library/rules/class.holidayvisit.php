@@ -14,8 +14,7 @@ class HolidayVisit implements YagaRule {
         $month = date('n');
         $day = date('j');
 
-        if ($criteria->Month == $month
-                        && $criteria->Day == $day) {
+        if ($criteria->Month == $month && $criteria->Day == $day) {
             return true;
         } else {
             return false;
@@ -33,7 +32,7 @@ class HolidayVisit implements YagaRule {
         }
 
         $string = $form->label('Yaga.Rules.HolidayVisit.Criteria.Head', 'HolidayVisit');
-        $string .= $form->dropDown('Month', $months).' ';
+        $string .= $form->dropDown('Month', $months);
         $string .= $form->dropDown('Day', $days);
         return $string;
     }

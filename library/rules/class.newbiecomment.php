@@ -31,8 +31,7 @@ class NewbieComment implements YagaRule {
 
         $insertDate = strtotime($firstDiscussion->DateInserted);
 
-        if ($currentDiscussionID == $firstDiscussion->DiscussionID
-                        && $insertDate > $targetDate) {
+        if ($currentDiscussionID == $firstDiscussion->DiscussionID && $insertDate > $targetDate) {
             return $user->UserID;
         } else {
             return false;
@@ -47,7 +46,7 @@ class NewbieComment implements YagaRule {
         ];
 
         $string = $form->label('Yaga.Rules.NewbieComment.Criteria.Head', 'NewbieComment');
-        $string .= $form->textbox('Duration').' ';
+        $string .= $form->textbox('Duration');
         $string .= $form->dropDown('Period', $lengths);
 
         return $string;
