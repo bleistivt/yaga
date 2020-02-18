@@ -134,7 +134,7 @@ class ActionController extends DashboardController {
             $actions[$index] = (array)$actionObject;
         }
 
-        $actions = array_column($actions, 'ActionID', 'Name');
+        $actions = array_column($actions, 'Name', 'ActionID');
         unset($actions[$actionID]);
 
         $this->setData('OtherActions', $actions);
@@ -169,19 +169,19 @@ class ActionController extends DashboardController {
      * Renders the Save tree and/or the Result of the sort update.
      */
     public function sort() {
-            // Check permission
-            $this->permission('Yaga.Reactions.Manage');
+        // Check permission
+        $this->permission('Yaga.Reactions.Manage');
 
-            $request = Gdn::request();
-            if ($request->isPostBack()) {
-                 $sortArray = $request->getValue('SortArray', null);
-                 $saves = $this->ActionModel->saveSort($sortArray);
-                 $this->setData('Result', true);
-                 $this->setData('Saves', $saves);
-            } else {
-                $this->setData('Result', false);
-            }
+        $request = Gdn::request();
+        if ($request->isPostBack()) {
+            $sortArray = $request->getValue('SortArray', null);
+            $saves = $this->ActionModel->saveSort($sortArray);
+            $this->setData('Result', true);
+            $this->setData('Saves', $saves);
+        } else {
+            $this->setData('Result', false);
+        }
 
-            $this->renderData();
+        $this->renderData();
      }
 }

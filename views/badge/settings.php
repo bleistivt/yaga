@@ -4,49 +4,71 @@
 
 $rules = $this->data('Rules');
 
-echo wrap($this->title(), 'h1');
-echo wrap(wrap(Gdn::translate('Yaga.Badges.Desc'), 'div'), 'div', ['class' => 'Wrap']);
-echo wrap(wrap(Gdn::translate('Yaga.Badges.Settings.Desc'), 'div'), 'div', ['class' => 'Wrap']);
-echo wrap(anchor(Gdn::translate('Yaga.Badge.Add'), 'badge/add', ['class' => 'Button']), 'div', ['class' => 'Wrap']);
+echo heading($this->title(), Gdn::translate('Yaga.Badge.Add'), 'badge/add', 'btn btn-primary');
 
+echo helpAsset(Gdn::translate('Yaga.Badges'), Gdn::translate('Yaga.Badges.Desc'));
+
+echo wrap(Gdn::translate('Yaga.Badges.Settings.Desc'), 'div', ['class' => 'padded']);
 ?>
-<table id="Badges" class="AltRows Sortable">
-    <thead>
-        <tr>
-            <th><?php echo Gdn::translate('Image'); ?></th>
-            <th><?php echo Gdn::translate('Name'); ?></th>
-            <th><?php echo Gdn::translate('Description'); ?></th>
-            <th><?php echo Gdn::translate('Rule'); ?></th>
-            <th><?php echo Gdn::translate('Award Value'); ?></th>
-            <th><?php echo Gdn::translate('Auto Award'); ?></th>
-            <th><?php echo Gdn::translate('Options'); ?></th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
-        $alt = 'Alt';
-        foreach ($this->data('Badges') as $badge) {
-            $alt = $alt ? '' : 'Alt';
-            $row = '';
 
-            $badgePhoto = img($badge->Photo, ['class' => 'BadgePhoto']);
+<div class="table-wrap">
+    <table id="Badges" class="table-data Sortable">
+        <thead>
+            <tr>
+                <th class="column-sm"><?php echo Gdn::translate('Image'); ?></th>
+                <th><?php echo Gdn::translate('Name'); ?></th>
+                <th class="column-lg"><?php echo Gdn::translate('Description'); ?></th>
+                <th><?php echo Gdn::translate('Rule'); ?></th>
+                <th class="column-sm"><?php echo Gdn::translate('Award Value'); ?></th>
+                <th class="column-sm"><?php echo Gdn::translate('Auto Award'); ?></th>
+                <th class="options column-sm"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            foreach ($this->data('Badges') as $badge) {
+                $tr = '<tr id="BadgeID_'.$badge->BadgeID.'" data-badgeid="'.$badge->BadgeID.'">';
 
-            $row .= wrap(anchor($badgePhoto, '/yaga/badges/'.$badge->BadgeID.'/'.Gdn_Format::url($badge->Name), ['title' => Gdn::translate('Yaga.Badge.DetailLink')]), 'td');
-            $row .= wrap($badge->Name, 'td');
-            $row .= wrap($badge->Description, 'td');
-            $ruleName = Gdn::translate('Yaga.Rules.UnknownRule');
-            if (array_key_exists($badge->RuleClass, $rules)) {
-                $ruleName = $rules[$badge->RuleClass];
+                $tr .= wrap(anchor(
+                    img($badge->Photo, ['class' => 'BadgePhoto']),
+                    '/yaga/badges/'.$badge->BadgeID.'/'.Gdn_Format::url($badge->Name),
+                    ['title' => Gdn::translate('Yaga.Badge.DetailLink')]
+                ), 'td');
+
+                $tr .= wrap(wrap($badge->Name, 'strong'), 'td');
+
+                $tr .= wrap($badge->Description, 'td');
+
+                $tr .= wrap($rules[$badge->RuleClass] ?? Gdn::translate('Yaga.Rules.UnknownRule'), 'td');
+
+                $tr .= wrap($badge->AwardValue, 'td');
+
+                $tr .= wrap(renderYagaToggle('badge/toggle/'.$badge->BadgeID, $badge->Enabled, $badge->BadgeID), 'td');
+
+                $tr .= '<td class="options"><div class="btn-group">';
+                $tr .= anchor(
+                    dashboardSymbol('edit'),
+                    'badge/edit/'.$badge->BadgeID,
+                    'btn btn-icon',
+                    ['title' => Gdn::translate('Edit')]
+                );
+                $tr .= anchor(
+                    dashboardSymbol('delete'),
+                    'badge/delete/'.$badge->BadgeID,
+                    'js-modal-confirm btn btn-icon',
+                    ['title' => Gdn::translate('Delete')]
+                );
+                $tr .= '</div></td>';
+
+                $tr .= '</tr>';
+
+                echo $tr;
             }
-            $row .= wrap($ruleName, 'td');
-            $row .= wrap($badge->AwardValue, 'td');
-            $toggleText = ($badge->Enabled) ? Gdn::translate('Enabled') : Gdn::translate('Disabled');
-            $activeClass = ($badge->Enabled) ? 'Active' : 'InActive';
-            $row .= wrap(wrap(anchor($toggleText, 'badge/toggle/'.$badge->BadgeID, 'Hijack Button'), 'span', ['class' => "ActivateSlider ActivateSlider-{$activeClass}"]), 'td');
-            $row .= wrap(anchor(Gdn::translate('Edit'), 'badge/edit/'.$badge->BadgeID, ['class' => 'Button']).anchor(Gdn::translate('Delete'), 'badge/delete/'.$badge->BadgeID, ['class' => 'Danger Popup Button']), 'td');
-            echo wrap($row, 'tr', ['id' => 'BadgeID_'.$badge->BadgeID, 'data-badgeid' => $badge->BadgeID, 'class' => $alt]);
-        }
-        ?>
-    </tbody>
-</table>
-<?php PagerModule::write(['Sender' => $this]);
+            ?>
+        </tbody>
+    </table>
+</div>
+
+<?php
+// This page cannot have a pager as this would interfere with sorting.
+//PagerModule::write(['Sender' => $this, 'View' => 'pager-dashboard']);

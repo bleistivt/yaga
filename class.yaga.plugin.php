@@ -591,9 +591,9 @@ class YagaPlugin extends Gdn_Plugin {
     /**
      * Insert JS and CSS files into the appropiate controllers and fill the reaction cache
      *
-     * @param DiscussionController $sender
+     * @param DiscussionController|PostController $sender
      */
-    public function discussionController_render_before(\DiscussionController $sender) {
+    public function discussionController_render_before(\Gdn_Controller $sender) {
         $this->addResources($sender);
         if (Gdn::config('Yaga.Reactions.Enabled')) {
             if ($sender->data('Discussion')) {
@@ -758,7 +758,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param Gdn_Controller $sender
      */
-    private function addResources($sender) {
+    private function addResources(\Gdn_Controller $sender) {
         $sender->addCssFile('reactions.css', 'plugins/yaga');
     }
 
@@ -767,7 +767,7 @@ class YagaPlugin extends Gdn_Plugin {
      *
      * @param Gdn_Controller $sender
      */
-    public function base_render_before($sender) {
+    public function base_render_before(\Gdn_Controller $sender) {
         if ($sender->MasterView == 'admin') {
             $sender->addCssFile('yaga.css', 'plugins/yaga');
         } else {

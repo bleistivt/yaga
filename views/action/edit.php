@@ -2,9 +2,9 @@
 
 /* Copyright 2013 Zachary Doll */
 if (property_exists($this, 'Action')) {
-    echo wrap(Gdn::translate('Yaga.Action.Edit'), 'h1');
+    echo heading(Gdn::translate('Yaga.Action.Edit'));
 } else {
-    echo wrap(Gdn::translate('Yaga.Action.Add'), 'h1');
+    echo heading(Gdn::translate('Yaga.Action.Add'));
 }
 
 $originalCssClass = $this->Form->getValue('CssClass');
@@ -13,59 +13,78 @@ echo $this->Form->open(['class' => 'Action']);
 echo $this->Form->errors();
 ?>
 <ul>
-    <li>
-        <?php
-        echo $this->Form->label('Name', 'Name');
-        echo $this->Form->textBox('Name');
-        ?>
+    <li class="form-group">
+        <div class="label-wrap">
+            <?php echo $this->Form->label('Name', 'Name'); ?>
+        </div>
+        <div class="input-wrap">
+            <?php echo $this->Form->textBox('Name'); ?>
+        </div>
     </li>
-    <li id="ActionIcons">
-        <?php
-        echo $this->Form->label('Icon');
-        foreach ($this->data('Icons') as $icon) {
-            $class = 'React'.$icon;
-            $selected = '';
-            if ($originalCssClass == $class) {
-                $selected = 'Selected';
+    <li class="form-group" id="ActionIcons">
+        <div class="label-wrap">
+            <?php echo $this->Form->label('Icon'); ?>
+        </div>
+        <div class="input-wrap">
+            <?php 
+            foreach ($this->data('Icons') as $icon) {
+                $class = 'React'.$icon;
+                $selected = '';
+                if ($originalCssClass == $class) {
+                    $selected = 'Selected';
+                }
+                echo img('plugins/yaga/design/images/action-icons/'.$icon.'.png', ['title' => $icon, 'data-class' => $class, 'class' => $selected]);
             }
-            echo img('plugins/yaga/design/images/action-icons/'.$icon.'.png', ['title' => $icon, 'data-class' => $class, 'class' => $selected]);
-        }
-        ?>
+            ?>
+        </div>
     </li>
-    <li>
-        <?php
-        echo $this->Form->label('Description', 'Description');
-        echo $this->Form->textBox('Description');
-        ?>
+    <li class="form-group">
+        <div class="label-wrap">
+            <?php echo $this->Form->label('Description', 'Description'); ?>
+        </div>
+        <div class="input-wrap">
+            <?php echo $this->Form->textBox('Description'); ?>
+        </div>
     </li>
-    <li>
-        <?php
-        echo $this->Form->label('Tooltip', 'Tooltip');
-        echo $this->Form->textBox('Tooltip');
-        ?>
+    <li class="form-group">
+        <div class="label-wrap">
+            <?php echo $this->Form->label('Tooltip', 'Tooltip'); ?>
+        </div>
+        <div class="input-wrap">
+            <?php echo $this->Form->textBox('Tooltip'); ?>
+        </div>
     </li>
-    <li>
-        <?php
-        echo $this->Form->label('Award Value', 'AwardValue');
-        echo $this->Form->textBox('AwardValue');
-        ?>
+    <li class="form-group">
+        <div class="label-wrap">
+            <?php echo $this->Form->label('Award Value', 'AwardValue'); ?>
+        </div>
+        <div class="input-wrap">
+            <?php echo $this->Form->textBox('AwardValue'); ?>
+        </div>
     </li>
-    <li id="AdvancedActionSettings">
-        <span><?php echo Gdn::translate('Advanced Settings'); ?></span>
-        <div>
-                <?php
-                echo $this->Form->label('Css Class', 'CssClass');
-                echo $this->Form->textBox('CssClass');
-                ?>
-            </div>
-            <div>
-                <?php
-                echo $this->Form->label('Permission', 'Permission');
-                echo wrap(Gdn::translate('Yaga.Action.PermDesc'), 'p');
-                echo $this->Form->dropdown('Permission', $this->data('Permissions'));
-                ?>
-            </div>
+    <li class="form-group">
+        <div class="label-wrap">
+            <?php
+            echo $this->Form->label('Css Class', 'CssClass');
+            echo wrap(Gdn::translate('Optional'), 'div', ['class' => 'info']);
+            ?>
+        </div>
+        <div class="input-wrap">
+            <?php echo $this->Form->textBox('CssClass'); ?>
+        </div>
+    </li>
+    <li class="form-group">
+        <div class="label-wrap">
+            <?php
+            echo $this->Form->label('Permission', 'Permission');
+            echo wrap(Gdn::translate('Yaga.Action.PermDesc'), 'div', ['class' => 'info']);
+            ?>
+        </div>
+        <div class="input-wrap">
+            <?php echo $this->Form->dropdown('Permission', $this->data('Permissions')); ?>
+        </div>
     </li>
 </ul>
+
 <?php
 echo $this->Form->close('Save');

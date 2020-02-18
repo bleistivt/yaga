@@ -2,7 +2,7 @@
 
 /* Copyright 2013 Zachary Doll */
 
-echo wrap($this->title(), 'h1');
+echo heading($this->title());
 echo '<ul class="DataList Badges">';
 foreach($this->data('Badges') as $badge) {
     // Don't show disabled badges
@@ -28,17 +28,18 @@ foreach($this->data('Badges') as $badge) {
     }
 
     $row .= wrap(
-                    wrap(
-                                    anchor($badge->Name, 'yaga/badges/'.$badge->BadgeID.'/'.Gdn_Format::url($badge->Name), ['class' => 'Title']), 'div', ['class' => 'Title']
-                    ).
-                    wrap(
-                                    wrap($badge->Description, 'span', ['class' => 'MItem BadgeDescription']).
-                                    wrap($badge->AwardValue.' points.', 'span', ['class' => 'MItem BadgePoints']).
-                                    wrapIf($awardDescription, 'p'),
-                                    'div',
-                                    ['class' => 'Meta']),
-                    'div',
-                    ['class' => 'ItemContent Badge']
+        wrap(
+            anchor($badge->Name, 'yaga/badges/'.$badge->BadgeID.'/'.Gdn_Format::url($badge->Name), ['class' => 'Title']), 'div', ['class' => 'Title']
+        ).
+        wrap(
+            wrap($badge->Description, 'span', ['class' => 'MItem BadgeDescription']).
+            wrap($badge->AwardValue.' points.', 'span', ['class' => 'MItem BadgePoints']).
+            wrapIf($awardDescription, 'p'),
+            'div',
+            ['class' => 'Meta']
+        ),
+        'div',
+        ['class' => 'ItemContent Badge']
     );
     echo wrap($row, 'li', ['class' => 'Item ItemBadge'.$readClass]);
 }

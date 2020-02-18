@@ -81,8 +81,7 @@ class YagaController extends DashboardController {
                 'LabelCode' => 'Yaga.LeaderBoard.Max',
                 'Control' => 'Textbox',
                 'Options' => [
-                    'Size' => 45,
-                    'class' => 'SmallInput'
+                    'Size' => 45
                 ]
             ]
         ]);
@@ -179,7 +178,6 @@ class YagaController extends DashboardController {
         $userBadgeAward = $badgeAwardModel->exists($userID, $badgeID);
         $recentAwards = $badgeAwardModel->getRecent($badgeID);
 
-
         $this->setData('AwardCount', $awardCount);
         $this->setData('RecentAwards', $recentAwards);
         $this->setData('UserBadgeAward', $userBadgeAward);
@@ -263,7 +261,7 @@ class YagaController extends DashboardController {
         if ($this->Form->errorCount() == 0 && $this->Form->isPostBack()) {
             $this->render('transport-success');
         } else {
-            $this->render();
+            $this->render('import');
         }
     }
 

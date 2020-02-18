@@ -7,7 +7,7 @@
  * @since 1.0
  * @copyright (c) 2013-2014, Zachary Doll
  */
-if (!function_exists('RenderReactionList')) {
+if (!function_exists('renderReactionList')) {
 
     /**
      * Renders a list of available actions that also contains the current count of
@@ -42,7 +42,7 @@ if (!function_exists('RenderReactionList')) {
 
 }
 
-if (!function_exists('RenderReactionRecord')) {
+if (!function_exists('renderReactionRecord')) {
 
     /**
      * Renders the reaction record for a specific item
@@ -79,7 +79,7 @@ if (!function_exists('RenderReactionRecord')) {
 
 }
 
-if (!function_exists('RenderActionRow')) {
+if (!function_exists('renderActionRow')) {
 
     /**
      * Renders an action row used to construct the action admin screen
@@ -89,35 +89,46 @@ if (!function_exists('RenderActionRow')) {
      * @return string
      */
     function renderActionRow($action) {
-        return wrap(
-            wrap(
-                anchor(Gdn::translate('Edit'), 'action/edit/'.$action->ActionID, ['class' => 'Popup Button']).
-                anchor(Gdn::translate('Delete'), 'action/delete/'.$action->ActionID, ['class' => 'Popup Button']),
-                'div',
-                ['class' => 'Tools']
-            ).
-            wrap(
-                wrap($action->Name, 'h4').
-                wrap(
-                    wrap($action->Description, 'span').' ' .
-                    wrap(plural($action->AwardValue, '%s Point', '%s Points'), 'span'), 'div', ['class' => 'Meta']).
-                wrap(
-                    wrap('&nbsp;', 'span', ['class' => 'ReactSprite React-'.$action->ActionID.' '.$action->CssClass]).
-                    wrapIf(rand(0, 18), 'span', ['class' => 'Count']) .
-                    wrap($action->Name, 'span', ['class' => 'ReactLabel']),
-                    'div',
-                    ['class' => 'Preview Reactions']
-                ),
-                'div',
-                ['class' => 'Action']
-            ),
-            'li',
-            ['id' => 'ActionID_'.$action->ActionID]
+        $tr = '<tr id="ActionID_'.$action->ActionID.'">';
+
+        $tr .= '<td><strong>'.$action->Name.'</strong></td>';
+        
+        $tr .= '<td>'.$action->Description.'</td>';
+        
+        $tr .= '<td>'.plural($action->AwardValue, '%s Point', '%s Points').'</td>';
+        
+        $tr .= '<td>';
+        $tr .= wrap(
+            wrap('&nbsp;', 'span', ['class' => 'ReactSprite React-'.$action->ActionID.' '.$action->CssClass])
+                .wrapIf(rand(1, 18), 'span', ['class' => 'Count'])
+                .wrap($action->Name, 'span', ['class' => 'ReactLabel']),
+            'div',
+            ['class' => 'Preview Reactions']
         );
+        $tr .= '</td>';
+
+        $tr .= '<td class="options"><div class="btn-group">';
+        $tr .= anchor(
+            dashboardSymbol('edit'),
+            'action/edit/'.$action->ActionID,
+            'js-modal btn btn-icon',
+            ['title' => Gdn::translate('Edit')]
+        );
+        $tr .= anchor(
+            dashboardSymbol('delete'),
+            'action/delete/'.$action->ActionID,
+            'js-modal-confirm btn btn-icon',
+            ['title' => Gdn::translate('Delete')]
+        );
+        $tr .= '</div></td>';
+
+        $tr .= '</tr>';
+
+        return $tr;
     }
 }
 
-if (!function_exists('RenderPerkPermissionForm')) {
+if (!function_exists('renderPerkPermissionForm')) {
 
     /**
      * Render a simple permission perk form
@@ -141,7 +152,7 @@ if (!function_exists('RenderPerkPermissionForm')) {
     }
 }
 
-if (!function_exists('RenderPerkConfigurationForm')) {
+if (!function_exists('renderPerkConfigurationForm')) {
 
     /**
      * Render a perk form for the specified configuration
@@ -172,3 +183,30 @@ if (!function_exists('RenderPerkConfigurationForm')) {
     }
 }
 
+if (!function_exists('renderYagaToggle')) {
+
+    /**
+     * Renders a toggle slider to toggle badges or ranks.
+     * 
+     * @since 2.0
+     * @param string $url The url to POST to.
+     * @param bool $enabled The sliders state.
+     * @param string $id The #ID of the slider.
+     */
+    function renderYagaToggle($url, $enabled = false, $id = '') {
+        $slider = $id ? '<div id="toggle-'.$id.'">' : '<div>';
+        $slider .= wrap(
+            anchor(
+                '<div class="toggle-well"></div><div class="toggle-slider"></div>',
+                $url,
+                'Hijack',
+                ['title' => Gdn::translate($enabled ? 'Enabled' : 'Disabled')]
+            ),
+            'span',
+            ['class' => 'toggle-wrap toggle-wrap-'.($enabled ? 'on' : 'off')]
+        );
+        $slider .= '</div>';
+
+        return $slider;
+    }
+}

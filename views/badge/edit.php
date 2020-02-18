@@ -17,7 +17,7 @@ if (class_exists($ruleClass)) {
     $rule = new UnknownRule();
 }
 
-echo wrap($this->title(), 'h1');
+echo heading($this->title());
 
 echo $this->Form->open(['enctype' => 'multipart/form-data', 'class' => 'Badge']);
 echo $this->Form->errors();

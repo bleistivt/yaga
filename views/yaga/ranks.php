@@ -1,9 +1,11 @@
 <?php if (!defined('APPLICATION')) exit();
 
 /* Copyright 2015 Zachary Doll */
-echo wrap($this->title(), 'h1');
+
+echo heading($this->title());
 $user = (Gdn::session()->User) ?: (object)['RankID' => 0];
 echo '<ul class="DataList Ranks">';
+
 foreach($this->data('Ranks') as $rank) {
     $row = '';
 
@@ -55,16 +57,17 @@ foreach($this->data('Ranks') as $rank) {
     //}
 
     $row .= wrap(
-                    wrap(
-                                    $rank->Name, 'div', ['class' => 'Title']
-                    ).
-                    wrap($rank->Description, 'div', ['class' => 'Description']).
-                    wrap(
-                                    wrapIf($metaString, 'span', ['class' => 'MItem RankRequirements']),
-                                    'div',
-                                    ['class' => 'Meta']),
-                    'div',
-                    ['class' => 'ItemContent Rank']
+        wrap(
+            $rank->Name, 'div', ['class' => 'Title']
+        ).
+        wrap($rank->Description, 'div', ['class' => 'Description']).
+        wrap(
+            wrapIf($metaString, 'span', ['class' => 'MItem RankRequirements']),
+            'div',
+            ['class' => 'Meta']
+        ),
+        'div',
+        ['class' => 'ItemContent Rank']
     );
     echo wrap($row, 'li', ['class' => 'Item ItemRank'.$readClass]);
 }

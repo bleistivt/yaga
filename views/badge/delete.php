@@ -1,6 +1,4 @@
-<?php if (!defined('APPLICATION')) exit();
-
-use Yaga; ?>
+<?php if (!defined('APPLICATION')) exit(); ?>
 
 <h1><?php echo $this->data('Title'); ?></h1>
 

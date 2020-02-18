@@ -1,10 +1,8 @@
 <?php if (!defined('APPLICATION')) exit();
 
-use Yaga;
-
 /* Copyright 2013-2014 Zachary Doll */
 
-echo wrap($this->title(), 'h1');
+echo heading($this->title());
 
 echo $this->Form->open();
 echo $this->Form->errors();
@@ -48,7 +46,7 @@ echo $this->Form->errors();
     </li>
 </ul>
 <?php
-    echo wrap(Gdn::translate('Yaga.Perks'), 'h3');
+    echo subheading(Gdn::translate('Yaga.Perks'));
 ?>
 <ul>
     <li>

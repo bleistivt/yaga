@@ -1,7 +1,5 @@
 <?php if (!defined('APPLICATION')) exit();
 
-use Yaga;
-
 /* Copyright 2013 Zachary Doll */
 
 $photoString = '';
@@ -13,7 +11,7 @@ if ($photo) {
 }
 $ageArray = ageArray();
 
-echo wrap($this->title(), 'h1');
+echo heading($this->title());
 
 echo wrap(
     $photoString.
@@ -56,7 +54,7 @@ echo wrap(
     <tbody>
         <?php
         $alt = 'Alt';
-        foreach ($this->data('Ranks') as $rank).
+        foreach ($this->data('Ranks') as $rank) {
             $alt = $alt ? '' : 'Alt';
             $row = '';
             $row .= wrap($rank->Name, 'td');

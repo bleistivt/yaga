@@ -50,7 +50,10 @@ class BadgeController extends DashboardController {
 
         // Get list of badges from the model and pass to the view
         list($offset, $limit) = offsetLimit($page, PagerModule::$DefaultPageSize);
-        $this->setData('Badges', $this->BadgeModel->getLimit($limit, $offset));
+        //$this->setData('Badges', $this->BadgeModel->getLimit($limit, $offset));
+
+        // This page cannot have a pager as this would interfere with sorting.
+        $this->setData('Badges', $this->BadgeModel->get());
         $this->setData('Rules', RulesController::getRules());
 
         $this->render();
@@ -114,7 +117,7 @@ class BadgeController extends DashboardController {
 
             // Find the rule criteria
             $formValues = $this->Form->formValues();
-            $criteria = array_diff_key($formValues, array_flip($this->EditFormFields));
+            $criteria = array_diff_key($formValues, array_flip($this->editFormFields));
 
             // Validate the criteria
             $ruleClass = new $formValues['RuleClass'];
@@ -193,19 +196,11 @@ class BadgeController extends DashboardController {
 
         $badge = $this->BadgeModel->getByID($badgeID);
 
-        if ($badge->Enabled) {
-            $enable = false;
-            $toggleText = Gdn::translate('Disabled');
-            $activeClass = 'InActive';
-        } else {
-            $enable = true;
-            $toggleText = Gdn::translate('Enabled');
-            $activeClass = 'Active';
-        }
+        $badge->Enabled = !$badge->Enabled;
+        $this->BadgeModel->enable($badgeID, $badge->Enabled);
 
-        $slider = wrap(wrap(anchor($toggleText, 'badge/toggle/'.$badge->BadgeID, 'Hijack Button'), 'span', ['class' => "ActivateSlider ActivateSlider-{$activeClass}"]), 'td');
-        $this->BadgeModel->enable($badgeID, $enable);
-        $this->jsonTarget('#BadgeID_'.$badgeID.' td:nth-child(6)', $slider, 'ReplaceWith');
+        $slider = renderYagaToggle('badge/toggle/'.$badge->BadgeID, $badge->Enabled, $badge->BadgeID);
+        $this->jsonTarget('#toggle-'.$badge->BadgeID, $slider, 'ReplaceWith');
         $this->render('blank', 'utility', 'dashboard');
     }
 

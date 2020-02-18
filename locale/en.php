@@ -32,6 +32,7 @@ $Definition['Yaga.MenuLinks.Show'] = 'Show links in the main menu that describe 
 $Definition['Yaga.Action'] = 'Action';
 $Definition['Yaga.Action.Add'] = 'Add Action';
 $Definition['Yaga.Action.Added'] = 'Action added successfully!';
+$Definition['Yaga.Action.ConfirmDelete'] = 'Are you sure you want to delete the <em>%s</em> action?';
 $Definition['Yaga.Action.Delete'] = 'Delete Action';
 $Definition['Yaga.Action.Edit'] = 'Edit Action';
 $Definition['Yaga.Action.Invalid'] = 'Invalid Action';
