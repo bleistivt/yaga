@@ -192,7 +192,7 @@ class Yaga {
                 // Only check awards for rules that use this hook
                 $hooks = array_map('strtolower',$rule->hooks());
                 if (in_array($hook, $hooks)) {
-                    $criteria = (object) unserialize($badge->RuleCriteria);
+                    $criteria = (object)unserialize($badge->RuleCriteria);
                     $result = $rule->award($sender, $user, $criteria);
                     if ($result) {
                         $awardedUserIDs = [];

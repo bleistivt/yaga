@@ -19,7 +19,7 @@ function writeModuleDiscussion($discussion, $px = 'Bookmark') {
 <li id="<?php echo "{$px}_{$discussion->DiscussionID}"; ?>" class="<?php echo cssClass($discussion); ?>">
      <span class="Options">
         <?php
-//            echo optionsList($discussion);
+//      echo optionsList($discussion);
         echo bookmarkButton($discussion);
         ?>
      </span>
@@ -27,15 +27,15 @@ function writeModuleDiscussion($discussion, $px = 'Bookmark') {
         echo anchor(Gdn_Format::text($discussion->Name, false), discussionUrl($discussion).($discussion->CountCommentWatch > 0 ? '#Item_'.$discussion->CountCommentWatch : ''), 'DiscussionLink');
      ?></div>
      <div class="Meta">
-            <?php
-                $last = new stdClass();
-                $last->UserID = $discussion->LastUserID;
-                $last->Name = $discussion->LastName;
+        <?php
+            $last = new stdClass();
+            $last->UserID = $discussion->LastUserID;
+            $last->Name = $discussion->LastName;
 
-                echo newComments($discussion);
+            echo newComments($discussion);
 
-                echo '<span class="MItem">'.Gdn_Format::date($discussion->LastDate, 'html').UserAnchor($last).'</span>';
-            ?>
+            echo '<span class="MItem">'.Gdn_Format::date($discussion->LastDate, 'html').UserAnchor($last).'</span>';
+        ?>
      </div>
 </li>
 <?php
@@ -55,7 +55,7 @@ function writePromotedContent($content, $sender) {
     }
 
     $contentType = $content['ItemType'];
-    $contentID = $content["{$contentType}ID"];
+    $contentID = $content['ContentID'];
     $author = $content['Author'] ?? false;
 
     switch (strtolower($contentType)) {

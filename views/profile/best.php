@@ -12,7 +12,7 @@ foreach ($contents as $content) {
     }
 
     $contentType = $content['ItemType'];
-    $contentID = $content["{$contentType}ID"];
+    $contentID = $content['ContentID'];
     $author = $content['Author'] ?? false;
 
 ?>
@@ -52,7 +52,7 @@ foreach ($contents as $content) {
                 </div>
                 <?php
                 if (Gdn::config('Yaga.Reactions.Enabled') && Gdn::session()->checkPermission('Yaga.Reactions.View')) {
-                    echo renderReactionRecord($contentID, strtolower($contentType));
+                    echo renderReactionRecord($contentID, $contentType);
                 }
                 ?>
             </div>
