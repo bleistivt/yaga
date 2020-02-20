@@ -913,4 +913,5 @@ class YagaPlugin extends Gdn_Plugin {
             Gdn::config()->loadArray(Gdn::config('Yaga.ConfBackup'), 'plugins/yaga');
         }
     }
+
 }

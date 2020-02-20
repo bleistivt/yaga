@@ -11,58 +11,12 @@
 class Yaga {
 
     /**
-     * A single copy of ActedModel available to plugins and hooks files.
-     * 
-     * @since 1.1
-     * @var ActedModel
-     */
-    protected static $_actedModel = null;
-
-    /**
-     * A single copy of ActionModel available to plugins and hooks files.
-     * 
-     * @var ActionModel
-     */
-    protected static $_actionModel = null;
-
-    /**
-     * A single copy of ReactionModel available to plugins and hooks files.
-     * 
-     * @var ReactionModel
-     */
-    protected static $_reactionModel = null;
-
-    /**
-     * A single copy of BadgeModel available to plugins and hooks files.
-     * 
-     * @var BadgeModel
-     */
-    protected static $_badgeModel = null;
-
-    /**
-     * A single copy of RankModel available to plugins and hooks files.
-     * 
-     * @var RankModel
-     */
-    protected static $_rankModel = null;
-
-    /**
-     * A single copy of BadgeAwardModel available to plugins and hooks files.
-     * 
-     * @var BadgeAwardModel
-     */
-    protected static $_badgeAwardModel = null;
-
-    /**
      * Get a reference to the acted model
      * @since 1.1
      * @return ActedModel
      */
     public static function actedModel() {
-        if (is_null(self::$_actedModel)) {
-            self::$_actedModel = new ActedModel();
-        }
-        return self::$_actedModel;
+        return Gdn::getContainer()->get(ActedModel::class);
     }
 
     /**
@@ -71,10 +25,7 @@ class Yaga {
      * @return ActionModel
      */
     public static function actionModel() {
-        if (is_null(self::$_actionModel)) {
-            self::$_actionModel = new ActionModel();
-        }
-        return self::$_actionModel;
+        return Gdn::getContainer()->get(ActionModel::class);
     }
 
     /**
@@ -83,10 +34,7 @@ class Yaga {
      * @return ReactionModel
      */
     public static function reactionModel() {
-        if (is_null(self::$_reactionModel)) {
-            self::$_reactionModel = new ReactionModel();
-        }
-        return self::$_reactionModel;
+        return Gdn::getContainer()->get(ReactionModel::class);
     }
 
     /**
@@ -95,10 +43,7 @@ class Yaga {
      * @return BadgeModel
      */
     public static function badgeModel() {
-        if (is_null(self::$_badgeModel)) {
-            self::$_badgeModel = new BadgeModel();
-        }
-        return self::$_badgeModel;
+        return Gdn::getContainer()->get(BadgeModel::class);
     }
 
      /**
@@ -107,10 +52,7 @@ class Yaga {
      * @return BadgeAwardModel
      */
     public static function badgeAwardModel() {
-        if (is_null(self::$_badgeAwardModel)) {
-            self::$_badgeAwardModel = new BadgeAwardModel();
-        }
-        return self::$_badgeAwardModel;
+        return Gdn::getContainer()->get(BadgeAwardModel::class);
     }
 
     /**
@@ -119,10 +61,7 @@ class Yaga {
      * @return RankModel
      */
     public static function rankModel() {
-        if (is_null(self::$_rankModel)) {
-            self::$_rankModel = new RankModel();
-        }
-        return self::$_rankModel;
+        return Gdn::getContainer()->get(RankModel::class);
     }
 
     /**
@@ -143,7 +82,7 @@ class Yaga {
         UserModel::givePoints($userID, $value, $source, $timestamp);
     }
 
-     /**
+    /**
      * This is the dispatcher to check badge awards
      *
      * @param mixed $sender The sending object
@@ -151,7 +90,7 @@ class Yaga {
      * (e.g. BadgeAwardModel_AfterBadgeAward_Handler or Base_AfterConnection)
      * @since 1.1
      */
-     public static function executeBadgeHooks($sender, $handler) {
+    public static function executeBadgeHooks($sender, $handler) {
         $session = Gdn::session();
         if (!Gdn::config('Yaga.Badges.Enabled') || !$session->isValid()) {
         return;
@@ -172,47 +111,53 @@ class Yaga {
         foreach ($badges as $badge) {
             // The badge award needs to be processed
             if (
-                ($badge->Enabled && $badge->UserID != $userID)
-                || array_key_exists($badge->RuleClass, $interactionRules)
+                !($badge->Enabled && $badge->UserID != $userID)
+                && !array_key_exists($badge->RuleClass, $interactionRules)
             ) {
-                // Create a rule object if needed
-                $class = $badge->RuleClass;
-                if (!in_array($class, $rules) && class_exists($class)) {
-                    $rule = new $class();
-                    $rules[$class] = $rule;
-                } else {
-                    if (!array_key_exists('UnknownRule', $rules)) {
-                    $rules['UnkownRule'] = new UnknownRule();
-                    }
-                    $rules[$class] = $rules['UnkownRule'];
+                continue;
+            }
+            
+            // Create a rule object if needed
+            $class = $badge->RuleClass;
+            if (!in_array($class, $rules) && class_exists($class)) {
+                $rule = new $class();
+                $rules[$class] = $rule;
+            } else {
+                if (!array_key_exists('UnknownRule', $rules)) {
+                $rules['UnkownRule'] = new UnknownRule();
                 }
+                $rules[$class] = $rules['UnkownRule'];
+            }
 
-                $rule = $rules[$class];
+            $rule = $rules[$class];
 
-                // Only check awards for rules that use this hook
-                $hooks = array_map('strtolower',$rule->hooks());
-                if (in_array($hook, $hooks)) {
-                    $criteria = (object)unserialize($badge->RuleCriteria);
-                    $result = $rule->award($sender, $user, $criteria);
-                    if ($result) {
-                        $awardedUserIDs = [];
-                        if (is_array($result)) {
-                            $awardedUserIDs = $result;
-                        } elseif (is_numeric($result)) {
-                            $awardedUserIDs[] = $result;
-                        } else {
-                            $awardedUserIDs[] = $userID;
-                        }
+            // Only check awards for rules that use this hook
+            $hooks = array_map('strtolower',$rule->hooks());
+            if (!in_array($hook, $hooks)) {
+                continue;
+            }
+            
+            $criteria = (object)unserialize($badge->RuleCriteria);
+            $result = $rule->award($sender, $user, $criteria);
+            if (!$result) {
+                continue;
+            }
+            
+            $awardedUserIDs = [];
+            if (is_array($result)) {
+                $awardedUserIDs = $result;
+            } elseif (is_numeric($result)) {
+                $awardedUserIDs[] = $result;
+            } else {
+                $awardedUserIDs[] = $userID;
+            }
 
-                        $systemUserID = Gdn::userModel()->getSystemUserID();
-                        foreach ($awardedUserIDs as $awardedUserID) {
-                            if ($awardedUserID == $systemUserID) {
-                                continue;
-                            }
-                            $badgeAwardModel->award($badge->BadgeID, $awardedUserID, $userID);
-                        }
-                    }
+            $systemUserID = Gdn::userModel()->getSystemUserID();
+            foreach ($awardedUserIDs as $awardedUserID) {
+                if ($awardedUserID == $systemUserID) {
+                    continue;
                 }
+                $badgeAwardModel->award($badge->BadgeID, $awardedUserID, $userID);
             }
         }
     }
