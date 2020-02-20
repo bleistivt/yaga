@@ -204,7 +204,7 @@ class ActedModel extends Gdn_Model {
         $content = Gdn::cache()->get($cacheKey);
 
         if ($content == Gdn_Cache::CACHEOP_FAILURE) {
-            $content = $this->getItems('best', $limit, $offset, $userID = false);
+            $content = $this->getItems('best', $limit, $offset, $userID);
 
             Gdn::cache()->store($cacheKey, $content, [
                 Gdn_Cache::FEATURE_EXPIRY => $this->expiry
@@ -245,6 +245,7 @@ class ActedModel extends Gdn_Model {
      */
     protected function process($records) {
         $content = [];
+        $reactionModel = Yaga::reactionModel();
 
         foreach ($records as $record) {
             $item = $this->getRecord($record['ParentType'], $record['ParentID']);
@@ -253,6 +254,9 @@ class ActedModel extends Gdn_Model {
                 // Item not found or no active handler for this item.
                 continue;
             }
+
+            // Fill the reaction cache to reduce the amount of queries.
+            $reactionModel->prefetch($record['ParentType'], $record['ParentID']);
 
             $item['ItemType'] = $record['ParentType'];
             $item['ContentID'] = $record['ParentID'];

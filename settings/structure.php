@@ -18,18 +18,18 @@ $px = $database->DatabasePrefix;
 // Tracks the data associated with reacting to content
 $construct->table('Reaction')
     ->primaryKey('ReactionID')
-    ->column('InsertUserID', 'int', false, ['index.1', 'unique.Reaction'])
+    ->column('InsertUserID', 'int', false, ['index', 'unique.Reaction'])
     ->column('ActionID', 'int', false, ['index', 'index.Profile'])
-    ->column('ParentID', 'int', false, 'unique.Reaction')
-    ->column('ParentType', 'varchar(100)', false, 'unique.Reaction')
+    ->column('ParentID', 'int', false, ['index.Record', 'unique.Reaction'])
+    ->column('ParentType', 'varchar(100)', false, ['index.Record', 'unique.Reaction'])
     ->column('ParentAuthorID', 'int', false, ['index', 'index.Profile'])
-    ->column('DateInserted', 'datetime')
+    ->column('DateInserted', 'datetime', false, 'index.Record')
     ->set($explicit, $drop);
 
-$result = $sql->query("SHOW INDEX FROM ${Px}Reaction WHERE Key_name = 'IX_ParentID_ParentType'")->result(); 
+/*$result = $sql->query("SHOW INDEX FROM ${Px}Reaction WHERE Key_name = 'IX_ParentID_ParentType'")->result(); 
 if (!$result && !$construct->CaptureOnly) {
     $sql->query("ALTER TABLE ${Px}Reaction ADD INDEX IX_ParentID_ParentType (ParentID, ParentType)");
-}
+}*/
 
 // Describes actions that can be taken on a comment, discussion or activity
 $construct->table('Action')
