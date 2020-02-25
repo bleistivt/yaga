@@ -90,7 +90,7 @@ class BadgeAwardModel extends Gdn_Model {
                     'Photo' => asset($badge->Photo, true),
                     'RecordType' => 'Badge',
                     'RecordID' => $badgeID,
-                    'Route' => '/yaga/badges/'.$badge->BadgeID.'/'.Gdn_Format::url($badge->Name),
+                    'Route' => '/yaga/badges/'.$badge->BadgeID.'/'.rawurlencode($badge->Name),
                     'HeadlineFormat' => Gdn::translate('Yaga.Badge.EarnedHeadlineFormat'),
                     'Data' => [
                         'Name' => $badge->Name

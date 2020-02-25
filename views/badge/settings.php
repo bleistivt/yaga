@@ -31,7 +31,7 @@ echo wrap(Gdn::translate('Yaga.Badges.Settings.Desc'), 'div', ['class' => 'padde
 
                 $tr .= wrap(anchor(
                     img($badge->Photo, ['class' => 'BadgePhoto']),
-                    '/yaga/badges/'.$badge->BadgeID.'/'.Gdn_Format::url($badge->Name),
+                    '/yaga/badges/'.$badge->BadgeID.'/'.rawurlencode($badge->Name),
                     ['title' => Gdn::translate('Yaga.Badge.DetailLink')]
                 ), 'td');
 

@@ -11,7 +11,7 @@ foreach($this->Data as $badge) {
             $badge['Photo'],
             ['class' => 'ProfilePhoto ProfilePhotoSmall']
         ),
-        'yaga/badges/'.$badge['BadgeID'].'/'.Gdn_Format::url($badge['Name']),
+        'yaga/badges/'.$badge['BadgeID'].'/'.rawurlencode($badge['Name']),
         ['title' => $badge['Name']]
     );
 }

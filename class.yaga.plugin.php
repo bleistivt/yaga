@@ -126,7 +126,7 @@ class YagaPlugin extends Gdn_Plugin {
                 wrap(
                     anchor(
                         $tempString,
-                        '/profile/reactions/'.$user->UserID.'/'.Gdn_Format::url($user->Name).'/'.$action->ActionID,
+                        '/profile/reactions/'.$user->UserID.'/'.rawurlencode($user->Name).'/'.$action->ActionID,
                         ['class' => 'Yaga_Reaction TextColor', 'title' => $action->Description]
                     ),
                     'span',
@@ -201,7 +201,7 @@ class YagaPlugin extends Gdn_Plugin {
         }
 
         // Build a pager
-        $baseUrl = 'profile/reactions/'.$sender->User->UserID.'/'.Gdn_Format::url($sender->User->Name).'/'.$actionID;
+        $baseUrl = 'profile/reactions/'.$sender->User->UserID.'/'.rawurlencode($sender->User->Name).'/'.$actionID;
         $pagerFactory = new Gdn_PagerFactory();
         $sender->Pager = $pagerFactory->getPager('Pager', $sender);
         $sender->Pager->ClientID = 'Pager';
@@ -276,7 +276,7 @@ class YagaPlugin extends Gdn_Plugin {
             $offset,
             $limit,
             $data->TotalRecords,
-            'profile/best/'.$sender->User->UserID.'/'.Gdn_Format::url($sender->User->Name).'/%1$s/'
+            'profile/best/'.$sender->User->UserID.'/'.rawurlencode($sender->User->Name).'/%1$s/'
         );
 
         // Render the ProfileController
