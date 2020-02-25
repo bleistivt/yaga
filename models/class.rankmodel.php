@@ -207,7 +207,7 @@ class RankModel extends Gdn_Model {
         $userModel->setField($userID, 'RankID', $rank->RankID);
 
         // Update the roles if necessary
-        $this->_UpdateUserRoles($userID, $oldRankID, $rank->RankID);
+        $this->_updateUserRoles($userID, $oldRankID, $rank->RankID);
 
         $this->EventArguments['Rank'] = $rank;
         $this->EventArguments['UserID'] = $userID;
@@ -236,7 +236,7 @@ class RankModel extends Gdn_Model {
      * @param int $oldRankID
      * @param int $newRankID
      */
-    private function _UpdateUserRoles($userID, $oldRankID, $newRankID) {
+    private function _updateUserRoles($userID, $oldRankID, $newRankID) {
         $userModel = Gdn::userModel();
 
         // Get the user's current roles

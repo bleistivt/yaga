@@ -2,7 +2,7 @@
 
 /* Copyright 2014 Zachary Doll */
 
-$contents = $this->_Content->Content;
+$contents = $this->_content->Content;
 
 echo '<ul class="DataList Compact BlogList">';
 foreach ($contents as $content) {

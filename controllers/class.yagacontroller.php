@@ -218,10 +218,10 @@ class YagaController extends DashboardController {
                 $this->setData('TransportPath', $zipFile);
             }
 
-            $include = $this->_FindIncludes();
+            $include = $this->_findIncludes();
             if (count($include)) {
-                $info = $this->_ExtractZip($zipFile);
-                $this->_ImportData($info, $include);
+                $info = $this->_extractZip($zipFile);
+                $this->_importData($info, $include);
                 Gdn_FileSystem::removeFolder(PATH_UPLOADS.'/import/yaga');
             } else {
                 $this->Form->addError(Gdn::translate('Yaga.Error.Includes'));
@@ -249,9 +249,9 @@ class YagaController extends DashboardController {
         }
 
         if ($this->Form->isPostBack()) {
-            $include = $this->_FindIncludes();
+            $include = $this->_findIncludes();
             if (count($include)) {
-                $filename = $this->_ExportData($include);
+                $filename = $this->_exportData($include);
                 $this->setData('TransportPath', $filename);
             } else {
                 $this->Form->addError(Gdn::translate('Yaga.Error.Includes'));
@@ -272,7 +272,7 @@ class YagaController extends DashboardController {
      * @return array
      * @since 1.0
      */
-    protected function _FindIncludes() {
+    protected function _findIncludes() {
         $formValues = $this->Form->formValues();
         $sections = $formValues['Checkboxes'];
 
@@ -293,7 +293,7 @@ class YagaController extends DashboardController {
      * @return mixed false on failure, the path to the transport file on success
      * @since 1.0
      */
-    protected function _ExportData($include = [], $path = null) {
+    protected function _exportData($include = [], $path = null) {
         $startTime = microtime(true);
         $info = new stdClass();
         $info->Version = Gdn::config('Yaga.Version', '?.?');
@@ -397,7 +397,7 @@ class YagaController extends DashboardController {
      * @return boolean Whether or not the transport file was extracted successfully
      * @since 1.0
      */
-    protected function _ExtractZip($filename) {
+    protected function _extractZip($filename) {
         if (!file_exists($filename)) {
             $this->Form->addError(Gdn::translate('Yaga.Error.FileDNE'));
 			return false;
@@ -423,7 +423,7 @@ class YagaController extends DashboardController {
         $zipFile->close();
 
         // Validate checksum
-        if ($this->_ValidateChecksum($metaData) === true) {
+        if ($this->_validateChecksum($metaData) === true) {
             return $metaData;
         } else {
             $this->Form->addError(Gdn::translate('Yaga.Error.ArchiveChecksum'));
@@ -441,14 +441,14 @@ class YagaController extends DashboardController {
      * form with a passing return value.
      * @since 1.0
      */
-    protected function _ImportData($info, $include) {
+    protected function _importData($info, $include) {
         if (!$info) {
             return false;
         }
 
         // Import Configs
         $configs = unserialize(file_get_contents(PATH_UPLOADS.'/import/yaga/'.$info->Config));
-        $configurations = $this->_NestedToDotNotation($configs, 'Yaga');
+        $configurations = self::_nestedToDotNotation($configs, 'Yaga');
         foreach ($configurations as $name => $value) {
             Gdn::config()->saveToConfig($name, $value);
         }
@@ -487,12 +487,12 @@ class YagaController extends DashboardController {
      * @return array
      * @since 1.0
      */
-    protected function _NestedToDotNotation($configs, $prefix = '') {
+    protected static function _nestedToDotNotation($configs, $prefix = '') {
         $configStrings = [];
 
         foreach ($configs as $name => $value) {
             if (is_array($value)) {
-                $configStrings = array_merge($configStrings, $this->_NestedToDotNotation($value, "$prefix.$name"));
+                $configStrings = array_merge($configStrings, self::_nestedToDotNotation($value, "$prefix.$name"));
             } else {
                 $configStrings["$prefix.$name"] = $value;
             }
@@ -508,7 +508,7 @@ class YagaController extends DashboardController {
      * @return boolean Whether or not the checksum is valid
      * @since 1.0
      */
-    protected function _ValidateChecksum($metaData) {
+    protected function _validateChecksum($metaData) {
         $hashes = [];
 
         // Hash the config file
@@ -528,7 +528,7 @@ class YagaController extends DashboardController {
         }
 
         // Hash the image files
-		$files = $this->_GetFiles(PATH_UPLOADS.'/import/yaga/images');
+		$files = self::_getFiles(PATH_UPLOADS.'/import/yaga/images');
         $this->setData('ImageCount', count($files));
 		foreach($files as $file) {
 			$hashes[] = md5_file($file);
@@ -552,13 +552,13 @@ class YagaController extends DashboardController {
      * @return array A list of Files and, optionally, Directories.
      * @since 1.0
      */
-    protected function _GetFiles($directory) {
+    protected static function _getFiles($directory) {
         $files = array_diff(scandir($directory), ['.', '..']);
         $result = [];
         foreach ($files as $file) {
             $fileName = $directory.'/'.$file;
             if (is_dir($fileName)) {
-                $result = array_merge($result, $this->_GetFiles($fileName));
+                $result = array_merge($result, self::_getFiles($fileName));
                 continue;
             }
             $result[] = $fileName;
