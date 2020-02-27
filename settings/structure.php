@@ -17,32 +17,32 @@ $px = $database->DatabasePrefix;
 
 // Rename Reaction, Action, Badge, BadgeAward & Rank
 
-$construct->table('Reaction')
+$construct->table('Reaction');
 // Differentiate between GDN_reaction (lowercase) and GDN_Reaction on case insensitive systems.
 if ($construct->tableExists() && $construct->columnExists('ActionID')) {
     $construct->renameTable($px.'Reaction', $px.'YagaReaction', false);
 }
 $construct->reset();
 
-$construct->table('Action')
+$construct->table('Action');
 if ($construct->tableExists()) {
     $construct->renameTable($px.'Action', $px.'YagaAction', false);
 }
 $construct->reset();
 
-$construct->table('Badge')
+$construct->table('Badge');
 if ($construct->tableExists()) {
     $construct->renameTable($px.'Badge', $px.'YagaBadge', false);
 }
 $construct->reset();
 
-$construct->table('BadgeAward')
+$construct->table('BadgeAward');
 if ($construct->tableExists()) {
     $construct->renameTable($px.'BadgeAward', $px.'YagaBadgeAward', false);
 }
 $construct->reset();
 
-$construct->table('Rank')
+$construct->table('Rank');
 if ($construct->tableExists()) {
     $construct->renameTable($px.'Rank', $px.'YagaRank', false);
 }
