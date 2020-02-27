@@ -137,7 +137,7 @@ class Yaga {
                 continue;
             }
             
-            $criteria = (object)unserialize($badge->RuleCriteria);
+            $criteria = (object)dbdecode($badge->RuleCriteria);
             $result = $rule->award($sender, $user, $criteria);
             if (!$result) {
                 continue;

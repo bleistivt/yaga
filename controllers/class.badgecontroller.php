@@ -101,7 +101,7 @@ class BadgeController extends DashboardController {
         if ($this->Form->isPostBack() == false) {
             if (property_exists($this, 'Badge')) {
                 // Manually merge the criteria into the badge object
-                $criteria = (array)unserialize($this->Badge->RuleCriteria);
+                $criteria = (array)dbdecode($this->Badge->RuleCriteria);
                 $badgeArray = (array)$this->Badge;
 
                 $data = array_merge($badgeArray, $criteria);
@@ -138,7 +138,7 @@ class BadgeController extends DashboardController {
 
             $rule->validate($criteria, $this->Form);
 
-            $serializedCriteria = serialize($criteria);
+            $serializedCriteria = dbencode($criteria);
             $this->Form->setFormValue('RuleCriteria', $serializedCriteria);
             if ($this->Form->save()) {
                 if ($edit) {

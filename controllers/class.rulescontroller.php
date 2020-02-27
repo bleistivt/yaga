@@ -62,14 +62,14 @@ class RulesController extends Gdn_Controller {
 
             asort($tempRules);
             if (empty($tempRules)) {
-                $rules = serialize(false);
+                $rules = dbencode(false);
             } else {
-                $rules = serialize($tempRules);
+                $rules = dbencode($tempRules);
             }
             Gdn::cache()->store('Yaga.Badges.Rules', $rules, [Gdn_Cache::FEATURE_EXPIRY => Gdn::config('Yaga.Rules.CacheExpire', 86400)]);
         }
 
-        return unserialize($rules);
+        return dbdecode($rules);
     }
 
     /**
@@ -93,15 +93,15 @@ class RulesController extends Gdn_Controller {
                     }
                 }
                 if (empty($tempRules)) {
-                    $rules = serialize(false);
+                    $rules = dbencode(false);
                 } else {
-                    $rules = serialize($tempRules);
+                    $rules = dbencode($tempRules);
                 }
 
                 Gdn::cache()->store('Yaga.Badges.InteractionRules', $rules, [Gdn_Cache::FEATURE_EXPIRY => Gdn::config('Yaga.Rules.CacheExpire', 86400)]);
             }
 
-            self::$interactionRulesCache = unserialize($rules);
+            self::$interactionRulesCache = dbdecode($rules);
         }
         
         return self::$interactionRulesCache;

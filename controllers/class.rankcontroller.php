@@ -100,7 +100,7 @@ class RankController extends DashboardController {
 
         if ($this->Form->isPostBack() != true) {
             if (property_exists($this, 'Rank')) {
-                $perkOptions = (array)unserialize($this->Rank->Perks);
+                $perkOptions = (array)dbdecode($this->Rank->Perks);
                 $rankArray = (array)$this->Rank;
 
                 $data = array_merge($rankArray, $perkOptions);
@@ -131,7 +131,7 @@ class RankController extends DashboardController {
             $this->EventArguments['PerkOptions'] =& $perkOptions;
             $this->fireEvent('BeforeValidation');
 
-            $this->Form->setFormValue('Perks', serialize($perkOptions));
+            $this->Form->setFormValue('Perks', dbencode($perkOptions));
 
             if ($this->Form->save()) {
                 if ($edit) {

@@ -525,10 +525,10 @@ class YagaPlugin extends Gdn_Plugin {
         }
 
         if (!is_array($user->Permissions)) {
-            $tempPerms = unserialize($user->Permissions);
+            $tempPerms = dbdecode($user->Permissions);
             if (!in_array($permission, $tempPerms)) {
                 $tempPerms[] = $permission;
-                $user->Permissions = serialize($tempPerms);
+                $user->Permissions = dbencode($tempPerms);
             }
         } else {
             $tempPerms =& $user->Permissions;
@@ -550,11 +550,11 @@ class YagaPlugin extends Gdn_Plugin {
         }
 
         if (!is_array($user->Permissions)) {
-            $tempPerms = unserialize($user->Permissions);
+            $tempPerms = dbdecode($user->Permissions);
             $key = array_search($permission, $tempPerms);
             if ($key) {
                 unset($tempPerms[$key]);
-                $user->Permissions = serialize($tempPerms);
+                $user->Permissions = dbencode($tempPerms);
             }
         } else {
             $tempPerms =& $user->Permissions;

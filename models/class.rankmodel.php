@@ -110,7 +110,7 @@ class RankModel extends Gdn_Model {
         if (!array_key_exists($rankID, self::$_perks)) {
             $ranks = $this->get();
             foreach ($ranks as $rank) {
-                self::$_perks[$rank->RankID] = unserialize($rank->Perks);
+                self::$_perks[$rank->RankID] = dbdecode($rank->Perks);
 
                 if (self::$_perks[$rank->RankID] === false) {
                     self::$_perks[$rank->RankID] = [];

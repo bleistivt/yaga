@@ -315,7 +315,7 @@ class YagaController extends DashboardController {
         $info->Config = 'configs.yaga';
         $configs = Gdn::config('Yaga', []);
         unset($configs['Version']);
-        $configData = serialize($configs);
+        $configData = dbencode($configs);
         $fh->addFromString('configs.yaga', $configData);
         $hashes[] = md5($configData);
 
@@ -324,7 +324,7 @@ class YagaController extends DashboardController {
             $info->Action = 'actions.yaga';
             $actions = Yaga::actionModel()->get('Sort', 'asc');
             $this->setData('ActionCount', count($actions));
-            $actionData = serialize($actions);
+            $actionData = dbencode($actions);
             $fh->addFromString('actions.yaga', $actionData);
             $hashes[] = md5($actionData);
         }
@@ -334,7 +334,7 @@ class YagaController extends DashboardController {
             $info->Rank = 'ranks.yaga';
             $ranks = Yaga::rankModel()->get('Level', 'asc');
             $this->setData('RankCount', count($ranks));
-            $rankData = serialize($ranks);
+            $rankData = dbencode($ranks);
             $fh->addFromString('ranks.yaga', $rankData);
             array_push($images, Gdn::config('Yaga.Ranks.Photo'), null);
             $hashes[] = md5($rankData);
@@ -345,7 +345,7 @@ class YagaController extends DashboardController {
             $info->Badge = 'badges.yaga';
             $badges = Yaga::badgeModel()->get();
             $this->setData('BadgeCount', count($badges));
-            $badgeData = serialize($badges);
+            $badgeData = dbencode($badges);
             $fh->addFromString('badges.yaga', $badgeData);
             $hashes[] = md5($badgeData);
             foreach ($badges as $badge) {
@@ -412,7 +412,7 @@ class YagaController extends DashboardController {
 
         // Get the metadata from the comment
         $comment = $zipFile->comment;
-        $metaData = unserialize($comment);
+        $metaData = dbdecode($comment);
 
         $result = $zipFile->extractTo(PATH_UPLOADS.'/import/yaga');
         if ($result !== true) {
@@ -447,7 +447,7 @@ class YagaController extends DashboardController {
         }
 
         // Import Configs
-        $configs = unserialize(file_get_contents(PATH_UPLOADS.'/import/yaga/'.$info->Config));
+        $configs = dbdecode(file_get_contents(PATH_UPLOADS.'/import/yaga/'.$info->Config));
         $configurations = self::_nestedToDotNotation($configs, 'Yaga');
         foreach ($configurations as $name => $value) {
             Gdn::config()->saveToConfig($name, $value);
@@ -459,7 +459,7 @@ class YagaController extends DashboardController {
             $key = StringBeginsWith($key, 'Yaga', false, true);
 
             if ($value) {
-                $data = unserialize(file_get_contents(PATH_UPLOADS.'/import/yaga/'.$info->$key));
+                $data = dbdecode(file_get_contents(PATH_UPLOADS.'/import/yaga/'.$info->$key));
                 Gdn::sql()->emptyTable('Yaga'.$key);
                 $modelName = $key.'Model';
                 $model = Yaga::$modelName();
