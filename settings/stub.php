@@ -78,7 +78,7 @@ if (!$row) {
         'Description' => 'Has it been a year already?',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#anniversary-1',
         'RuleClass' => 'LengthOfService',
-        'RuleCriteria' => 'a:2:{s:8:"Duration";s:1:"1";s:6:"Period";s:4:"year";}',
+        'RuleCriteria' => '{"Duration":"1","Period":"year"}',
         'AwardValue' => 5
     ]);
     $sql->insert('YagaBadge', [
@@ -86,7 +86,7 @@ if (!$row) {
         'Description' => 'Thanks for sticking with us for 2 years.',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#anniversary-2',
         'RuleClass' => 'LengthOfService',
-        'RuleCriteria' => 'a:2:{s:8:"Duration";s:1:"2";s:6:"Period";s:4:"year";}',
+        'RuleCriteria' => '{"Duration":"2","Period":"year"}',
         'AwardValue' => 5
     ]);
     $sql->insert('YagaBadge', [
@@ -94,7 +94,7 @@ if (!$row) {
         'Description' => 'That\'s three years you have been here!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#anniversary-3',
         'RuleClass' => 'LengthOfService',
-        'RuleCriteria' => 'a:2:{s:8:"Duration";s:1:"3";s:6:"Period";s:4:"year";}',
+        'RuleCriteria' => '{"Duration":"3","Period":"year"}',
         'AwardValue' => 5
     ]);
     $sql->insert('YagaBadge', [
@@ -102,7 +102,7 @@ if (!$row) {
         'Description' => 'You might have graduated from college considering how long you have been here.',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#anniversary-4',
         'RuleClass' => 'LengthOfService',
-        'RuleCriteria' => 'a:2:{s:8:"Duration";s:1:"4";s:6:"Period";s:4:"year";}',
+        'RuleCriteria' => '{"Duration":"4","Period":"year"}',
         'AwardValue' => 5
     ]);
     $sql->insert('YagaBadge', [
@@ -110,7 +110,7 @@ if (!$row) {
         'Description' => 'Five years ago, you created your account. Thanks for sticking around!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#anniversary-5',
         'RuleClass' => 'LengthOfService',
-        'RuleCriteria' => 'a:2:{s:8:"Duration";s:1:"5";s:6:"Period";s:4:"year";}',
+        'RuleCriteria' => '{"Duration":"5","Period":"year"}',
         'AwardValue' => 5
     ]);
     $sql->insert('YagaBadge', [
@@ -118,7 +118,7 @@ if (!$row) {
         'Description' => 'You have reached your final form. OK, not really, but you are still awesome in my book!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#anniversary-longtime',
         'RuleClass' => 'LengthOfService',
-        'RuleCriteria' => 'a:2:{s:8:"Duration";s:1:"6";s:6:"Period";s:4:"year";}',
+        'RuleCriteria' => '{"Duration":"6","Period":"year"}',
         'AwardValue' => 10
     ]);
     $sql->insert('YagaBadge', [
@@ -126,7 +126,7 @@ if (!$row) {
         'Description' => 'You have received 5 awesomes. Not a bad start!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#awesome-1',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:1:"5";s:8:"ActionID";s:1:"3";}',
+        'RuleCriteria' => '{"Target":"5","ActionID":"3"}',
         'AwardValue' => 10
     ]);
     $sql->insert('YagaBadge', [
@@ -134,7 +134,7 @@ if (!$row) {
         'Description' => 'You keep posting great content. Nice!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#awesome-2',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:2:"25";s:8:"ActionID";s:1:"3";}',
+        'RuleCriteria' => '{"Target":"25","ActionID":"3"}',
         'AwardValue' => 10
     ]);
     $sql->insert('YagaBadge', [
@@ -142,7 +142,7 @@ if (!$row) {
         'Description' => 'Your posts are what good forums are made of!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#awesome-3',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:3:"100";s:8:"ActionID";s:1:"3";}',
+        'RuleCriteria' => '{"Target":"100","ActionID":"3"}',
         'AwardValue' => 10
     ]);
     $sql->insert('YagaBadge', [
@@ -150,7 +150,7 @@ if (!$row) {
         'Description' => 'We definitely want you to keep doing what you are doing.',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#awesome-4',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:3:"250";s:8:"ActionID";s:1:"3";}',
+        'RuleCriteria' => '{"Target":"250","ActionID":"3"}',
         'AwardValue' => 25
     ]);
     $sql->insert('YagaBadge', [
@@ -158,7 +158,7 @@ if (!$row) {
         'Description' => 'We\'re lucky to have you here. Amazing!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#awesome-5',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:3:"500";s:8:"ActionID";s:1:"3";}',
+        'RuleCriteria' => '{"Target":"500","ActionID":"3"}',
         'AwardValue' => 50
     ]);
     $sql->insert('YagaBadge', [
@@ -166,7 +166,7 @@ if (!$row) {
         'Description' => 'Thanks for posting on your anniversary. It means so much to us that you remembered!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#cakeday',
         'RuleClass' => 'CakeDayPost',
-        'RuleCriteria' => 'a:0:{}',
+        'RuleCriteria' => '{}',
         'AwardValue' => 10
     ]);
     $sql->insert('YagaBadge', [
@@ -174,7 +174,7 @@ if (!$row) {
         'Description' => 'You are in there and getting involved. Have some free points!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#comment-1',
         'RuleClass' => 'PostCount',
-        'RuleCriteria' => 'a:2:{s:10:"Comparison";s:3:"gte";s:6:"Target";s:1:"1";}',
+        'RuleCriteria' => '{"Comparison":"gte","Target":"1"}',
         'AwardValue' => 2
     ]);
     $sql->insert('YagaBadge', [
@@ -182,7 +182,7 @@ if (!$row) {
         'Description' => 'This is how you get to places. Keep up your posting.',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#comment-2',
         'RuleClass' => 'PostCount',
-        'RuleCriteria' => 'a:2:{s:10:"Comparison";s:3:"gte";s:6:"Target";s:2:"10";}',
+        'RuleCriteria' => '{"Comparison":"gte","Target":"10"}',
         'AwardValue' => 5
     ]);
     $sql->insert('YagaBadge', [
@@ -190,7 +190,7 @@ if (!$row) {
         'Description' => 'Thanks for driving discussions!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#comment-3',
         'RuleClass' => 'PostCount',
-        'RuleCriteria' => 'a:2:{s:10:"Comparison";s:3:"gte";s:6:"Target";s:3:"100";}',
+        'RuleCriteria' => '{"Comparison":"gte","Target":"100"}',
         'AwardValue' => 10
     ]);
     $sql->insert('YagaBadge', [
@@ -198,7 +198,7 @@ if (!$row) {
         'Description' => 'You have given the gift of gab to this community.',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#comment-4',
         'RuleClass' => 'PostCount',
-        'RuleCriteria' => 'a:2:{s:10:"Comparison";s:3:"gte";s:6:"Target";s:3:"500";}',
+        'RuleCriteria' => '{"Comparison":"gte","Target":"500"}',
         'AwardValue' => 15
     ]);
     $sql->insert('YagaBadge', [
@@ -206,7 +206,7 @@ if (!$row) {
         'Description' => 'When you are here, you\'re family!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#comment-5',
         'RuleClass' => 'PostCount',
-        'RuleCriteria' => 'a:2:{s:10:"Comparison";s:3:"gte";s:6:"Target";s:4:"1000";}',
+        'RuleCriteria' => '{"Comparison":"gte","Target":"1000"}',
         'AwardValue' => 20
     ]);
     $sql->insert('YagaBadge', [
@@ -214,7 +214,7 @@ if (!$row) {
         'Description' => 'See how many likes you get with these shares. Am I doing this right?',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#fb-connector',
         'RuleClass' => 'SocialConnection',
-        'RuleCriteria' => 'a:1:{s:13:"SocialNetwork";s:8:"Facebook";}',
+        'RuleCriteria' => '{"SocialNetwork":"Facebook"}',
         'AwardValue' => 10
     ]);
     $sql->insert('YagaBadge', [
@@ -222,7 +222,7 @@ if (!$row) {
         'Description' => 'You have received 5 insightfuls. Not a bad start!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#insightful-1',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:1:"5";s:8:"ActionID";s:1:"2";}',
+        'RuleCriteria' => '{"Target":"5","ActionID":"2"}',
         'AwardValue' => 10
     ]);
     $sql->insert('YagaBadge', [
@@ -230,7 +230,7 @@ if (!$row) {
         'Description' => 'You keep posting great content. Nice!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#insightful-2',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:2:"25";s:8:"ActionID";s:1:"2";}',
+        'RuleCriteria' => '{"Target":"25","ActionID":"2"}',
         'AwardValue' => 10
     ]);
     $sql->insert('YagaBadge', [
@@ -238,7 +238,7 @@ if (!$row) {
         'Description' => 'Your posts are what good forums are made of!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#insightful-3',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:3:"100";s:8:"ActionID";s:1:"2";}',
+        'RuleCriteria' => '{"Target":"100","ActionID":"2"}',
         'AwardValue' => 10
     ]);
     $sql->insert('YagaBadge', [
@@ -246,7 +246,7 @@ if (!$row) {
         'Description' => 'We definitely want you to keep doing what you are doing.',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#insightful-4',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:3:"250";s:8:"ActionID";s:1:"2";}',
+        'RuleCriteria' => '{"Target":"250","ActionID":"2"}',
         'AwardValue' => 25
     ]);
     $sql->insert('YagaBadge', [
@@ -254,7 +254,7 @@ if (!$row) {
         'Description' => 'We\'re lucky to have you here. Amazing!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#insightful-5',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:3:"500";s:8:"ActionID";s:1:"2";}',
+        'RuleCriteria' => '{"Target":"500","ActionID":"2"}',
         'AwardValue' => 50
     ]);
     $sql->insert('YagaBadge', [
@@ -262,7 +262,7 @@ if (!$row) {
         'Description' => 'Mentioning someone in a post is a great way to direct comments.',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#mention',
         'RuleClass' => 'HasMentioned',
-        'RuleCriteria' => 'a:0:{}',
+        'RuleCriteria' => '{}',
         'AwardValue' => 5
     ]);
     $sql->insert('YagaBadge', [
@@ -270,7 +270,7 @@ if (!$row) {
         'Description' => 'Today is the anniversary of the first human moon-walk. Celebrate!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#moon-landing',
         'RuleClass' => 'HolidayVisit',
-        'RuleCriteria' => 'a:2:{s:5:"Month";s:1:"7";s:3:"Day";s:2:"20";}',
+        'RuleCriteria' => '{"Month":"7","Day":"20"}',
         'AwardValue' => 15
     ]);
     $sql->insert('YagaBadge', [
@@ -278,7 +278,7 @@ if (!$row) {
         'Description' => 'Thanks for sharing yourself with the community.',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#portrait-upload',
         'RuleClass' => 'PhotoExists',
-        'RuleCriteria' => 'a:0:{}',
+        'RuleCriteria' => '{}',
         'AwardValue' => 10
     ]);
     $sql->insert('YagaBadge', [
@@ -286,7 +286,7 @@ if (!$row) {
         'Description' => 'You have received your first promote. This is a great start!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#promote-1',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:1:"1";s:8:"ActionID";s:1:"1";}',
+        'RuleCriteria' => '{"Target":"1","ActionID":"1"}',
         'AwardValue' => 10
     ]);
     $sql->insert('YagaBadge', [
@@ -294,7 +294,7 @@ if (!$row) {
         'Description' => 'You keep posting great content. Nice!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#promote-2',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:1:"5";s:8:"ActionID";s:1:"1";}',
+        'RuleCriteria' => '{"Target":"5","ActionID":"1"}',
         'AwardValue' => 10
     ]);
     $sql->insert('YagaBadge', [
@@ -302,7 +302,7 @@ if (!$row) {
         'Description' => 'Your posts are what good forums are made of!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#promote-3',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:2:"25";s:8:"ActionID";s:1:"1";}',
+        'RuleCriteria' => '{"Target":"25","ActionID":"1"}',
         'AwardValue' => 25
     ]);
     $sql->insert('YagaBadge', [
@@ -310,7 +310,7 @@ if (!$row) {
         'Description' => 'We definitely want you to keep doing what you are doing.',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#promote-4',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:2:"50";s:8:"ActionID";s:1:"1";}',
+        'RuleCriteria' => '{"Target":"50","ActionID":"1"}',
         'AwardValue' => 50
     ]);
     $sql->insert('YagaBadge', [
@@ -318,7 +318,7 @@ if (!$row) {
         'Description' => 'We\'re lucky to have you here. Amazing!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#promote-5',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:3:"100";s:8:"ActionID";s:1:"1";}',
+        'RuleCriteria' => '{"Target":"100","ActionID":"1"}',
         'AwardValue' => 100
     ]);
     $sql->insert('YagaBadge', [
@@ -326,7 +326,7 @@ if (!$row) {
         'Description' => 'You are doing so much stuff today. Have another badge!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#achievement-combo',
         'RuleClass' => 'AwardCombo',
-        'RuleCriteria' => 'a:3:{s:6:"Target";s:1:"5";s:8:"Duration";s:1:"1";s:6:"Period";s:3:"day";}',
+        'RuleCriteria' => '{"Target":"5","Duration":"1","Period":"day"}',
         'AwardValue' => 20
     ]);
     $sql->insert('YagaBadge', [
@@ -334,7 +334,7 @@ if (!$row) {
         'Description' => 'I am tired just looking at all the stuff you are doing!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#running-man',
         'RuleClass' => 'CommentMarathon',
-        'RuleCriteria' => 'a:3:{s:6:"Target";s:2:"25";s:8:"Duration";s:1:"1";s:6:"Period";s:3:"day";}',
+        'RuleCriteria' => '{"Target":"25","Duration":"1","Period":"day"}',
         'AwardValue' => 10
     ]);
     $sql->insert('YagaBadge', [
@@ -342,7 +342,7 @@ if (!$row) {
         'Description' => 'You have received 5 WTFs. Not a bad start!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#shock-1',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:1:"5";s:8:"ActionID";s:1:"5";}',
+        'RuleCriteria' => '{"Target":"5","ActionID":"5"}',
         'AwardValue' => 10
     ]);
     $sql->insert('YagaBadge', [
@@ -350,7 +350,7 @@ if (!$row) {
         'Description' => 'You keep posting great content. Nice!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#shock-2',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:2:"25";s:8:"ActionID";s:1:"5";}',
+        'RuleCriteria' => '{"Target":"25","ActionID":"5"}',
         'AwardValue' => 10
     ]);
     $sql->insert('YagaBadge', [
@@ -358,7 +358,7 @@ if (!$row) {
         'Description' => 'Your posts are what good forums are made of!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#shock-3',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:3:"100";s:8:"ActionID";s:1:"5";}',
+        'RuleCriteria' => '{"Target":"100","ActionID":"5"}',
         'AwardValue' => 10
     ]);
     $sql->insert('YagaBadge', [
@@ -366,7 +366,7 @@ if (!$row) {
         'Description' => 'We definitely want you to keep doing what you are doing.',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#shock-4',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:3:"250";s:8:"ActionID";s:1:"5";}',
+        'RuleCriteria' => '{"Target":"250","ActionID":"5"}',
         'AwardValue' => 25
     ]);
     $sql->insert('YagaBadge', [
@@ -374,7 +374,7 @@ if (!$row) {
         'Description' => 'We\'re lucky to have you here. Amazing!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#shock-5',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:3:"500";s:8:"ActionID";s:1:"5";}',
+        'RuleCriteria' => '{"Target":"500","ActionID":"5"}',
         'AwardValue' => 50
     ]);
     $sql->insert('YagaBadge', [
@@ -382,7 +382,7 @@ if (!$row) {
         'Description' => 'You have super fast reflexes to have responded so quickly!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#threadshot-reticle',
         'RuleClass' => 'ReflexComment',
-        'RuleCriteria' => 'a:1:{s:7:"Seconds";s:2:"60";}',
+        'RuleCriteria' => '{"Seconds":"60"}',
         'AwardValue' => 15
     ]);
     $sql->insert('YagaBadge', [
@@ -390,7 +390,7 @@ if (!$row) {
         'Description' => 'Make way for the retweets, hash tags, and restrictive message length. It is refreshing to see well crafted messages make every character cou',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#twitter-connector',
         'RuleClass' => 'SocialConnection',
-        'RuleCriteria' => 'a:1:{s:13:"SocialNetwork";s:7:"Twitter";}',
+        'RuleCriteria' => '{"SocialNetwork":"Twitter"}',
         'AwardValue' => 10
     ]);
     $sql->insert('YagaBadge', [
@@ -398,7 +398,7 @@ if (!$row) {
         'Description' => 'You should try bring humans back to life now that you have brought this discussion back from the dead.',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#unimpressed-necropost',
         'RuleClass' => 'NecroPost',
-        'RuleCriteria' => 'a:2:{s:8:"Duration";s:2:"26";s:6:"Period";s:4:"week";}',
+        'RuleCriteria' => '{"Duration":"26","Period":"week"}',
         'AwardValue' => 10
     ]);
     $sql->insert('YagaBadge', [
@@ -406,7 +406,7 @@ if (!$row) {
         'Description' => 'Thanks for posting on a new member\'s first discussion. I know you made them feel at home.',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#welcome-committee',
         'RuleClass' => 'NewbieComment',
-        'RuleCriteria' => 'a:2:{s:8:"Duration";s:1:"2";s:6:"Period";s:3:"day";}',
+        'RuleCriteria' => '{"Duration":"2","Period":"day"}',
         'AwardValue' => 10
     ]);
     $sql->insert('YagaBadge', [
@@ -414,7 +414,7 @@ if (!$row) {
         'Description' => 'You have received 5 LOLs. Not a bad start!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#wink-1',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:1:"5";s:8:"ActionID";s:1:"4";}',
+        'RuleCriteria' => '{"Target":"5","ActionID":"4"}',
         'AwardValue' => 10
     ]);
     $sql->insert('YagaBadge', [
@@ -422,7 +422,7 @@ if (!$row) {
         'Description' => 'You keep posting great content. Nice!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#wink-2',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:2:"25";s:8:"ActionID";s:1:"4";}',
+        'RuleCriteria' => '{"Target":"25","ActionID":"4"}',
         'AwardValue' => 10
     ]);
     $sql->insert('YagaBadge', [
@@ -430,7 +430,7 @@ if (!$row) {
         'Description' => 'Your posts are what good forums are made of!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#wink-3',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:3:"100";s:8:"ActionID";s:1:"4";}',
+        'RuleCriteria' => '{"Target":"100","ActionID":"4"}',
         'AwardValue' => 10
     ]);
     $sql->insert('YagaBadge', [
@@ -438,7 +438,7 @@ if (!$row) {
         'Description' => 'We definitely want you to keep doing what you are doing.',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#wink-4',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:3:"250";s:8:"ActionID";s:1:"4";}',
+        'RuleCriteria' => '{"Target":"250","ActionID":"4"}',
         'AwardValue' => 25
     ]);
     $sql->insert('YagaBadge', [
@@ -446,7 +446,7 @@ if (!$row) {
         'Description' => 'We\'re lucky to have you here. Amazing!',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#wink-5',
         'RuleClass' => 'ReactionCount',
-        'RuleCriteria' => 'a:2:{s:6:"Target";s:3:"500";s:8:"ActionID";s:1:"4";}',
+        'RuleCriteria' => '{"Target":"500","ActionID":"4"}',
         'AwardValue' => 50
     ]);
 }
@@ -462,7 +462,7 @@ if (!$row) {
         'PointReq' => 0,
         'PostReq' => 0,
         'AgeReq' => 0,
-        'Perks' => 'a:6:{s:29:"ConfGarden.EditContentTimeout";s:1:"0";s:26:"PermGarden.Curation.Manage";s:6:"revoke";s:27:"PermPlugins.Signatures.Edit";s:6:"revoke";s:23:"PermPlugins.Tagging.Add";s:6:"revoke";s:35:"ConfPlugins.Emotify.FormatEmoticons";s:1:"0";s:27:"ConfGarden.Format.MeActions";s:1:"0";}'
+        'Perks' => '{"ConfGarden.EditContentTimeout":"0","PermGarden.Curation.Manage":"revoke","PermPlugins.Signatures.Edit":"revoke","PermPlugins.Tagging.Add":"revoke","ConfPlugins.Emotify.FormatEmoticons":"0","ConfGarden.Format.MeActions":"0"}'
     ]);
     $sql->insert('YagaRank', [
         'RankID' => 2,
@@ -472,7 +472,7 @@ if (!$row) {
         'PointReq' => 0,
         'PostReq' => 5,
         'AgeReq' => 86400,
-        'Perks' => 'a:4:{s:29:"ConfGarden.EditContentTimeout";s:1:"0";s:26:"PermGarden.Curation.Manage";s:6:"revoke";s:27:"PermPlugins.Signatures.Edit";s:6:"revoke";s:23:"PermPlugins.Tagging.Add";s:6:"revoke";}'
+        'Perks' => '{"ConfGarden.EditContentTimeout":"0","PermGarden.Curation.Manage":"revoke","PermPlugins.Signatures.Edit":"revoke","PermPlugins.Tagging.Add":"revoke"}'
     ]);
     $sql->insert('YagaRank', [
         'RankID' => 3,
@@ -482,7 +482,7 @@ if (!$row) {
         'PointReq' => 15,
         'PostReq' => 50,
         'AgeReq' => 604800,
-        'Perks' => 'a:3:{s:29:"ConfGarden.EditContentTimeout";s:1:"0";s:35:"ConfPlugins.Emotify.FormatEmoticons";s:1:"1";s:27:"ConfGarden.Format.MeActions";s:1:"1";}'
+        'Perks' => '{"ConfGarden.EditContentTimeout":"0","ConfPlugins.Emotify.FormatEmoticons":"1","ConfGarden.Format.MeActions":"1"}'
     ]);
     $sql->insert('YagaRank', [
         'RankID' => 4,
@@ -492,7 +492,7 @@ if (!$row) {
         'PointReq' => 75,
         'PostReq' => 200,
         'AgeReq' => 2678400,
-        'Perks' => 'a:4:{s:29:"ConfGarden.EditContentTimeout";s:6:"604800";s:27:"PermPlugins.Signatures.Edit";s:5:"grant";s:35:"ConfPlugins.Emotify.FormatEmoticons";s:1:"1";s:27:"ConfGarden.Format.MeActions";s:1:"1";}'
+        'Perks' => '{"ConfGarden.EditContentTimeout":"604800","PermPlugins.Signatures.Edit":"grant","ConfPlugins.Emotify.FormatEmoticons":"1","ConfGarden.Format.MeActions":"1"}'
     ]);
     $sql->insert('YagaRank', [
         'RankID' => 5,
@@ -502,7 +502,7 @@ if (!$row) {
         'PointReq' => 250,
         'PostReq' => 400,
         'AgeReq' => 7776000,
-        'Perks' => 'a:6:{s:29:"ConfGarden.EditContentTimeout";s:7:"2592000";s:26:"PermGarden.Curation.Manage";s:5:"grant";s:27:"PermPlugins.Signatures.Edit";s:5:"grant";s:23:"PermPlugins.Tagging.Add";s:5:"grant";s:35:"ConfPlugins.Emotify.FormatEmoticons";s:1:"1";s:27:"ConfGarden.Format.MeActions";s:1:"1";}'
+        'Perks' => '{"ConfGarden.EditContentTimeout":"2592000","PermGarden.Curation.Manage":"grant","PermPlugins.Signatures.Edit":"grant","PermPlugins.Tagging.Add":"grant","ConfPlugins.Emotify.FormatEmoticons":"1","ConfGarden.Format.MeActions":"1"}'
     ]);
     $sql->insert('YagaRank', [
         'RankID' => 6,
@@ -512,7 +512,7 @@ if (!$row) {
         'PointReq' => 1000,
         'PostReq' => 1000,
         'AgeReq' => 31536000,
-        'Perks' => 'a:2:{s:4:"Role";s:2:"32";s:26:"PermGarden.Curation.Manage";s:5:"grant";}'
+        'Perks' => '{"Role":"32","PermGarden.Curation.Manage":"grant"}'
     ]);
     $sql->insert('YagaRank', [
         'RankID' => 7,
@@ -522,7 +522,7 @@ if (!$row) {
         'PointReq' => 10000,
         'PostReq' => 10000,
         'AgeReq' => 157766400,
-        'Perks' => 'a:7:{s:4:"Role";s:2:"16";s:29:"ConfGarden.EditContentTimeout";s:2:"-1";s:26:"PermGarden.Curation.Manage";s:5:"grant";s:27:"PermPlugins.Signatures.Edit";s:5:"grant";s:23:"PermPlugins.Tagging.Add";s:5:"grant";s:35:"ConfPlugins.Emotify.FormatEmoticons";s:1:"1";s:27:"ConfGarden.Format.MeActions";s:1:"1";}',
+        'Perks' => '{"Role":"16","ConfGarden.EditContentTimeout":"-1","PermGarden.Curation.Manage":"grant","PermPlugins.Signatures.Edit":"grant","PermPlugins.Tagging.Add":"grant","ConfPlugins.Emotify.FormatEmoticons":"1","ConfGarden.Format.MeActions":"1"}',
         'Enabled' => 0
     ]);
 }
