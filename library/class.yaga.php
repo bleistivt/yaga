@@ -93,7 +93,7 @@ class Yaga {
     public static function executeBadgeHooks($sender, $handler) {
         $session = Gdn::session();
         if (!Gdn::config('Yaga.Badges.Enabled') || !$session->isValid()) {
-        return;
+            return;
         }
 
         // Let's us use __FUNCTION__ in the original hook
