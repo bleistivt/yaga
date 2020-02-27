@@ -810,20 +810,20 @@ class YagaPlugin extends Gdn_Plugin {
             // Remove neutral/negative reactions
             $actions = Yaga::actionModel()->getWhere(['AwardValue <' => 1])->result();
             foreach ($actions as $negative) {
-                Gdn::userModel()->getDelete('Reaction', ['InsertUserID' => $userID, 'ActionID' => $negative->ActionID], $data);
+                Gdn::userModel()->getDelete('YagaReaction', ['InsertUserID' => $userID, 'ActionID' => $negative->ActionID], $data);
             }
         } elseif ($deleteMethod == 'wipe') {
             // Completely remove reactions
-            Gdn::userModel()->getDelete('Reaction', ['InsertUserID' => $userID], $data);
+            Gdn::userModel()->getDelete('YagaReaction', ['InsertUserID' => $userID], $data);
         } else {
             // Leave reactions
         }
 
         // Remove the reactions they have received
-        Gdn::userModel()->getDelete('Reaction', ['ParentAuthorID' => $userID], $data);
+        Gdn::userModel()->getDelete('YagaReaction', ['ParentAuthorID' => $userID], $data);
 
         // Remove their badges
-        Gdn::userModel()->getDelete('BadgeAward', ['UserID' => $userID], $data);
+        Gdn::userModel()->getDelete('YagaBadgeAward', ['UserID' => $userID], $data);
 
         // Blank the user's yaga information
         $sql->update('User')

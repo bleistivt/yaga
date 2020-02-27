@@ -23,7 +23,8 @@ class BadgeModel extends Gdn_Model {
      * Defines the related database table name.
      */
     public function __construct() {
-        parent::__construct('Badge');
+        parent::__construct('YagaBadge');
+        $this->PrimaryKey = 'BadgeID';
     }
 
     /**
@@ -35,7 +36,7 @@ class BadgeModel extends Gdn_Model {
         if (empty(self::$_badges)) {
             self::$_badges = $this->SQL
                 ->select()
-                ->from('Badge')
+                ->from('YagaBadge')
                 ->orderBy('Sort')
                 ->get()
                 ->result();
@@ -53,7 +54,7 @@ class BadgeModel extends Gdn_Model {
     public function getLimit($limit = false, $offset = false) {
         return $this->SQL
             ->select()
-            ->from('Badge')
+            ->from('YagaBadge')
             ->orderBy('Sort')
             ->limit($limit, $offset)
             ->get()
@@ -69,7 +70,7 @@ class BadgeModel extends Gdn_Model {
     public function getByID($badgeID) {
         $badge = $this->SQL
             ->select()
-            ->from('Badge')
+            ->from('YagaBadge')
             ->where('BadgeID', $badgeID)
             ->get()
             ->firstRow();
@@ -85,7 +86,7 @@ class BadgeModel extends Gdn_Model {
     public function enable($badgeID, $enable) {
         $enable = (!$enable) ? 0 : 1;
         $this->SQL
-            ->update('Badge')
+            ->update('YagaBadge')
             ->set('Enabled', $enable)
             ->where('BadgeID', $badgeID)
             ->put();
@@ -107,12 +108,12 @@ class BadgeModel extends Gdn_Model {
             try {
                 $this->Database->beginTransaction();
                 // Delete the badge
-                $this->SQL->delete('Badge', ['BadgeID' => $badgeID]);
+                $this->SQL->delete('YagaBadge', ['BadgeID' => $badgeID]);
 
                 // Find the affected users
                 $userIDSet = $this->SQL
                     ->select('UserID')
-                    ->from('BadgeAward')
+                    ->from('YagaBadgeAward')
                     ->where('BadgeID', $badgeID)
                     ->get()
                     ->resultArray();
@@ -131,7 +132,7 @@ class BadgeModel extends Gdn_Model {
                     Yaga::givePoints($userID, -1 * $badge->AwardValue, 'Badge');
                 }
                 // Remove the award rows
-                $this->SQL->delete('BadgeAward', ['BadgeID' => $badgeID]);
+                $this->SQL->delete('YagaBadgeAward', ['BadgeID' => $badgeID]);
 
                 $this->Database->commitTransaction();
             } catch(Exception $ex) {
@@ -155,8 +156,8 @@ class BadgeModel extends Gdn_Model {
         $sql = 'select b.BadgeID, b.Name, b.Description, b.Photo, b.AwardValue, '
             .'ba.UserID, ba.InsertUserID, ba.Reason, ba.DateInserted, '
             .'ui.Name AS InsertUserName '
-            ."from {$px}Badge as b "
-            ."left join {$px}BadgeAward as ba ON b.BadgeID = ba.BadgeID and ba.UserID = :UserID "
+            ."from {$px}YagaBadge as b "
+            ."left join {$px}YagaBadgeAward as ba ON b.BadgeID = ba.BadgeID and ba.UserID = :UserID "
             ."left join {$px}User as ui on ba.InsertUserID = ui.UserID "
             .'order by b.Sort';
 

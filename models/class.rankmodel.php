@@ -29,7 +29,8 @@ class RankModel extends Gdn_Model {
      * Defines the related database table name.
      */
     public function __construct() {
-        parent::__construct('Rank');
+        parent::__construct('YagaRank');
+        $this->PrimaryKey = 'RankID';
     }
 
     /**
@@ -41,7 +42,7 @@ class RankModel extends Gdn_Model {
         if (empty(self::$_ranks)) {
             self::$_ranks = $this->SQL
                 ->select()
-                ->from('Rank')
+                ->from('YagaRank')
                 ->orderBy('Sort')
                 ->get()
                 ->result();
@@ -153,7 +154,7 @@ class RankModel extends Gdn_Model {
     public function enable($rankID, $enable) {
         $enable = (!$enable) ? 0 : 1;
         $this->SQL
-            ->update('Rank')
+            ->update('YagaRank')
             ->set('Enabled', $enable)
             ->where('RankID', $rankID)
             ->put();

@@ -15,8 +15,41 @@ $sql = $database->sql(); // To run queries.
 $construct = $database->structure(); // To modify and add database tables.
 $px = $database->DatabasePrefix;
 
-// Tracks the data associated with reacting to content
+// Rename Reaction, Action, Badge, BadgeAward & Rank
+
 $construct->table('Reaction')
+// Differentiate between GDN_reaction (lowercase) and GDN_Reaction on case insensitive systems.
+if ($construct->tableExists() && $construct->columnExists('ActionID')) {
+    $construct->renameTable($px.'Reaction', $px.'YagaReaction', false);
+}
+$construct->reset();
+
+$construct->table('Action')
+if ($construct->tableExists()) {
+    $construct->renameTable($px.'Action', $px.'YagaAction', false);
+}
+$construct->reset();
+
+$construct->table('Badge')
+if ($construct->tableExists()) {
+    $construct->renameTable($px.'Badge', $px.'YagaBadge', false);
+}
+$construct->reset();
+
+$construct->table('BadgeAward')
+if ($construct->tableExists()) {
+    $construct->renameTable($px.'BadgeAward', $px.'YagaBadgeAward', false);
+}
+$construct->reset();
+
+$construct->table('Rank')
+if ($construct->tableExists()) {
+    $construct->renameTable($px.'Rank', $px.'YagaRank', false);
+}
+$construct->reset();
+
+// Tracks the data associated with reacting to content
+$construct->table('YagaReaction')
     ->primaryKey('ReactionID')
     ->column('InsertUserID', 'int', false, ['index', 'unique.Reaction'])
     ->column('ActionID', 'int', false, ['index', 'index.Profile'])
@@ -32,7 +65,7 @@ if (!$result && !$construct->CaptureOnly) {
 }*/
 
 // Describes actions that can be taken on a comment, discussion or activity
-$construct->table('Action')
+$construct->table('YagaAction')
     ->primaryKey('ActionID')
     ->column('Name', 'varchar(140)')
     ->column('Description', 'varchar(255)')
@@ -44,7 +77,7 @@ $construct->table('Action')
     ->set($explicit, $drop);
 
 // Describes a badge and the associated rule criteria
-$construct->table('Badge')
+$construct->table('YagaBadge')
     ->primaryKey('BadgeID')
     ->column('Name', 'varchar(140)')
     ->column('Description', 'varchar(255)', null)
@@ -57,7 +90,7 @@ $construct->table('Badge')
     ->set($explicit, $drop);
 
 // Tracks the actual awarding of badges
-$construct->table('BadgeAward')
+$construct->table('YagaBadgeAward')
     ->primaryKey('BadgeAwardID')
     ->column('BadgeID', 'int', false, 'index.UserBadges')
     ->column('UserID', 'int', false, 'index.UserBadges')
@@ -67,7 +100,7 @@ $construct->table('BadgeAward')
     ->set($explicit, $drop);
 
 // Describes a rank and associated values
-$construct->table('Rank')
+$construct->table('YagaRank')
     ->primaryKey('RankID')
     ->column('Name', 'varchar(140)')
     ->column('Description', 'varchar(255)', null)
@@ -94,7 +127,7 @@ if ($sql->getWhere('ActivityType', ['Name' => 'RankPromotion'])->numRows() == 0 
     $sql->insert('ActivityType', ['AllowComments' => '1', 'Name' => 'RankPromotion', 'FullHeadline' => '%1$s was promoted.', 'ProfileHeadline' => '%1$s was promoted.', 'Notify' => 1]);
 }
 
-// Correct the url of the old default badge icon.
+// Correct the urls to the old default badge icon.
 if (!$construct->CaptureOnly) {
-    $sql->update('Badge', ['Photo' => 'plugins/yaga/design/images/default_badge.png'], ['Photo' => 'applications/yaga/design/images/default_badge.png'])->put();
+    $sql->update('YagaBadge', ['Photo' => 'plugins/yaga/design/images/default_badge.png'], ['Photo' => 'applications/yaga/design/images/default_badge.png'])->put();
 }

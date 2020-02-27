@@ -89,7 +89,7 @@ class ActedModel extends Gdn_Model {
 
             from (
                 select ParentID, ParentType, max(DateInserted) as DateInserted
-                from {$px}Reaction {$where}
+                from {$px}YagaReaction {$where}
                 group by ParentID, ParentType
                 order by null
             ) as r

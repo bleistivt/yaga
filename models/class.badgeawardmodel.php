@@ -23,7 +23,8 @@ class BadgeAwardModel extends Gdn_Model {
      * Defines the related database table name.
      */
     public function __construct() {
-        parent::__construct('BadgeAward');
+        parent::__construct('YagaBadgeAward');
+        $this->PrimaryKey = 'BadgeAwardID';
     }
 
     /**
@@ -36,7 +37,7 @@ class BadgeAwardModel extends Gdn_Model {
     public function getRecent($badgeID, $limit = 15) {
         return $this->SQL
             ->select('ba.UserID, ba.DateInserted, u.Name, u.Photo, u.Gender, u.Email')
-            ->from('BadgeAward ba')
+            ->from('YagaBadgeAward ba')
             ->join('User u', 'ba.UserID = u.UserID')
             ->where('BadgeID', $badgeID)
             ->orderBy('DateInserted', 'Desc')
@@ -59,7 +60,7 @@ class BadgeAwardModel extends Gdn_Model {
 
         if (!empty($badge)) {
             if (!$this->exists($userID, $badgeID)) {
-                $this->SQL->insert('BadgeAward', [
+                $this->SQL->insert('YagaBadgeAward', [
                     'BadgeID' => $badgeID,
                     'UserID' => $userID,
                     'InsertUserID' => $insertUserID,
@@ -124,7 +125,7 @@ class BadgeAwardModel extends Gdn_Model {
     public function exists($userID, $badgeID) {
         return $this->SQL
             ->select()
-            ->from('BadgeAward')
+            ->from('YagaBadgeAward')
             ->where('BadgeID', $badgeID)
             ->where('UserID', $userID)
             ->get()
@@ -141,8 +142,8 @@ class BadgeAwardModel extends Gdn_Model {
     public function getByUser($userID, $dataType = DATASET_TYPE_ARRAY) {
         return $this->SQL
             ->select()
-            ->from('Badge b')
-            ->join('BadgeAward ba', 'ba.BadgeID = b.BadgeID', 'left')
+            ->from('YagaBadge b')
+            ->join('YagaBadgeAward ba', 'ba.BadgeID = b.BadgeID', 'left')
             ->where('ba.UserID', $userID)
             ->get()
             ->result($dataType);
@@ -159,8 +160,8 @@ class BadgeAwardModel extends Gdn_Model {
             $px = $this->Database->DatabasePrefix;
             $sql = 'select b.BadgeID, b.Enabled, b.RuleClass, b.RuleCriteria, '
                 .'ba.UserID '
-                ."from {$px}Badge as b "
-                ."left join {$px}BadgeAward as ba ON b.BadgeID = ba.BadgeID and ba.UserID = :UserID ";
+                ."from {$px}YagaBadge as b "
+                ."left join {$px}YagaBadgeAward as ba ON b.BadgeID = ba.BadgeID and ba.UserID = :UserID ";
 
             $this->unobtainedCache[$userID] = $this->Database->query($sql, [':UserID' => $userID])->result();
         }
@@ -187,7 +188,7 @@ class BadgeAwardModel extends Gdn_Model {
             case 'CountBadges':
                 Gdn::database()->query(DBAModel::getCountSQL(
                     'count',
-                    'User', 'BadgeAward',
+                    'User', 'YagaBadgeAward',
                     'CountBadges', 'BadgeAwardID',
                     'UserID', 'UserID',
                     $where

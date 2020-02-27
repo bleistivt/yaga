@@ -23,7 +23,8 @@ class ActionModel extends Gdn_Model {
      * Defines the related database table name.
      */
     public function __construct() {
-        parent::__construct('Action');
+        parent::__construct('YagaAction');
+        $this->PrimaryKey = 'ActionID';
     }
 
     /**
@@ -35,7 +36,7 @@ class ActionModel extends Gdn_Model {
         if (empty(self::$_actions)) {
             self::$_actions = $this->SQL
                 ->select()
-                ->from('Action')
+                ->from('YagaAction')
                 ->orderBy('Sort')
                 ->get()
                 ->result();
@@ -52,7 +53,7 @@ class ActionModel extends Gdn_Model {
     public function getByID($actionID) {
         $action = $this->SQL
             ->select()
-            ->from('Action')
+            ->from('YagaAction')
             ->where('ActionID', $actionID)
             ->get()
             ->firstRow();
@@ -80,16 +81,16 @@ class ActionModel extends Gdn_Model {
      */
     public function deleteAction($actionID, $replacementID = null) {
         if ($this->exists($actionID)) {
-            $this->SQL->delete('Action', ['ActionID' => $actionID]);
+            $this->SQL->delete('YagaAction', ['ActionID' => $actionID]);
 
             // replace the reaction table to move reactions to a new action
             if ($replacementID && $this->exists($replacementID)) {
-                $this->SQL->update('Reaction')
+                $this->SQL->update('YagaReaction')
                     ->set('ActionID', $replacementID)
                     ->where('ActionID', $actionID)
                     ->put();
             } else {
-                $this->SQL->delete('Reaction', ['ActionID' => $actionID]);
+                $this->SQL->delete('YagaReaction', ['ActionID' => $actionID]);
             }
             return true;
         }

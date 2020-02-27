@@ -23,7 +23,8 @@ class ReactionModel extends Gdn_Model {
      * Defines the related database table name.
      */
     public function __construct() {
-        parent::__construct('Reaction');
+        parent::__construct('YagaReaction');
+        $this->PrimaryKey = 'ReactionID';
     }
 
     /**
@@ -55,10 +56,10 @@ class ReactionModel extends Gdn_Model {
 
         $sql = "select a.*, "
            ."(select count(r.ReactionID) "
-           ."from {$px}Reaction as r "
+           ."from {$px}YagaReaction as r "
            ."where r.ParentID = :ParentID and r.ParentType = :ParentType "
            ."and r.ActionID = a.ActionID) as Count "
-           ."from {$px}Action AS a "
+           ."from {$px}YagaAction AS a "
            ."order by a.Sort";
 
         return $this->Database->query($sql, [':ParentID' => $id, ':ParentType' => $type])->result();
@@ -78,8 +79,8 @@ class ReactionModel extends Gdn_Model {
         } else {
             $result = $this->SQL
                 ->select('a.*, r.InsertUserID as UserID, r.DateInserted')
-                ->from('Action a')
-                ->join('Reaction r', 'a.ActionID = r.ActionID')
+                ->from('YagaAction a')
+                ->join('YagaReaction r', 'a.ActionID = r.ActionID')
                 ->where('r.ParentID', $id)
                 ->where('r.ParentType', $type)
                 ->orderBy('r.DateInserted')
@@ -101,7 +102,7 @@ class ReactionModel extends Gdn_Model {
     public function getByUser($id, $type, $userID) {
         return $this->SQL
             ->select()
-            ->from('Reaction')
+            ->from('YagaReaction')
             ->where('ParentID', $id)
             ->where('ParentType', $type)
             ->where('InsertUserID', $userID)
@@ -119,7 +120,7 @@ class ReactionModel extends Gdn_Model {
     public function getUserCount($userID, $actionID) {
         return $this->SQL
             ->select('ReactionID', 'count', 'RowCount')
-            ->from('Reaction')
+            ->from('YagaReaction')
             ->where(['ActionID' => $actionID, 'ParentAuthorID' => $userID])
             ->get()
             ->firstRow()
@@ -136,7 +137,7 @@ class ReactionModel extends Gdn_Model {
     public function getUserTakenCount($userID, $actionID) {
         return $this->SQL
             ->select('ReactionID', 'count', 'RowCount')
-            ->from('Reaction')
+            ->from('YagaReaction')
             ->where(['ActionID' => $actionID, 'InsertUserID' => $userID])
             ->get()
             ->firstRow()
@@ -175,7 +176,7 @@ class ReactionModel extends Gdn_Model {
             if ($actionID == $currentReaction->ActionID) {
                 // remove the record
                 $reaction = $this->SQL->delete(
-                    'Reaction',
+                    'YagaReaction',
                     [
                         'ParentID' => $id,
                         'ParentType' => $type,
@@ -189,7 +190,7 @@ class ReactionModel extends Gdn_Model {
             } else {
                 // update the record
                 $reaction = $this->SQL
-                    ->update('Reaction')
+                    ->update('YagaReaction')
                     ->set('ActionID', $actionID)
                     ->set('DateInserted', Gdn_Format::toDateTime())
                     ->where('ParentID', $id)
@@ -203,7 +204,7 @@ class ReactionModel extends Gdn_Model {
             // insert a record
             $reaction = $this->SQL
                 ->insert(
-                    'Reaction',
+                    'YagaReaction',
                     [
                         'ActionID' => $actionID,
                         'ParentID' =>    $id,
@@ -241,8 +242,8 @@ class ReactionModel extends Gdn_Model {
         if (!empty($ids)) {
             $result = $this->SQL
                 ->select('a.*, r.InsertUserID as UserID, r.DateInserted, r.ParentID')
-                ->from('Action a')
-                ->join('Reaction r', 'a.ActionID = r.ActionID')
+                ->from('YagaAction a')
+                ->join('YagaReaction r', 'a.ActionID = r.ActionID')
                 ->whereIn('r.ParentID', $ids)
                 ->where('r.ParentType', $type)
                 ->orderBy('r.DateInserted')
