@@ -22,31 +22,26 @@ $construct->table('Reaction');
 if ($construct->tableExists() && $construct->columnExists('ActionID')) {
     $construct->renameTable($px.'Reaction', $px.'YagaReaction', false);
 }
-$construct->reset();
 
 $construct->table('Action');
 if ($construct->tableExists()) {
     $construct->renameTable($px.'Action', $px.'YagaAction', false);
 }
-$construct->reset();
 
 $construct->table('Badge');
 if ($construct->tableExists()) {
     $construct->renameTable($px.'Badge', $px.'YagaBadge', false);
 }
-$construct->reset();
 
 $construct->table('BadgeAward');
 if ($construct->tableExists()) {
     $construct->renameTable($px.'BadgeAward', $px.'YagaBadgeAward', false);
 }
-$construct->reset();
 
 $construct->table('Rank');
 if ($construct->tableExists()) {
     $construct->renameTable($px.'Rank', $px.'YagaRank', false);
 }
-$construct->reset();
 
 // Delete duplicates from GDN_Reactions that violate the UNIQUE constraint (user reacting to the same content twice).
 $construct->table('YagaReaction');
@@ -65,7 +60,6 @@ if ($construct->tableExists()) {
         )", 'delete');
     }
 }
-$construct->reset();
 
 // Tracks the data associated with reacting to content
 $construct->table('YagaReaction')
