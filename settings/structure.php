@@ -49,16 +49,19 @@ if ($construct->tableExists()) {
 $construct->reset();
 
 // Delete duplicates from GDN_Reactions that violate the UNIQUE constraint (user reacting to the same content twice).
-$sql->query("
-    delete from ${px}YagaReaction
-    where ReactionID in (
-        select * from (
-            select max(r.ReactionID)
-            from ${px}YagaReaction as r
-            group by r.InsertUserID, r.ParentID, r.ParentType
-            having count(r.ReactionID) > 1
-        ) as r2
-)", 'delete');
+$result = $sql->query("show index from ${px}YagaReaction where Key_name = 'UX_YagaReaction_Reaction'")->result();
+if (!$result) {
+    $sql->query("
+        delete from ${px}YagaReaction
+        where ReactionID in (
+            select * from (
+                select max(r.ReactionID)
+                from ${px}YagaReaction as r
+                group by r.InsertUserID, r.ParentID, r.ParentType
+                having count(r.ReactionID) > 1
+            ) as r2
+    )", 'delete');
+}
 
 // Tracks the data associated with reacting to content
 $construct->table('YagaReaction')
@@ -71,9 +74,9 @@ $construct->table('YagaReaction')
     ->column('DateInserted', 'datetime', false, 'index.Record')
     ->set($explicit, $drop);
 
-/*$result = $sql->query("SHOW INDEX FROM ${px}Reaction WHERE Key_name = 'IX_ParentID_ParentType'")->result(); 
+/*$result = $sql->query("SHOW INDEX FROM ${px}YagaReaction WHERE Key_name = 'IX_ParentID_ParentType'")->result(); 
 if (!$result && !$construct->CaptureOnly) {
-    $sql->query("ALTER TABLE ${px}Reaction ADD INDEX IX_ParentID_ParentType (ParentID, ParentType)");
+    $sql->query("ALTER TABLE ${px}YagaReaction ADD INDEX IX_ParentID_ParentType (ParentID, ParentType)");
 }*/
 
 // Describes actions that can be taken on a comment, discussion or activity
