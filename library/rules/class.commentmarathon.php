@@ -10,22 +10,17 @@
 class CommentMarathon implements YagaRule {
 
     public function award($sender, $user, $criteria) {
-        $target = $criteria->Target;
-        $targetDate = Gdn_Format::toDateTime(strtotime($criteria->Duration.' '.$criteria->Period.' ago'));
+        $targetDate = DateTimeFormatter::timeStampToDateTime((int)strtotime($criteria->Duration.' '.$criteria->Period.' ago'));
 
-        $sql = Gdn::sql();
-        $count = $sql->select('count(CommentID) as Count')
-                 ->from('Comment')
-                 ->where('InsertUserID', $user->UserID)
-                 ->where('DateInserted >=', $targetDate)
-                 ->get()
-                        ->firstRow();
+        $count = Gdn::sql()
+            ->select('count(CommentID) as Count')
+            ->from('Comment')
+            ->where('InsertUserID', $user->UserID)
+            ->where('DateInserted >=', $targetDate)
+            ->get()
+            ->firstRow();
 
-        if ($count->Count >= $target) {
-            return true;
-        } else {
-            return false;
-        }
+        return $count->Count >= $criteria->Target;
     }
 
     public function form($form) {

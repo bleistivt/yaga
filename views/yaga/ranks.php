@@ -2,8 +2,11 @@
 
 /* Copyright 2015 Zachary Doll */
 
-echo heading($this->title());
 $user = (Gdn::session()->User) ?: (object)['RankID' => 0];
+$dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
+
+echo heading($this->title());
+
 echo '<ul class="DataList Ranks">';
 
 foreach($this->data('Ranks') as $rank) {
@@ -27,7 +30,10 @@ foreach($this->data('Ranks') as $rank) {
             }
         }
         if ($rank->AgeReq > 0) {
-            $reqs[] = sprintf(Gdn::translate('Yaga.Ranks.Story.AgeReq'), Gdn_Format::seconds($rank->AgeReq));
+            $reqs[] = sprintf(
+                Gdn::translate('Yaga.Ranks.Story.AgeReq'),
+                $dateFormatter->formatSeconds($rank->AgeReq)
+            );
         }
 
         switch(count($reqs)) {

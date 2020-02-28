@@ -2,8 +2,12 @@
 
 /* Copyright 2013 Zachary Doll */
 
+$dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
+
 echo heading($this->title());
+
 echo '<ul class="DataList Badges">';
+
 foreach($this->data('Badges') as $badge) {
     // Don't show disabled badges
     //if (!$badge->Enabled) {
@@ -15,7 +19,11 @@ foreach($this->data('Badges') as $badge) {
 
     if ($badge->UserID) {
         $readClass = '';
-        $awardDescription = sprintf(Gdn::translate('Yaga.Badge.Earned.Format'), Gdn_Format::date($badge->DateInserted, 'html'), $badge->InsertUserName);
+        $awardDescription = sprintf(
+            Gdn::translate('Yaga.Badge.Earned.Format'),
+            $dateFormatter->formatDate($badge->DateInserted, true),
+            $badge->InsertUserName
+        );
         if ($badge->Reason) {
             $awardDescription .= ': "'.$badge->Reason.'"';
         }

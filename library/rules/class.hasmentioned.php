@@ -11,12 +11,7 @@
 class HasMentioned implements YagaRule {
 
     public function award($sender, $user, $criteria) {
-        $hasMentioned    = count($sender->EventArguments['MentionedUsers']);
-        if ($hasMentioned) {
-            return true;
-        } else {
-            return false;
-        }
+        return count($sender->EventArguments['MentionedUsers']) > 0;
     }
 
     public function form($form) {

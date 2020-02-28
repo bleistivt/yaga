@@ -537,12 +537,7 @@ class YagaController extends DashboardController {
         sort($hashes);
 		$calculatedChecksum = md5(implode(',', $hashes));
 
-        if ($calculatedChecksum != $metaData->MD5) {
-            return false;
-		}
-		else {
-            return true;
-		}
+        return $calculatedChecksum == $metaData->MD5;
     }
 
     /**

@@ -12,11 +12,8 @@ class LengthOfService implements YagaRule {
     public function award($sender, $user, $criteria) {
         $insertDate = strtotime($user->DateInserted);
         $targetDate = strtotime($criteria->Duration.' '.$criteria->Period.' ago');
-        if ($insertDate < $targetDate) {
-            return true;
-        } else {
-            return false;
-        }
+
+        return $insertDate < $targetDate;
     }
 
     public function form($form) {

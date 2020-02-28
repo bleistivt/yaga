@@ -169,6 +169,7 @@ class ReactionModel extends Gdn_Model {
         $currentReaction = $this->getByUser($id, $type, $userID);
         $eventArgs['CurrentReaction'] = $currentReaction;
         $this->fireEvent('BeforeReactionSave', $eventArgs);
+        $now = DateTimeFormatter::timeStampToDateTime(time());
 
         if ($currentReaction) {
             $oldAction = $actionModel->getByID($currentReaction->ActionID);
@@ -192,7 +193,7 @@ class ReactionModel extends Gdn_Model {
                 $reaction = $this->SQL
                     ->update('YagaReaction')
                     ->set('ActionID', $actionID)
-                    ->set('DateInserted', Gdn_Format::toDateTime())
+                    ->set('DateInserted', $now)
                     ->where('ParentID', $id)
                     ->where('ParentType', $type)
                     ->where('InsertUserID', $userID)
@@ -211,7 +212,7 @@ class ReactionModel extends Gdn_Model {
                         'ParentType' => $type,
                         'ParentAuthorID' => $authorID,
                         'InsertUserID' => $userID,
-                        'DateInserted' => Gdn_Format::toDateTime()
+                        'DateInserted' => $now
                     ]
                 );
             $eventArgs['Exists'] = true;

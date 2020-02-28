@@ -3,6 +3,8 @@
 /* Copyright 2013 Zachary Doll */
 
 $contents = $this->data('Content');
+$dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
+$formatService = Gdn::formatService();
 
 echo '<ul class="DataList Compact BlogList">';
 foreach ($contents as $content) {
@@ -17,7 +19,7 @@ foreach ($contents as $content) {
 
 ?>
     <li id="<?php echo "{$contentType}_{$contentID}"; ?>" class="Item">
-        <h3><?php echo anchor(Gdn_Format::text($content['Name'], false), $content['ContentURL']); ?></h3>
+        <h3><?php echo anchor(htmlspecialchars($content['Name']), $content['ContentURL']); ?></h3>
         <div class="Item-Header">
             <div class="AuthorWrap">
                 <span class="Author">
@@ -34,7 +36,14 @@ foreach ($contents as $content) {
             </div>
             <div class="Meta">
                 <span class="MItem DateCreated">
-                    <?php echo anchor(Gdn_Format::date($content['DateInserted'], 'html'), $content['ContentURL'], 'Permalink', ['rel' => 'nofollow']); ?>
+                    <?php
+                        echo anchor(
+                            $dateFormatter->formatDate($content['DateInserted'], true),
+                            $content['ContentURL'],
+                            'Permalink',
+                            ['rel' => 'nofollow']
+                        );
+                    ?>
                 </span>
                 <?php
                 // Include source if one was set
@@ -48,7 +57,7 @@ foreach ($contents as $content) {
             <div class="Item-BodyWrap">
                 <div class="Item-Body">
                     <div class="Message Expander">
-                        <?php echo Gdn_Format::to($content['Body'], $content['Format']); ?>
+                        <?php echo $formatService->renderHTML($content['Body'], $content['Format']); ?>
                     </div>
                     <?php
                     if (Gdn::config('Yaga.Reactions.Enabled') && Gdn::session()->checkPermission('Yaga.Reactions.View')) {

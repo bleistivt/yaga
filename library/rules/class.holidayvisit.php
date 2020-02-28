@@ -14,11 +14,7 @@ class HolidayVisit implements YagaRule {
         $month = date('n');
         $day = date('j');
 
-        if ($criteria->Month == $month && $criteria->Day == $day) {
-            return true;
-        } else {
-            return false;
-        }
+        return $criteria->Month == $month && $criteria->Day == $day;
     }
 
     public function form($form) {

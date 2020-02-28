@@ -10,11 +10,7 @@
 class PhotoExists implements YagaRule {
 
     public function award($sender, $user, $criteria) {
-        if ($user->Photo) {
-            return true;
-        } else {
-            return false;
-        }
+        return (bool)$user->Photo;
     }
 
     public function form($form) {

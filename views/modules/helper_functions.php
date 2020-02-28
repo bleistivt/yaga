@@ -15,6 +15,8 @@
  * @param string $px
  */
 function writeModuleDiscussion($discussion, $px = 'Bookmark') {
+    $dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
+
 ?>
 <li id="<?php echo "{$px}_{$discussion->DiscussionID}"; ?>" class="<?php echo cssClass($discussion); ?>">
      <span class="Options">
@@ -24,7 +26,7 @@ function writeModuleDiscussion($discussion, $px = 'Bookmark') {
         ?>
      </span>
      <div class="Title"><?php
-        echo anchor(Gdn_Format::text($discussion->Name, false), discussionUrl($discussion).($discussion->CountCommentWatch > 0 ? '#Item_'.$discussion->CountCommentWatch : ''), 'DiscussionLink');
+        echo anchor(htmlspecialchars($discussion->Name), discussionUrl($discussion).($discussion->CountCommentWatch > 0 ? '#Item_'.$discussion->CountCommentWatch : ''), 'DiscussionLink');
      ?></div>
      <div class="Meta">
         <?php
@@ -34,7 +36,7 @@ function writeModuleDiscussion($discussion, $px = 'Bookmark') {
 
             echo newComments($discussion);
 
-            echo '<span class="MItem">'.Gdn_Format::date($discussion->LastDate, 'html').UserAnchor($last).'</span>';
+            echo '<span class="MItem">'.$dateFormatter->formatDate($badge->DateInserted, true).UserAnchor($last).'</span>';
         ?>
      </div>
 </li>
@@ -53,6 +55,8 @@ function writePromotedContent($content, $sender) {
     if ($userPhotoFirst === null) {
         $userPhotoFirst = Gdn::config('Vanilla.Comment.UserPhotoFirst', true);
     }
+
+    $dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
 
     $contentType = $content['ItemType'];
     $contentID = $content['ContentID'];
@@ -93,7 +97,14 @@ function writePromotedContent($content, $sender) {
             </div>
             <div class="Meta CommentMeta CommentInfo">
                 <span class="MItem DateCreated">
-                    <?php echo anchor(Gdn_Format::date($content['DateInserted'], 'html'), $contentURL, 'Permalink', ['rel' => 'nofollow']); ?>
+                    <?php
+                        echo anchor(
+                            $dateFormatter->formatDate($content['DateInserted'], true),
+                            $contentURL,
+                            'Permalink',
+                            ['rel' => 'nofollow']
+                        );
+                    ?>
                 </span>
                 <?php
                 // Include source if one was set
@@ -105,10 +116,14 @@ function writePromotedContent($content, $sender) {
                 $sender->fireEvent('ContentInfo');
                 ?>
             </div>
-            <div class="Title"><?php echo anchor(Gdn_Format::text($content['Name'], false), $contentURL, 'DiscussionLink'); ?></div>
+            <div class="Title"><?php echo anchor(htmlspecialchars($content['Name']), $contentURL, 'DiscussionLink'); ?></div>
             <div class="Body">
             <?php
-                echo anchor(strip_tags(Gdn_Format::to($content['Body'], $content['Format'])), $contentURL, 'BodyLink');
+                echo anchor(
+                    strip_tags(Gdn::formatService()->renderHTML($content['Body'], $content['Format'])),
+                    $contentURL,
+                    'BodyLink'
+                );
                 $sender->fireEvent('AfterBody'); // seperate event to account for less space.
             ?>
             </div>

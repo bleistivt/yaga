@@ -12,11 +12,7 @@ class SocialConnection implements YagaRule {
     public function award($sender, $user, $criteria) {
         $network = $sender->EventArguments['Provider'];
 
-        if ($network == $criteria->SocialNetwork) {
-            return true;
-        } else {
-            return false;
-        }
+        return $network == $criteria->SocialNetwork;
     }
 
     public function form($form) {
