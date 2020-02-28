@@ -2,11 +2,13 @@
 
 /* Copyright 2013 Zachary Doll */
 
+use \Vanilla\Formatting\DateTimeFormatter;
+
 $badge = $this->data('Badge');
 $userBadgeAward = $this->data('UserBadgeAward', false);
 $recentAwards = $this->data('RecentAwards', false);
 $awardCount = $this->data('AwardCount', 0);
-$dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
+// $dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
 
 echo wrap(
     img($badge->Photo, ['class' => 'BadgePhotoDisplay']).
@@ -23,7 +25,8 @@ if ($userBadgeAward) {
         userPhoto(Gdn::session()->User).
         Gdn::translate('Yaga.Badge.Earned').' '.
         wrap(
-            $dateFormatter->formatDate($userBadgeAward->DateInserted, true),
+            //$dateFormatter->formatDate($userBadgeAward->DateInserted, true),
+            Gdn_Format::date($userBadgeAward->DateInserted, 'html')
             'span',
             ['class' => 'DateReceived']
         ),

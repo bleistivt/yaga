@@ -1,9 +1,11 @@
 <?php if (!defined('APPLICATION')) exit();
 
+use \Vanilla\Formatting\DateTimeFormatter;
+
 /* Copyright 2014 Zachary Doll */
 
 $contents = $this->_content->Content;
-$dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
+// $dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
 $formatService = Gdn::formatService();
 
 echo '<ul class="DataList Compact BlogList">';
@@ -38,7 +40,8 @@ foreach ($contents as $content) {
                 <span class="MItem DateCreated">
                     <?php
                         echo anchor(
-                            $dateFormatter->formatDate($content['DateInserted'], true),
+                            //$dateFormatter->formatDate($content['DateInserted'], true),
+                            Gdn_Format::date($content['DateInserted'], 'html'),
                             $content['ContentURL'],
                             'Permalink',
                             ['rel' => 'nofollow']

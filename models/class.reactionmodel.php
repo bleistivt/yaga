@@ -1,5 +1,7 @@
 <?php if (!defined('APPLICATION')) exit();
 
+use \Vanilla\Formatting\DateTimeFormatter;
+
 /* Copyright 2013 Zachary Doll */
 
 /**
@@ -169,7 +171,8 @@ class ReactionModel extends Gdn_Model {
         $currentReaction = $this->getByUser($id, $type, $userID);
         $eventArgs['CurrentReaction'] = $currentReaction;
         $this->fireEvent('BeforeReactionSave', $eventArgs);
-        $now = DateTimeFormatter::timeStampToDateTime(time());
+        //$now = DateTimeFormatter::timeStampToDateTime(time());
+        $now = Gdn_Format::toDateTime();
 
         if ($currentReaction) {
             $oldAction = $actionModel->getByID($currentReaction->ActionID);

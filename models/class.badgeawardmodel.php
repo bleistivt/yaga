@@ -1,5 +1,7 @@
 <?php if (!defined('APPLICATION')) exit();
 
+use \Vanilla\Formatting\DateTimeFormatter;
+
 /* Copyright 2013 Zachary Doll */
 
 /**
@@ -65,7 +67,8 @@ class BadgeAwardModel extends Gdn_Model {
                     'UserID' => $userID,
                     'InsertUserID' => $insertUserID,
                     'Reason' => $reason,
-                    'DateInserted' => DateTimeFormatter::timeStampToDateTime(time())
+                    //'DateInserted' => DateTimeFormatter::timeStampToDateTime(time())
+                    'DateInserted' => Gdn_Format::toDateTime()
                 ]);
 
                 // Record the points for this badge

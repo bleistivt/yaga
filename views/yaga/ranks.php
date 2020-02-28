@@ -2,8 +2,10 @@
 
 /* Copyright 2015 Zachary Doll */
 
+use \Vanilla\Formatting\DateTimeFormatter;
+
 $user = (Gdn::session()->User) ?: (object)['RankID' => 0];
-$dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
+// $dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
 
 echo heading($this->title());
 
@@ -32,7 +34,8 @@ foreach($this->data('Ranks') as $rank) {
         if ($rank->AgeReq > 0) {
             $reqs[] = sprintf(
                 Gdn::translate('Yaga.Ranks.Story.AgeReq'),
-                $dateFormatter->formatSeconds($rank->AgeReq)
+                //$dateFormatter->formatSeconds($rank->AgeReq)
+                Gdn_Format::seconds($rank->AgeReq)
             );
         }
 
