@@ -262,6 +262,9 @@ class ActedModel extends Gdn_Model {
             $item['ContentID'] = $record['ParentID'];
             $item['ContentURL'] = $item['Url'];
 
+            // Titles are escaped in the view.
+            $item['Name'] = htmlspecialchars_decode($item['Name']);
+
             // Attach User
             $item['Author'] = Gdn::userModel()->getID($item['InsertUserID'] ?? false);
 
