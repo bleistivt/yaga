@@ -133,10 +133,10 @@ class ActedModel extends Gdn_Model {
         if ($content == Gdn_Cache::CACHEOP_FAILURE) {
             $content = $this->getItems('received', $limit, $offset, $userID, $actionID);
 
-            // Add result to cache
-            Gdn::cache()->store($cacheKey, $content, [
-                Gdn_Cache::FEATURE_EXPIRY => $this->expiry
-            ]);
+            // Add result to cache only if guest permissions apply.
+            if (!Gdn::session()->isValid()) {
+                Gdn::cache()->store($cacheKey, $content, [Gdn_Cache::FEATURE_EXPIRY => $this->expiry]);
+            }
         }
 
         return $this->process($content);
@@ -159,9 +159,9 @@ class ActedModel extends Gdn_Model {
         if ($content == Gdn_Cache::CACHEOP_FAILURE) {
             $content = $this->getItems('taken', $limit, $offset, $userID, $actionID);
 
-            Gdn::cache()->store($cacheKey, $content, [
-                Gdn_Cache::FEATURE_EXPIRY => $this->expiry
-            ]);
+            if (!Gdn::session()->isValid()) {
+                Gdn::cache()->store($cacheKey, $content, [Gdn_Cache::FEATURE_EXPIRY => $this->expiry]);
+            }
         }
 
         return $this->process($content);
@@ -183,9 +183,9 @@ class ActedModel extends Gdn_Model {
         if ($content == Gdn_Cache::CACHEOP_FAILURE) {
             $content = $this->getItems('action', $limit, $offset, $userID = false, $actionID);
 
-            Gdn::cache()->store($cacheKey, $content, [
-                Gdn_Cache::FEATURE_EXPIRY => $this->expiry
-            ]);
+            if (!Gdn::session()->isValid()) {
+                Gdn::cache()->store($cacheKey, $content, [Gdn_Cache::FEATURE_EXPIRY => $this->expiry]);
+            }
         }
 
         return $this->process($content);
@@ -206,9 +206,9 @@ class ActedModel extends Gdn_Model {
         if ($content == Gdn_Cache::CACHEOP_FAILURE) {
             $content = $this->getItems('best', $limit, $offset, $userID);
 
-            Gdn::cache()->store($cacheKey, $content, [
-                Gdn_Cache::FEATURE_EXPIRY => $this->expiry
-            ]);
+            if (!Gdn::session()->isValid()) {
+                Gdn::cache()->store($cacheKey, $content, [Gdn_Cache::FEATURE_EXPIRY => $this->expiry]);
+            }
         }
 
         return $this->process($content);
@@ -228,9 +228,9 @@ class ActedModel extends Gdn_Model {
         if ($content == Gdn_Cache::CACHEOP_FAILURE) {
             $content = $this->getItems('recent', $limit, $offset);
 
-            Gdn::cache()->store($cacheKey, $content, [
-                Gdn_Cache::FEATURE_EXPIRY => $this->expiry
-            ]);
+            if (!Gdn::session()->isValid()) {
+                Gdn::cache()->store($cacheKey, $content, [Gdn_Cache::FEATURE_EXPIRY => $this->expiry]);
+            }
         }
 
         return $this->process($content);
@@ -275,7 +275,7 @@ class ActedModel extends Gdn_Model {
     }
 
     /**
-     * Wrapper for getRecord()
+     * getRecord() without permission checks as permissions are already applied in getItems().
      *
      * @since 1.1
      * @param string $recordType
@@ -283,12 +283,35 @@ class ActedModel extends Gdn_Model {
      * @return array
      */
     protected function getRecord($recordType, $id) {
-        if (in_array($recordType, ['discussion', 'comment', 'activity'])) {
-            try {
-                return getRecord($recordType, $id);
-            } catch (Exception $e) {
-                return false;
+        if (in_array($recordType, ['discussion', 'comment'])) {
+            $container = Gdn::getContainer();
+            $discussionModel = $container->get(DiscussionModel::class);
+
+            if ($recordType === 'discussion') {
+                $row = $discussionModel->getID($id, DATASET_TYPE_ARRAY);
+
+                if ($row) {
+                    $row['ShareUrl'] = $row['Url'] = discussionUrl($row);
+                    return $row;
+                }
+            } else {
+                $row = $container->get(CommentModel::class)->getID($id, DATASET_TYPE_ARRAY);
+
+                if ($row) {
+                    $row['Url'] = url("/discussion/comment/{$id}#Comment_{$id}", true);
+
+                    $discussion = $discussionModel->getID($row['DiscussionID'], DATASET_TYPE_ARRAY);
+                    if ($discussion) {
+                        $row['ShareUrl'] = $row['Url'] = $discussion['Url'] = discussionUrl($discussion);
+                        $row['Name'] = $discussion['Name'];
+                        $row['Discussion'] = $discussion;
+
+                        return $row;
+                    }
+                }
             }
+            return false;
+
         } else {
             $this->EventArguments['Type'] = $recordType;
             $this->EventArguments['ID'] = $id;
