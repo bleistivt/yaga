@@ -135,7 +135,9 @@ if ($sql->getWhere('ActivityType', ['Name' => 'RankPromotion'])->numRows() == 0 
     $sql->insert('ActivityType', ['AllowComments' => '1', 'Name' => 'RankPromotion', 'FullHeadline' => '%1$s was promoted.', 'ProfileHeadline' => '%1$s was promoted.', 'Notify' => 1]);
 }
 
-// Correct the urls to the old default badge icon.
+// Correct the urls to the old default icons.
 if (!$construct->CaptureOnly) {
     $sql->update('YagaBadge', ['Photo' => 'plugins/yaga/design/images/default_badge.png'], ['Photo' => 'applications/yaga/design/images/default_badge.png'])->put();
+    $sql->update('YagaBadge', ['Photo' => 'plugins/yaga/design/images/default_promotion.png'], ['Photo' => 'applications/yaga/design/images/default_promotion.png'])->put();
+    $sql->update('YagaBadge')->set('Photo', "REPLACE(Photo, 'applications/yaga/design/images', 'plugins/yaga/design/images')", false)->put();
 }
