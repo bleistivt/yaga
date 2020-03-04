@@ -26,7 +26,7 @@ if ($userBadgeAward) {
         Gdn::translate('Yaga.Badge.Earned').' '.
         wrap(
             //$dateFormatter->formatDate($userBadgeAward->DateInserted, true),
-            Gdn_Format::date($userBadgeAward->DateInserted, 'html')
+            Gdn_Format::date($userBadgeAward->DateInserted, 'html'),
             'span',
             ['class' => 'DateReceived']
         ),
@@ -52,7 +52,8 @@ if ($recentAwards) {
                 userPhoto($user).
                 userAnchor($user).' '.
                 wrap(
-                    $dateFormatter->formatDate($award->DateInserted, true),
+                    //$dateFormatter->formatDate($award->DateInserted, true),
+                    Gdn_Format::date($award->DateInserted, 'html'),
                     'span',
                     ['class' => 'DateReceived']
                 ),
