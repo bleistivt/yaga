@@ -139,5 +139,5 @@ if ($sql->getWhere('ActivityType', ['Name' => 'RankPromotion'])->numRows() == 0 
 if (!$construct->CaptureOnly) {
     $sql->update('YagaBadge', ['Photo' => 'plugins/yaga/design/images/default_badge.png'], ['Photo' => 'applications/yaga/design/images/default_badge.png'])->put();
     $sql->update('YagaBadge', ['Photo' => 'plugins/yaga/design/images/default_promotion.png'], ['Photo' => 'applications/yaga/design/images/default_promotion.png'])->put();
-    $sql->update('YagaBadge')->set('Photo', "REPLACE(Photo, 'applications/yaga/design/images', 'plugins/yaga/design/images')", false)->put();
+    $sql->update('YagaBadge')->set('Photo', "replace(Photo, 'applications/yaga/design/images', 'plugins/yaga/design/images')", false)->put();
 }

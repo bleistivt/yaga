@@ -395,7 +395,7 @@ if (!$row) {
     ]);
     $sql->insert('YagaBadge', [
         'Name' => 'I\'m Not Dead Yet!',
-        'Description' => 'You should try bring humans back to life now that you have brought this discussion back from the dead.',
+        'Description' => 'You should try to bring humans back to life now that you have brought this discussion back from the dead.',
         'Photo' => '/plugins/yaga/design/images/default_badges.svg#unimpressed-necropost',
         'RuleClass' => 'NecroPost',
         'RuleCriteria' => '{"Duration":"26","Period":"week"}',
