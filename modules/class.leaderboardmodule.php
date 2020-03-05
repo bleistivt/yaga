@@ -4,7 +4,7 @@
 
 /**
  * Renders a leaderboard in the panel detailing points earned of all time
- * 
+ *
  * @package Yaga
  * @since 1.0
  */
@@ -12,22 +12,22 @@ class LeaderBoardModule extends Gdn_Module {
 
     /**
      * Holds the title of the module.
-     * 
+     *
      * @var string
      */
     public $title = false;
 
     /**
      * Holds the slot type of the module.
-     * 
+     *
      * @var string Valid options are 'a': All Time, 'w': Weekly, 'm':
-     * Monthly, 'y': Yearly 
+     * Monthly, 'y': Yearly
      */
     public $slotType = 'a';
 
     /**
      * Specifies the asset this module should be rendered to.
-     * 
+     *
      * @return string
      */
     public function assetTarget() {
@@ -35,8 +35,17 @@ class LeaderBoardModule extends Gdn_Module {
     }
 
     /**
+     * Class constructor
+     *
+     * @param object $sender
+     */
+    public function __construct($sender = '') {
+        parent::__construct($sender, 'plugins/yaga');
+    }
+
+    /**
      * Set the slot type of the leaderboard. Defaults to 'a' for all time.
-     * 
+     *
      * @param string $slotType Valid options are 'a': All Time, 'w': Weekly, 'm':
      * Monthly, 'y': Yearly
      */
@@ -81,7 +90,7 @@ class LeaderBoardModule extends Gdn_Module {
 
     /**
      * Renders the leaderboard.
-     * 
+     *
      * @return string
      */
     public function toString() {
