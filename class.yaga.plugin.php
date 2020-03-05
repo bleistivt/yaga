@@ -638,7 +638,7 @@ class YagaPlugin extends Gdn_Plugin {
         if (Gdn::config('Yaga.LeaderBoard.Enabled', false)) {
             // add leaderboard modules to the activity page
             $module = new LeaderBoardModule();
-            $module->SlotType = 'w';
+            $module->slotType = 'w';
             $sender->addModule($module);
             $module = new LeaderBoardModule();
             $sender->addModule($module);

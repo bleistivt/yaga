@@ -103,7 +103,7 @@ class YagaController extends DashboardController {
         $this->MasterView = 'default';
 
         $weeklyModule = new LeaderBoardModule();
-        $weeklyModule->SlotType = 'w';
+        $weeklyModule->slotType = 'w';
         $this->addModule($weeklyModule);
         $allTimeModule = new LeaderBoardModule();
         $this->addModule($allTimeModule);
