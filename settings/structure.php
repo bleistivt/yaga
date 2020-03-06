@@ -137,7 +137,14 @@ if ($sql->getWhere('ActivityType', ['Name' => 'RankPromotion'])->numRows() == 0 
 
 // Correct the urls to the old default icons.
 if (!$construct->CaptureOnly) {
-    $sql->update('YagaBadge', ['Photo' => 'plugins/yaga/design/images/default_badge.png'], ['Photo' => 'applications/yaga/design/images/default_badge.png'])->put();
-    $sql->update('YagaBadge', ['Photo' => 'plugins/yaga/design/images/default_promotion.png'], ['Photo' => 'applications/yaga/design/images/default_promotion.png'])->put();
-    $sql->update('YagaBadge')->set('Photo', "replace(Photo, 'applications/yaga/design/images', 'plugins/yaga/design/images')", false)->put();
+    $oldPath = 'applications/yaga/design/images/';
+    $newPath = 'plugins/yaga/design/images/';
+
+    $sql->update('YagaBadge', ['Photo' => $newPath.'default_badge.png'], ['Photo' => $oldPath.'default_badge.png'])->put();
+    $sql->update('YagaBadge', ['Photo' => $newPath.'default_promotion.png'], ['Photo' => $oldPath.'default_promotion.png'])->put();
+
+    $sql->update('YagaBadge')->set('Photo', "replace(`Photo`, '$oldPath', '$newPath')", false)->put();
+
+    $yagaTypes = array_column($sql->getWhere('ActivityType', ['Name' => ['BadgeAward', 'RankPromotion']])->resultArray(), 'ActivityTypeID');
+    $sql->update('Activity')->set('Photo', "replace(`Photo`, '$oldPath', '$newPath')", false)->whereIn('ActivityTypeID', $yagaTypes)->put();
 }
