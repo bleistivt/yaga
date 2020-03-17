@@ -204,6 +204,7 @@ class YagaController extends DashboardController {
         if ($this->Form->isPostBack() == true) {
             // Handle the file upload
             $upload = new Gdn_Upload();
+            $upload->allowFileExtension('zip');
             $tmpZip = $upload->validateUpload('FileUpload', false);
 
             $zipFile = false;
@@ -295,9 +296,9 @@ class YagaController extends DashboardController {
      */
     protected function _exportData($include = [], $path = null) {
         $startTime = microtime(true);
-        $info = new stdClass();
-        $info->Version = Gdn::config('Yaga.Version', '?.?');
-        $info->StartDate = date('Y-m-d H:i:s');
+        $info = [];
+        $info['Version'] = Gdn::config('Yaga.Version', '?.?');
+        $info['StartDate'] = date('Y-m-d H:i:s');
 
         if (is_null($path)) {
             $path = PATH_UPLOADS.'/export'.date('Y-m-d-His').'.yaga.zip';
@@ -312,41 +313,41 @@ class YagaController extends DashboardController {
         }
 
         // Add configuration items
-        $info->Config = 'configs.yaga';
+        $info['Config'] = 'configs.json';
         $configs = Gdn::config('Yaga', []);
         unset($configs['Version']);
         $configData = dbencode($configs);
-        $fh->addFromString('configs.yaga', $configData);
+        $fh->addFromString('configs.json', $configData);
         $hashes[] = md5($configData);
 
         // Add actions
         if ($include['Action']) {
-            $info->Action = 'actions.yaga';
+            $info['Action'] = 'actions.json';
             $actions = Yaga::actionModel()->get('Sort', 'asc');
             $this->setData('ActionCount', count($actions));
             $actionData = dbencode($actions);
-            $fh->addFromString('actions.yaga', $actionData);
+            $fh->addFromString('actions.json', $actionData);
             $hashes[] = md5($actionData);
         }
 
         // Add ranks and associated image
         if ($include['Rank']) {
-            $info->Rank = 'ranks.yaga';
+            $info['Rank'] = 'ranks.json';
             $ranks = Yaga::rankModel()->get('Level', 'asc');
             $this->setData('RankCount', count($ranks));
             $rankData = dbencode($ranks);
-            $fh->addFromString('ranks.yaga', $rankData);
+            $fh->addFromString('ranks.json', $rankData);
             array_push($images, Gdn::config('Yaga.Ranks.Photo'), null);
             $hashes[] = md5($rankData);
         }
 
         // Add badges and associated images
         if ($include['Badge']) {
-            $info->Badge = 'badges.yaga';
+            $info['Badge'] = 'badges.json';
             $badges = Yaga::badgeModel()->get();
             $this->setData('BadgeCount', count($badges));
             $badgeData = dbencode($badges);
-            $fh->addFromString('badges.yaga', $badgeData);
+            $fh->addFromString('badges.json', $badgeData);
             $hashes[] = md5($badgeData);
             foreach ($badges as $badge) {
                 array_push($images, $badge->Photo);
@@ -362,26 +363,27 @@ class YagaController extends DashboardController {
         }
 
         foreach ($filteredImages as $image) {
-            if ($fh->addFile('.'.$image, 'images/'.$image) === false) {
+            $image = ltrim($image, '/');
+            if ($fh->addFile('./'.$image, 'images/'.$image) === false) {
                 $this->Form->addError(sprintf(Gdn::translate('Yaga.Error.AddFile'), $fh->getStatusString()));
                 //return false;
             }
-            $hashes[] = md5_file('.'.$image);
+            $hashes[] = md5_file('./'.$image);
         }
 
         // Save all the hashes
         sort($hashes);
-        $info->MD5 = md5(implode(',', $hashes));
-        $info->EndDate = date('Y-m-d H:i:s');
+        $info['MD5'] = md5(implode(',', array_unique($hashes)));
+        $info['EndDate'] = date('Y-m-d H:i:s');
 
         $endTime = microtime(true);
         $totalTime = $endTime - $startTime;
         $m = floor($totalTime / 60);
         $s = $totalTime - ($m * 60);
 
-        $info->ElapsedTime = sprintf('%02d:%02.2f', $m, $s);
+        $info['ElapsedTime'] = sprintf('%02d:%02.2f', $m, $s);
 
-        $fh->setArchiveComment(serialize($info));
+        $fh->setArchiveComment(dbencode($info));
         if ($fh->close()) {
             return $path;
         } else {
@@ -412,7 +414,7 @@ class YagaController extends DashboardController {
 
         // Get the metadata from the comment
         $comment = $zipFile->comment;
-        $metaData = dbdecode($comment);
+        $metaData = (array)dbdecode($comment);
 
         $result = $zipFile->extractTo(PATH_UPLOADS.'/import/yaga');
         if ($result !== true) {
@@ -447,7 +449,7 @@ class YagaController extends DashboardController {
         }
 
         // Import Configs
-        $configs = dbdecode(file_get_contents(PATH_UPLOADS.'/import/yaga/'.$info->Config));
+        $configs = dbdecode(file_get_contents(PATH_UPLOADS.'/import/yaga/'.$info['Config']));
         $configurations = self::_nestedToDotNotation($configs, 'Yaga');
         foreach ($configurations as $name => $value) {
             Gdn::config()->saveToConfig($name, $value);
@@ -459,7 +461,7 @@ class YagaController extends DashboardController {
             $key = StringBeginsWith($key, 'Yaga', false, true);
 
             if ($value) {
-                $data = dbdecode(file_get_contents(PATH_UPLOADS.'/import/yaga/'.$info->$key));
+                $data = dbdecode(file_get_contents(PATH_UPLOADS.'/import/yaga/'.$info[$key]));
                 Gdn::sql()->emptyTable('Yaga'.$key);
                 $modelName = $key.'Model';
                 $model = Yaga::$modelName();
@@ -471,7 +473,8 @@ class YagaController extends DashboardController {
         }
 
         // Import uploaded files
-        if (Gdn_FileSystem::copy(PATH_UPLOADS.'/import/yaga/images/uploads/', PATH_UPLOADS.'/') === false) {
+        $path = PATH_UPLOADS.'/import/yaga/images/uploads/';
+        if (file_exists($path) && Gdn_FileSystem::copy($path, PATH_UPLOADS.'/') === false) {
             $this->Form->addError(Gdn::translate('Yaga.Error.TransportCopy'));
         }
 
@@ -512,19 +515,19 @@ class YagaController extends DashboardController {
         $hashes = [];
 
         // Hash the config file
-        $hashes[] = md5_file(PATH_UPLOADS.'/import/yaga/'.$metaData->Config);
+        $hashes[] = md5_file(PATH_UPLOADS.'/import/yaga/'.$metaData['Config']);
 
         // Hash the data files
-        if (property_exists($metaData, 'Action')) {
-            $hashes[] = md5_file(PATH_UPLOADS.'/import/yaga/'.$metaData->Action);
+        if (array_key_exists('Action', $metaData)) {
+            $hashes[] = md5_file(PATH_UPLOADS.'/import/yaga/'.$metaData['Action']);
         }
 
-        if (property_exists($metaData, 'Badge')) {
-            $hashes[] = md5_file(PATH_UPLOADS.'/import/yaga/'.$metaData->Badge);
+        if (array_key_exists('Badge', $metaData)) {
+            $hashes[] = md5_file(PATH_UPLOADS.'/import/yaga/'.$metaData['Badge']);
         }
 
-        if (property_exists($metaData, 'Rank')) {
-            $hashes[] = md5_file(PATH_UPLOADS.'/import/yaga/'.$metaData->Rank);
+        if (array_key_exists('Rank', $metaData)) {
+            $hashes[] = md5_file(PATH_UPLOADS.'/import/yaga/'.$metaData['Rank']);
         }
 
         // Hash the image files
@@ -535,9 +538,9 @@ class YagaController extends DashboardController {
 		}
 
         sort($hashes);
-		$calculatedChecksum = md5(implode(',', $hashes));
+		$calculatedChecksum = md5(implode(',', array_unique($hashes)));
 
-        return $calculatedChecksum == $metaData->MD5;
+        return $calculatedChecksum == $metaData['MD5'];
     }
 
     /**
