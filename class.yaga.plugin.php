@@ -26,8 +26,8 @@ class YagaPlugin extends Gdn_Plugin {
         $eventArguments = $sender->EventArguments;
         if ($eventArguments['AssetName'] == 'Content' && $sender->OriginalRequestMethod == 'index') {
             //echo 'Sweet sweet stats!';
-            $badgeAwardModel = Yaga::badgeAwardModel();
-            $reactionModel = Yaga::reactionModel();
+            $badgeAwardModel = Gdn::getContainer()->get(BadgeAwardModel::class);
+            $reactionModel = Gdn::getContainer()->get(ReactionModel::class);
 
             $badgeCount = $badgeAwardModel->getCount();
             $reactionCount = $reactionModel->getCount();
@@ -108,8 +108,8 @@ class YagaPlugin extends Gdn_Plugin {
         echo wrap(Gdn::translate('Yaga.Reactions', 'Reactions'), 'h2', ['class' => 'H']);
 
         // insert the reaction totals in the profile
-        $reactionModel = Yaga::reactionModel();
-        $actions = Yaga::actionModel()->get();
+        $reactionModel = Gdn::getContainer()->get(ReactionModel::class);
+        $actions = Gdn::getContainer()->get(ActionModel::class)->get();
         $string = '';
         foreach ($actions as $action) {
             $selected = ($actionID == $action->ActionID) ? ' Selected' : '';
@@ -185,7 +185,7 @@ class YagaPlugin extends Gdn_Plugin {
         $sender->addDefinition('ExpandText', Gdn::translate('(more)'));
         $sender->addDefinition('CollapseText', Gdn::translate('(less)'));
 
-        $model = Yaga::actedModel();
+        $model = Gdn::getContainer()->get(ActedModel::class);
         $data = $model->getReceived($sender->User->UserID, $actionID, $limit, $offset);
 
         $sender->setData('Content', $data->Content);
@@ -213,7 +213,7 @@ class YagaPlugin extends Gdn_Plugin {
         );
 
         // Add the specific action to the breadcrumbs
-        $action = Yaga::actionModel()->getID($actionID);
+        $action = Gdn::getContainer()->get(ActionModel::class)->getID($actionID);
         if ($action) {
             $sender->_SetBreadcrumbs($action->Name, $baseUrl);
         }
@@ -253,7 +253,7 @@ class YagaPlugin extends Gdn_Plugin {
         $sender->addDefinition('ExpandText', Gdn::translate('(more)'));
         $sender->addDefinition('CollapseText', Gdn::translate('(less)'));
 
-        $model = Yaga::actedModel();
+        $model = Gdn::getContainer()->get(ActedModel::class);
         $data = $model->getBest($sender->User->UserID, $limit, $offset);
 
         $sender->setData('Content', $data->Content);
@@ -334,7 +334,7 @@ class YagaPlugin extends Gdn_Plugin {
             return;
         }
 
-        $rankModel = Yaga::rankModel();
+        $rankModel = Gdn::getContainer()->get(RankModel::class);
         $rank = $rankModel->getHighestQualifyingRank($user);
 
         if ($rank && $rank->RankID != $user->RankID) {
@@ -493,7 +493,7 @@ class YagaPlugin extends Gdn_Plugin {
             return;
         }
 
-        $rankModel = Yaga::rankModel();
+        $rankModel = Gdn::getContainer()->get(RankModel::class);
         $perks = $rankModel->getPerks($rankID);
 
         // Apply all the perks
@@ -595,15 +595,22 @@ class YagaPlugin extends Gdn_Plugin {
      */
     public function discussionController_render_before($sender) {
         $this->addResources($sender);
+
         if (Gdn::config('Yaga.Reactions.Enabled')) {
             if ($sender->data('Discussion')) {
-                Yaga::reactionModel()->prefetch('discussion', $sender->Data['Discussion']->DiscussionID);
+                Gdn::getContainer()
+                    ->get(ReactionModel::class)
+                    ->prefetch('discussion', $sender->Data['Discussion']->DiscussionID);
             }
+
             if (isset($sender->Data['Comments'])) {
                 $commentIDs = array_column($sender->Data['Comments']->resultArray(), 'CommentID');
                 // set the DataSet type back to "object"
                 $sender->Data['Comments']->dataSetType(DATASET_TYPE_OBJECT);
-                Yaga::reactionModel()->prefetch('comment', $commentIDs);
+
+                Gdn::getContainer()
+                    ->get(ReactionModel::class)
+                    ->prefetch('comment', $commentIDs);
             }
         }
     }
@@ -647,12 +654,90 @@ class YagaPlugin extends Gdn_Plugin {
     }
 
     /**
+     * This is the dispatcher to check badge awards
+     *
+     * @param mixed $sender The sending object
+     * @param string $handler The event handler to check associated rules for awards
+     * (e.g. BadgeAwardModel_AfterBadgeAward_Handler or Base_AfterConnection)
+     * @since 1.1
+     */
+    public static function executeBadgeHooks($sender, $handler) {
+        $session = Gdn::session();
+        if (!Gdn::config('Yaga.Badges.Enabled') || !$session->isValid()) {
+            return;
+        }
+
+        // Let's us use __FUNCTION__ in the original hook
+        $hook = strtolower(str_ireplace('_Handler', '', $handler));
+
+        $userID = $session->UserID;
+        $user = $session->User;
+
+        $badges = Gdn::getContainer()->get(BadgeModel::class)->get();
+
+        $interactionRules = RulesController::getInteractionRules();
+
+        $rules = [];
+        foreach ($badges as $badge) {
+            // The badge award needs to be processed
+            if (!$badge->Enabled || !array_key_exists($badge->RuleClass, $interactionRules)) {
+                continue;
+            }
+
+            // Create a rule object if needed
+            $class = $badge->RuleClass;
+            if (!in_array($class, $rules) && class_exists($class)) {
+                $rule = new $class();
+                $rules[$class] = $rule;
+            } else {
+                if (!array_key_exists('UnknownRule', $rules)) {
+                $rules['UnkownRule'] = new UnknownRule();
+                }
+                $rules[$class] = $rules['UnkownRule'];
+            }
+
+            $rule = $rules[$class];
+
+            // Only check awards for rules that use this hook
+            $hooks = array_map('strtolower', $rule->hooks());
+            if (!in_array($hook, $hooks)) {
+                continue;
+            }
+            
+            $criteria = (object)dbdecode($badge->RuleCriteria);
+            $result = $rule->award($sender, $user, $criteria);
+            if (!$result) {
+                continue;
+            }
+            
+            $awardedUserIDs = [];
+            if (is_array($result)) {
+                $awardedUserIDs = $result;
+            } elseif (is_numeric($result)) {
+                $awardedUserIDs[] = $result;
+            } else {
+                $awardedUserIDs[] = $userID;
+            }
+
+            $badgeAwardModel = Gdn::getContainer()->get(BadgeAwardModel::class);
+
+            $systemUserID = Gdn::userModel()->getSystemUserID();
+            foreach ($awardedUserIDs as $awardedUserID) {
+                if ($awardedUserID == $systemUserID) {
+                    continue;
+                }
+                $badgeAwardModel->award($badge->BadgeID, $awardedUserID, $userID);
+            }
+        }
+    }
+
+    /**
      * Check for Badge Awards
      *
      * @param Gdn_Dispatcher $sender
      */
     public function gdn_dispatcher_appStartup_handler($sender) {
-        Yaga::executeBadgeHooks($sender, __FUNCTION__);
+        self::executeBadgeHooks($sender, __FUNCTION__);
     }
 
     /**
@@ -661,7 +746,7 @@ class YagaPlugin extends Gdn_Plugin {
      * @param mixed $sender
      */
     public function base_afterGetSession_handler($sender) {
-        Yaga::executeBadgeHooks($sender, __FUNCTION__);
+        self::executeBadgeHooks($sender, __FUNCTION__);
     }
 
     /**
@@ -670,7 +755,7 @@ class YagaPlugin extends Gdn_Plugin {
      * @param CommentModel $sender
      */
     public function commentModel_afterSaveComment_handler($sender) {
-        Yaga::executeBadgeHooks($sender, __FUNCTION__);
+        self::executeBadgeHooks($sender, __FUNCTION__);
     }
 
     /**
@@ -679,7 +764,7 @@ class YagaPlugin extends Gdn_Plugin {
      * @param DiscussionModel $sender
      */
     public function discussionModel_afterSaveDiscussion_handler($sender) {
-        Yaga::executeBadgeHooks($sender, __FUNCTION__);
+        self::executeBadgeHooks($sender, __FUNCTION__);
     }
 
     /**
@@ -688,7 +773,7 @@ class YagaPlugin extends Gdn_Plugin {
      * @param ActivityModel $sender
      */
     public function activityModel_beforeSaveComment_handler($sender) {
-        Yaga::executeBadgeHooks($sender, __FUNCTION__);
+        self::executeBadgeHooks($sender, __FUNCTION__);
     }
 
     /**
@@ -697,7 +782,7 @@ class YagaPlugin extends Gdn_Plugin {
      * @param CommentModel $sender
      */
     public function commentModel_beforeNotification_handler($sender) {
-        Yaga::executeBadgeHooks($sender, __FUNCTION__);
+        self::executeBadgeHooks($sender, __FUNCTION__);
     }
 
     /**
@@ -706,7 +791,7 @@ class YagaPlugin extends Gdn_Plugin {
      * @param DiscussionModel $sender
      */
     public function discussionModel_beforeNotification_handler($sender) {
-        Yaga::executeBadgeHooks($sender, __FUNCTION__);
+        self::executeBadgeHooks($sender, __FUNCTION__);
     }
 
     /**
@@ -715,7 +800,7 @@ class YagaPlugin extends Gdn_Plugin {
      * @param mixed $sender
      */
     public function base_afterSignIn_handler($sender) {
-        Yaga::executeBadgeHooks($sender, __FUNCTION__);
+        self::executeBadgeHooks($sender, __FUNCTION__);
     }
 
     /**
@@ -724,7 +809,7 @@ class YagaPlugin extends Gdn_Plugin {
      * @param UserModel $sender
      */
     public function userModel_afterSave_handler($sender) {
-        Yaga::executeBadgeHooks($sender, __FUNCTION__);
+        self::executeBadgeHooks($sender, __FUNCTION__);
     }
 
     /**
@@ -733,7 +818,7 @@ class YagaPlugin extends Gdn_Plugin {
      * @param ReactionModel $sender
      */
     public function reactionModel_afterReactionSave_handler($sender) {
-        Yaga::executeBadgeHooks($sender, __FUNCTION__);
+        self::executeBadgeHooks($sender, __FUNCTION__);
     }
 
     /**
@@ -742,7 +827,7 @@ class YagaPlugin extends Gdn_Plugin {
      * @param BadgeAwardModel $sender
      */
     public function badgeAwardModel_afterBadgeAward_handler($sender) {
-        Yaga::executeBadgeHooks($sender, __FUNCTION__);
+        self::executeBadgeHooks($sender, __FUNCTION__);
     }
 
     /**
@@ -751,7 +836,7 @@ class YagaPlugin extends Gdn_Plugin {
      * @param mixed $sender
      */
     public function base_afterConnection_handler($sender) {
-        Yaga::executeBadgeHooks($sender, __FUNCTION__);
+        self::executeBadgeHooks($sender, __FUNCTION__);
     }
 
     /**
@@ -809,7 +894,11 @@ class YagaPlugin extends Gdn_Plugin {
         $deleteMethod = $options['DeleteMethod'] ?? 'delete';
         if ($deleteMethod == 'delete') {
             // Remove neutral/negative reactions
-            $actions = Yaga::actionModel()->getWhere(['AwardValue <' => 1])->result();
+            $actions = Gdn::getContainer()
+                ->get(ActionModel::class)
+                ->getWhere(['AwardValue <' => 1])
+                ->result();
+
             foreach ($actions as $negative) {
                 Gdn::userModel()->getDelete('YagaReaction', ['InsertUserID' => $userID, 'ActionID' => $negative->ActionID], $data);
             }

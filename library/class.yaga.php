@@ -16,6 +16,7 @@ class Yaga {
      * @return ActedModel
      */
     public static function actedModel() {
+        deprecated(__FUNCTION__, 'Gdn::getContainer');
         return Gdn::getContainer()->get(ActedModel::class);
     }
 
@@ -25,6 +26,7 @@ class Yaga {
      * @return ActionModel
      */
     public static function actionModel() {
+        deprecated(__FUNCTION__, 'Gdn::getContainer');
         return Gdn::getContainer()->get(ActionModel::class);
     }
 
@@ -34,6 +36,7 @@ class Yaga {
      * @return ReactionModel
      */
     public static function reactionModel() {
+        deprecated(__FUNCTION__, 'Gdn::getContainer');
         return Gdn::getContainer()->get(ReactionModel::class);
     }
 
@@ -43,6 +46,7 @@ class Yaga {
      * @return BadgeModel
      */
     public static function badgeModel() {
+        deprecated(__FUNCTION__, 'Gdn::getContainer');
         return Gdn::getContainer()->get(BadgeModel::class);
     }
 
@@ -52,6 +56,7 @@ class Yaga {
      * @return BadgeAwardModel
      */
     public static function badgeAwardModel() {
+        deprecated(__FUNCTION__, 'Gdn::getContainer');
         return Gdn::getContainer()->get(BadgeAwardModel::class);
     }
 
@@ -61,6 +66,7 @@ class Yaga {
      * @return RankModel
      */
     public static function rankModel() {
+        deprecated(__FUNCTION__, 'Gdn::getContainer');
         return Gdn::getContainer()->get(RankModel::class);
     }
 
@@ -89,72 +95,7 @@ class Yaga {
      * @since 1.1
      */
     public static function executeBadgeHooks($sender, $handler) {
-        $session = Gdn::session();
-        if (!Gdn::config('Yaga.Badges.Enabled') || !$session->isValid()) {
-            return;
-        }
-
-        // Let's us use __FUNCTION__ in the original hook
-        $hook = strtolower(str_ireplace('_Handler', '', $handler));
-
-        $userID = $session->UserID;
-        $user = $session->User;
-
-        $badges = Gdn::getContainer()->get(BadgeModel::class)->get();
-
-        $interactionRules = RulesController::getInteractionRules();
-
-        $rules = [];
-        foreach ($badges as $badge) {
-            // The badge award needs to be processed
-            if (!$badge->Enabled || !array_key_exists($badge->RuleClass, $interactionRules)) {
-                continue;
-            }
-
-            // Create a rule object if needed
-            $class = $badge->RuleClass;
-            if (!in_array($class, $rules) && class_exists($class)) {
-                $rule = new $class();
-                $rules[$class] = $rule;
-            } else {
-                if (!array_key_exists('UnknownRule', $rules)) {
-                $rules['UnkownRule'] = new UnknownRule();
-                }
-                $rules[$class] = $rules['UnkownRule'];
-            }
-
-            $rule = $rules[$class];
-
-            // Only check awards for rules that use this hook
-            $hooks = array_map('strtolower', $rule->hooks());
-            if (!in_array($hook, $hooks)) {
-                continue;
-            }
-            
-            $criteria = (object)dbdecode($badge->RuleCriteria);
-            $result = $rule->award($sender, $user, $criteria);
-            if (!$result) {
-                continue;
-            }
-            
-            $awardedUserIDs = [];
-            if (is_array($result)) {
-                $awardedUserIDs = $result;
-            } elseif (is_numeric($result)) {
-                $awardedUserIDs[] = $result;
-            } else {
-                $awardedUserIDs[] = $userID;
-            }
-
-            $badgeAwardModel = Gdn::getContainer()->get(BadgeAwardModel::class);
-
-            $systemUserID = Gdn::userModel()->getSystemUserID();
-            foreach ($awardedUserIDs as $awardedUserID) {
-                if ($awardedUserID == $systemUserID) {
-                    continue;
-                }
-                $badgeAwardModel->award($badge->BadgeID, $awardedUserID, $userID);
-            }
-        }
+        deprecated(__FUNCTION__, 'YagaPlugin::executeBadgeHooks');
+        YagaPlugin::executeBadgeHooks($sender, $handler);
     }
 }
