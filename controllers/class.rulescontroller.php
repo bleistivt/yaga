@@ -12,6 +12,12 @@
 class RulesController extends Gdn_Controller {
 
     /**
+     * @var array These objects will be created on instantiation and available via
+     * $this->ObjectName
+     */
+    public $Uses = ['Form'];
+
+    /**
      * Memory cache for getInteractionRules()
      * 
      * @var unobtainedCache
@@ -115,9 +121,8 @@ class RulesController extends Gdn_Controller {
     public function getCriteriaForm($ruleClass) {
         if (class_exists($ruleClass) && in_array('YagaRule', class_implements($ruleClass))) {
             $rule = new $ruleClass();
-            $form = Gdn::factory('Form');
-            $form->setStyles('bootstrap');
-            $formString = $rule->form($form);
+            $this->Form->setStyles('bootstrap');
+            $formString = $rule->form($this->Form);
             $description = $rule->description();
             $name = $rule->name();
 

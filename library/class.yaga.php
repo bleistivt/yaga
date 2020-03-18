@@ -7,6 +7,7 @@
  * 
  * @package Yaga
  * @since 1.0
+ * @deprecated
  */
 class Yaga {
 
