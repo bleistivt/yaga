@@ -76,9 +76,7 @@ class Yaga {
      * @param int $timestamp
      */
     public static function givePoints($userID, $value, $source = 'Other', $timestamp = false) {
-        if ($userID == Gdn::userModel()->getSystemUserID()) {
-            return;
-        }
+        deprecated(__FUNCTION__, 'UserModel::givePoints');
         UserModel::givePoints($userID, $value, $source, $timestamp);
     }
 

@@ -21,12 +21,21 @@ class ReactionModel extends Gdn_Model {
      */
     private static $_reactions = [];
 
+    /** @var ConversationModel */
+    private $actionModel;
+
+    /** @var UserModel */
+    private $userModel;
+
     /**
      * Defines the related database table name.
      */
-    public function __construct() {
+    public function __construct(ActionModel $actionModel, UserModel $userModel) {
         parent::__construct('YagaReaction');
         $this->PrimaryKey = 'ReactionID';
+
+        $this->actionModel = $actionModel;
+        $this->userModel = $userModel;
     }
 
     /**
@@ -43,7 +52,7 @@ class ReactionModel extends Gdn_Model {
         // try getting the record count from the cache
         if (array_key_exists($type.$id, self::$_reactions)) {
             $reactions = self::$_reactions[$type.$id];
-            $actions = Yaga::actionModel()->get();
+            $actions = $this->actionModel->get();
             // add the count
             foreach ($actions as &$action) {
                 $action->Count = 0;
@@ -165,8 +174,7 @@ class ReactionModel extends Gdn_Model {
         unset(self::$_reactions[$type.$id]);
 
         $eventArgs = ['ParentID' => $id, 'ParentType' => $type, 'ParentUserID' => $authorID, 'InsertUserID' => $userID, 'ActionID' => $actionID];
-        $actionModel = Yaga::actionModel();
-        $newAction = $actionModel->getByID($actionID);
+        $newAction = $this->actionModel->getByID($actionID);
         $points = $score = $newAction->AwardValue;
         $currentReaction = $this->getByUser($id, $type, $userID);
         $eventArgs['CurrentReaction'] = $currentReaction;
@@ -175,7 +183,7 @@ class ReactionModel extends Gdn_Model {
         $now = Gdn_Format::toDateTime();
 
         if ($currentReaction) {
-            $oldAction = $actionModel->getByID($currentReaction->ActionID);
+            $oldAction = $this->actionModel->getByID($currentReaction->ActionID);
 
             if ($actionID == $currentReaction->ActionID) {
                 // remove the record
@@ -225,7 +233,7 @@ class ReactionModel extends Gdn_Model {
         $totalScore = $this->setUserScore($id, $type, $userID, $score);
         $eventArgs['TotalScore'] = $totalScore;
         // Give the user points commesurate with reaction activity
-        Yaga::givePoints($authorID, $points, 'Reaction');
+        UserModel::givePoints($authorID, $points, 'Reaction');
         $eventArgs['Points'] = $points;
         $this->fireEvent('AfterReactionSave', $eventArgs);
         return $reaction;
@@ -266,7 +274,7 @@ class ReactionModel extends Gdn_Model {
             }
 
             // Prime the user cache
-            Gdn::userModel()->getIDs($userIDs);
+            $this->userModel->getIDs($userIDs);
         }
     }
 

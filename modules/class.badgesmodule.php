@@ -31,7 +31,7 @@ class BadgesModule extends Gdn_Module {
             $this->Title = Gdn::translate('Yaga.Badges');
         }
 
-        $badgeAwardModel = Yaga::badgeAwardModel();
+        $badgeAwardModel = Gdn::getContainer()->get(BadgeAwardModel::class);
         $this->Data = $badgeAwardModel->getByUser($userID);
     }
 
