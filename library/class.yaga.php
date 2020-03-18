@@ -100,21 +100,17 @@ class Yaga {
         $userID = $session->UserID;
         $user = $session->User;
 
-        $badgeAwardModel = Yaga::badgeAwardModel();
-        $badges = $badgeAwardModel->getUnobtained($userID);
+        $badges = Gdn::getContainer()->get(BadgeModel::class)->get();
 
         $interactionRules = RulesController::getInteractionRules();
 
         $rules = [];
         foreach ($badges as $badge) {
             // The badge award needs to be processed
-            if (
-                !($badge->Enabled && $badge->UserID != $userID)
-                && !array_key_exists($badge->RuleClass, $interactionRules)
-            ) {
+            if (!$badge->Enabled || !array_key_exists($badge->RuleClass, $interactionRules)) {
                 continue;
             }
-            
+
             // Create a rule object if needed
             $class = $badge->RuleClass;
             if (!in_array($class, $rules) && class_exists($class)) {
@@ -130,7 +126,7 @@ class Yaga {
             $rule = $rules[$class];
 
             // Only check awards for rules that use this hook
-            $hooks = array_map('strtolower',$rule->hooks());
+            $hooks = array_map('strtolower', $rule->hooks());
             if (!in_array($hook, $hooks)) {
                 continue;
             }
@@ -149,6 +145,8 @@ class Yaga {
             } else {
                 $awardedUserIDs[] = $userID;
             }
+
+            $badgeAwardModel = Gdn::getContainer()->get(BadgeAwardModel::class);
 
             $systemUserID = Gdn::userModel()->getSystemUserID();
             foreach ($awardedUserIDs as $awardedUserID) {

@@ -17,7 +17,7 @@ class BadgeModel extends Gdn_Model {
      * Used as a cache
      * @var DataSet
      */
-    private static $_badges = null;
+    private $_badges = null;
 
     /**
      * Defines the related database table name.
@@ -33,15 +33,15 @@ class BadgeModel extends Gdn_Model {
      * @return DataSet
      */
     public function get($orderFields = '', $orderDirection = 'asc', $limit = false, $pageNumber = false) {
-        if (empty(self::$_badges)) {
-            self::$_badges = $this->SQL
+        if (empty($this->_badges)) {
+            $this->_badges = $this->SQL
                 ->select()
                 ->from('YagaBadge')
                 ->orderBy('Sort')
                 ->get()
                 ->result();
         }
-        return self::$_badges;
+        return $this->_badges;
     }
 
     /**
@@ -129,7 +129,7 @@ class BadgeModel extends Gdn_Model {
 
                 // Remove their points
                 foreach ($userIDs as $userID) {
-                    Yaga::givePoints($userID, -1 * $badge->AwardValue, 'Badge');
+                    UserModel::givePoints($userID, -1 * $badge->AwardValue, 'Badge');
                 }
                 // Remove the award rows
                 $this->SQL->delete('YagaBadgeAward', ['BadgeID' => $badgeID]);

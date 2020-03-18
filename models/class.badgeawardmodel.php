@@ -21,12 +21,17 @@ class BadgeAwardModel extends Gdn_Model {
      */
     private $unobtainedCache = [];
 
+    /** @var BadgeModel */
+    private $badgeModel;
+
     /**
      * Defines the related database table name.
      */
-    public function __construct() {
+    public function __construct(BadgeModel $badgeModel) {
         parent::__construct('YagaBadgeAward');
         $this->PrimaryKey = 'BadgeAwardID';
+
+        $this->badgeModel = $badgeModel;
     }
 
     /**
@@ -57,7 +62,7 @@ class BadgeAwardModel extends Gdn_Model {
      * @param string $reason This is the reason the giver gave with the award
      */
     public function award($badgeID, $userID, $insertUserID = null, $reason = '') {
-        $badge = Yaga::badgeModel()->getByID($badgeID);
+        $this->badgeModel->getByID($badgeID);
         $this->unobtainedCache[$userID] = null;
 
         if (!empty($badge)) {
@@ -72,7 +77,7 @@ class BadgeAwardModel extends Gdn_Model {
                 ]);
 
                 // Record the points for this badge
-                Yaga::givePoints($userID, $badge->AwardValue, 'Badge');
+                UserModel::givePoints($userID, $badge->AwardValue, 'Badge');
 
                 // Increment the user's badge count
                 $this->SQL->update('User')
@@ -154,11 +159,13 @@ class BadgeAwardModel extends Gdn_Model {
 
     /**
      * Returns the list of unobtained but enabled badges for a specific user
+     * Despite its name, this function actually returns all badges and joins the given UserID, where awarded.
      *
      * @param int $userID
      * @return DataSet
      */
     public function getUnobtained($userID) {
+        deprecated(__FUNCTION__);
         if (!isset($this->unobtainedCache[$userID])) {
             $px = $this->Database->DatabasePrefix;
             $sql = 'select b.BadgeID, b.Enabled, b.RuleClass, b.RuleCriteria, '
@@ -189,7 +196,7 @@ class BadgeAwardModel extends Gdn_Model {
         $result = ['Complete' => true];
         switch($column) {
             case 'CountBadges':
-                Gdn::database()->query(DBAModel::getCountSQL(
+                $this->Database->query(DBAModel::getCountSQL(
                     'count',
                     'User', 'YagaBadgeAward',
                     'CountBadges', 'BadgeAwardID',

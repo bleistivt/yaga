@@ -21,7 +21,7 @@ class ReactionModel extends Gdn_Model {
      */
     private static $_reactions = [];
 
-    /** @var ConversationModel */
+    /** @var ActionModel */
     private $actionModel;
 
     /** @var UserModel */
