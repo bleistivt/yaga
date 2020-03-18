@@ -98,6 +98,9 @@ class RankController extends DashboardController {
         $this->setData('Roles', $roles);
 
         if ($this->Form->isPostBack() != true) {
+            $this->Form->setValue('PointReq', 0);
+            $this->Form->setValue('PostReq', 0);
+
             if (property_exists($this, 'Rank')) {
                 $perkOptions = (array)dbdecode($this->Rank->Perks);
                 $rankArray = (array)$this->Rank;

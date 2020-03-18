@@ -340,7 +340,7 @@ class YagaPlugin extends Gdn_Plugin {
         if ($rank && $rank->RankID != $user->RankID) {
             // Only promote automatically
             $oldRank = $rankModel->getByID($user->RankID);
-            if ($oldRank->Sort < $rank->Sort) {
+            if (($oldRank->Sort ?? 0) < $rank->Sort) {
                 $rankModel->set($rank->RankID, $userID, true);
             }
         }

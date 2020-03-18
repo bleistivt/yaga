@@ -216,6 +216,27 @@ class RankModel extends Gdn_Model {
     }
 
     /**
+     * Ensure a rank is always saved with a sort.
+     *
+     * @param array $formPostValues
+     * @param array $settings
+     * @return boolean
+     */
+    public function save($formPostValues, $settings = false) {
+        if (!isset($formPostValues[$this->PrimaryKey]) && !isset($formPostValues['Sort'])) {
+            $max = $this->SQL
+                ->select('Sort', 'max', 'MaxValue')
+                ->from($this->Name)
+                ->get()
+                ->firstRow(DATASET_TYPE_ARRAY)['MaxValue'] ?? 0;
+
+            $formPostValues['Sort'] = $max + 1;
+        }
+
+        return parent::save($formPostValues, $settings);
+    }
+
+    /**
      * Updates the sort field for each rank in the sort array
      *
      * @param array $sortArray
