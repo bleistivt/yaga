@@ -82,8 +82,8 @@ class BestController extends Gdn_Controller {
             $this->index($page);
             return;
         }
-        $actionModel = Yaga::actionModel();
-        $action = $actionModel->getByID($id);
+
+        $action = $this->ActionModel->getByID($id);
         if (!$action) {
             $this->index($page);
             return;

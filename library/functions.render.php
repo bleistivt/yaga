@@ -21,7 +21,7 @@ if (!function_exists('renderReactionList')) {
      * @return string Rendered list of actions available
      */
     function renderReactionList($id, $type) {
-        $reactions = Yaga::reactionModel()->getList($id, $type);
+        $reactions = Gdn::getContainer()->get(ReactionModel::class)->getList($id, $type);
         $showCount = Gdn::session()->checkPermission('Yaga.Reactions.View');
         $actionsString = '';
         foreach ($reactions as $action) {
@@ -55,7 +55,7 @@ if (!function_exists('renderReactionRecord')) {
      * @return string Rendered list of existing reactions
      */
     function renderReactionRecord($id, $type) {
-        $reactions = Yaga::reactionModel()->getRecord($id, $type);
+        $reactions = Gdn::getContainer()->get(ReactionModel::class)->getRecord($id, $type);
         $limit = Gdn::config('Yaga.Reactions.RecordLimit');
         $reactionCount = count($reactions);
         $recordsString = '';

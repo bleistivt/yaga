@@ -14,7 +14,7 @@ class YagaController extends DashboardController {
      * @var array These objects will be created on instantiation and available via
      * $this->ObjectName
      */
-    public $Uses = ['Form'];
+    public $Uses = ['Form', 'ActionModel', 'BadgeModel', 'RankModel', 'BadgeAwardModel'];
 
     /**
      * Make this look like a dashboard page and add the resources
@@ -123,7 +123,7 @@ class YagaController extends DashboardController {
         $this->title(Gdn::translate('Yaga.Ranks.All'));
 
         // Get list of ranks from the model and pass to the view
-        $this->setData('Ranks', Yaga::rankModel()->get());
+        $this->setData('Ranks', $this->RankModel->get());
 
         $this->render('ranks');
     }
@@ -152,7 +152,7 @@ class YagaController extends DashboardController {
 
         // Get list of badges from the model and pass to the view
         $userID = Gdn::session()->UserID;
-        $allBadges = Yaga::badgeModel()->getWithEarned($userID);
+        $allBadges = $this->BadgeModel->getWithEarned($userID);
         $this->setData('Badges', $allBadges);
 
         $this->render('badges');
@@ -167,17 +167,16 @@ class YagaController extends DashboardController {
      */
     public function badgeDetail($badgeID, $slug = null) {
         $this->permission('Yaga.Badges.View');
-        $badge = Yaga::badgeModel()->getByID($badgeID);
+        $badge = $this->BadgeModel->getByID($badgeID);
 
         if (!$badge) {
             throw NotFoundException('Badge');
         }
 
         $userID = Gdn::session()->UserID;
-        $badgeAwardModel = Yaga::badgeAwardModel();
-        $awardCount = $badgeAwardModel->getCount(['BadgeID' => $badgeID]);
-        $userBadgeAward = $badgeAwardModel->exists($userID, $badgeID);
-        $recentAwards = $badgeAwardModel->getRecent($badgeID);
+        $awardCount = $this->BadgeAwardModel->getCount(['BadgeID' => $badgeID]);
+        $userBadgeAward = $this->BadgeAwardModel->exists($userID, $badgeID);
+        $recentAwards = $this->BadgeAwardModel->getRecent($badgeID);
 
         $this->setData('AwardCount', $awardCount);
         $this->setData('RecentAwards', $recentAwards);
@@ -324,7 +323,7 @@ class YagaController extends DashboardController {
         // Add actions
         if ($include['Action']) {
             $info['Action'] = 'actions.json';
-            $actions = Yaga::actionModel()->get('Sort', 'asc');
+            $actions = $this->ActionModel()->get('Sort', 'asc');
             $this->setData('ActionCount', count($actions));
             $actionData = dbencode($actions);
             $fh->addFromString('actions.json', $actionData);
@@ -334,7 +333,7 @@ class YagaController extends DashboardController {
         // Add ranks and associated image
         if ($include['Rank']) {
             $info['Rank'] = 'ranks.json';
-            $ranks = Yaga::rankModel()->get('Level', 'asc');
+            $ranks = $this->RankModel()->get('Level', 'asc');
             $this->setData('RankCount', count($ranks));
             $rankData = dbencode($ranks);
             $fh->addFromString('ranks.json', $rankData);
@@ -345,7 +344,7 @@ class YagaController extends DashboardController {
         // Add badges and associated images
         if ($include['Badge']) {
             $info['Badge'] = 'badges.json';
-            $badges = Yaga::badgeModel()->get();
+            $badges = $this->BadgeModel()->get();
             $this->setData('BadgeCount', count($badges));
             $badgeData = dbencode($badges);
             $fh->addFromString('badges.json', $badgeData);
@@ -465,7 +464,7 @@ class YagaController extends DashboardController {
                 $data = dbdecode(file_get_contents(PATH_UPLOADS.'/import/yaga/'.$info[$key]));
                 Gdn::sql()->emptyTable('Yaga'.$key);
                 $modelName = $key.'Model';
-                $model = Yaga::$modelName();
+                $model = Gdn::getContainer()->get($modelName);
                 foreach ($data as $datum) {
                     $model->insert((array)$datum);
                 }
