@@ -15,7 +15,7 @@ class AwardCombo implements YagaRule {
         $userID = $sender->EventArguments['UserID'];
         $target = $criteria->Target;
 
-        $badgeAwardModel = Yaga::badgeAwardModel();
+        $badgeAwardModel = Gdn::getContainer()->get(BadgeAwardModel::class);
         $targetDate = strtotime($criteria->Duration.' '.$criteria->Period.' ago');
         $badges = $badgeAwardModel->getByUser($userID);
 

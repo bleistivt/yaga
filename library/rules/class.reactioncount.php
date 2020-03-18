@@ -16,7 +16,9 @@ class ReactionCount implements YagaRule {
             return false;
         }
 
-        $count = Yaga::reactionModel()->getUserCount($sender->EventArguments['ParentUserID'], $actionID);
+        $count = Gdn::getContainer()
+            ->get(ReactionModel::class)
+            ->getUserCount($sender->EventArguments['ParentUserID'], $actionID);
 
         if ($count >= $criteria->Target) {
             // Award the badge to the user that got the reaction
@@ -27,7 +29,7 @@ class ReactionCount implements YagaRule {
     }
 
     public function form($form) {
-        $actions = Yaga::actionModel()->get();
+        $actions = Gdn::getContainer()->get(ActionModel::class)->get();
         $reactions = [];
         foreach ($actions as $action) {
             $reactions[$action->ActionID] = $action->Name;

@@ -18,6 +18,18 @@ class ActedModel extends Gdn_Model {
      */
     protected $expiry = 600;
 
+    /** @var ReactionModel */
+    private $reactionModel;
+
+    /**
+     * Defines the related database table name.
+     */
+    public function __construct(ReactionModel $reactionModel) {
+        parent::__construct();
+
+        $this->reactionModel = $reactionModel;
+    }
+
     /**
      * Fetch content items by grouping reaction records.
      *
@@ -245,7 +257,6 @@ class ActedModel extends Gdn_Model {
      */
     protected function process($records) {
         $content = [];
-        $reactionModel = Yaga::reactionModel();
 
         foreach ($records as $record) {
             $item = $this->getRecord($record['ParentType'], $record['ParentID']);
@@ -256,7 +267,7 @@ class ActedModel extends Gdn_Model {
             }
 
             // Fill the reaction cache to reduce the amount of queries.
-            $reactionModel->prefetch($record['ParentType'], $record['ParentID']);
+            $this->reactionModel->prefetch($record['ParentType'], $record['ParentID']);
 
             $item['ItemType'] = $record['ParentType'];
             $item['ContentID'] = $record['ParentID'];

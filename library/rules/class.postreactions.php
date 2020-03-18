@@ -24,7 +24,7 @@ class PostReactions implements YagaRule {
         }
 
         // Get the reaction counts for this parent item
-        $reactionModel = Yaga::reactionModel();
+        $reactionModel = Gdn::getContainer()->get(ReactionModel::class);
         $reactions = $reactionModel->getList($args['ParentID'], $args['ParentType']);
 
         // Squash the dataset into an array
@@ -45,7 +45,7 @@ class PostReactions implements YagaRule {
     }
 
     public function form($form) {
-        $actions = Yaga::actionModel()->get();
+        $actions = Gdn::getContainer()->get(ActionModel::class)->get();
 
         $string = $form->label('Yaga.Rules.PostReactions.Criteria.Head', 'ReactionCount');
 
