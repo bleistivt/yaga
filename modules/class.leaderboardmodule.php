@@ -49,6 +49,13 @@ class LeaderBoardModule extends Gdn_Module {
      * @param string $slotType Valid options are 'a': All Time, 'w': Weekly, 'm':
      * Monthly, 'y': Yearly
      */
+    public function setSlotType($slotType) {
+        $this->slotType = $slotType;
+    }
+
+    /**
+     * Fetch necessary data for the selected slot type.
+     */
     public function getData() {
         switch(strtolower($this->slotType)) {
             case 'w':
