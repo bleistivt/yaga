@@ -32,14 +32,15 @@ function writeModuleDiscussion($discussion, $px = 'Bookmark') {
      ?></div>
      <div class="Meta">
         <?php
-            $last = new stdClass();
-            $last->UserID = $discussion->LastUserID;
-            $last->Name = $discussion->LastName;
+            $last = [
+                'UserID' => $discussion->LastUserID,
+                'Name' => $discussion->LastName
+            ];
 
             echo newComments($discussion);
 
-            //echo '<span class="MItem">'.$dateFormatter->formatDate($badge->DateInserted, true).UserAnchor($last).'</span>';
-            echo '<span class="MItem">'.Gdn_Format::date($badge->DateInserted, 'html').UserAnchor($last).'</span>';
+            //echo '<span class="MItem">'.$dateFormatter->formatDate($badge->DateInserted, true).userAnchor($last).'</span>';
+            echo '<span class="MItem">'.Gdn_Format::date($badge->DateInserted, 'html').userAnchor($last).'</span>';
         ?>
      </div>
 </li>

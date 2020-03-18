@@ -45,8 +45,7 @@ class PostReactions implements YagaRule {
     }
 
     public function form($form) {
-        $actionModel = new ActionModel();
-        $actions = $actionModel->get();
+        $actions = Yaga::actionModel()->get();
 
         $string = $form->label('Yaga.Rules.PostReactions.Criteria.Head', 'ReactionCount');
 

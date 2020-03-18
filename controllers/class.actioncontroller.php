@@ -155,8 +155,7 @@ class ActionController extends DashboardController {
         ]);
 
         // Load up all permissions
-        $permissionModel = new PermissionModel();
-        $permissions = $permissionModel->permissionColumns();
+        $permissions = Gdn::permissionModel()->permissionColumns();
         unset($permissions['PermissionID']);
         $permissionKeys = array_keys($permissions);
         $permissionList = array_combine($permissionKeys, $permissionKeys);

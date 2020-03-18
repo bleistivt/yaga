@@ -94,8 +94,7 @@ class RankController extends DashboardController {
         }
 
         // Load up all roles
-        $roleModel = new RoleModel();
-        $roles = $roleModel->getArray();
+        $roles = array_column(RoleModel::roles(), 'Name', 'RoleID');
         $this->setData('Roles', $roles);
 
         if ($this->Form->isPostBack() != true) {
