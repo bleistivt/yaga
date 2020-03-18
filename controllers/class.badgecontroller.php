@@ -133,7 +133,7 @@ class BadgeController extends DashboardController {
             $criteria = array_diff_key($formValues, array_flip($this->editFormFields));
 
             // Validate the criteria
-            $ruleClass = new $formValues['RuleClass'];
+            $ruleClass = $formValues['RuleClass'];
             $rule = new $ruleClass();
 
             $rule->validate($criteria, $this->Form);
@@ -242,13 +242,13 @@ class BadgeController extends DashboardController {
             }
      }
 
-     /**
-        * You can manually award badges to users for special cases
-        *
-        * @param int $userID
-        * @throws Gdn_UserException
-        */
-     public function award($userID) {
+    /**
+     * You can manually award badges to users for special cases
+     *
+     * @param int $userID
+     * @throws Gdn_UserException
+     */
+    public function award($userID) {
         // Check permission
         $this->permission('Yaga.Badges.Add');
         $this->setHighlightRoute('badge/settings');

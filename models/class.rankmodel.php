@@ -174,7 +174,7 @@ class RankModel extends Gdn_Model {
 
         // Don't bother setting a rank that they already have
         if ($rank->RankID == $oldRankID) {
-                return;
+            return;
         }
 
         if ($activity) {

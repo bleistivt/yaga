@@ -14,7 +14,7 @@ class YagaPlugin extends Gdn_Plugin {
      * Redirect any old links to proper settings page permanently
      * @param SettingsController $sender
      */
-    public function settingsController_yaga_Create($sender) {
+    public function settingsController_yaga_create($sender) {
         redirectTo('yaga/settings', 301);
     }
 
