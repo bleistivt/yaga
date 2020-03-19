@@ -241,7 +241,7 @@ if (!function_exists('renderYagaOptionButtons')) {
             $options .= anchor(
                 dashboardSymbol('delete'),
                 $deleteUrl,
-                'js-modal-confirm btn btn-icon',
+                'js-modal btn btn-icon',
                 ['title' => Gdn::translate('Delete')]
             );
         }
