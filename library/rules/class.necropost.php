@@ -50,7 +50,7 @@ class NecroPost implements YagaRule {
 
     public function description() {
         $description = Gdn::translate('Yaga.Rules.NecroPost.Desc');
-        return wrap($description, 'div', ['class' => 'InfoMessage']);
+        return wrap($description, 'div', ['class' => 'alert alert-info padded']);
     }
 
     public function name() {

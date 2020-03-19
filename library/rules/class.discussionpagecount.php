@@ -42,7 +42,7 @@ class DiscussionPageCount implements YagaRule {
 
     public function description() {
         $description = Gdn::translate('Yaga.Rules.DiscussionPageCount.Desc');
-        return wrap($description, 'div', ['class' => 'InfoMessage']);
+        return wrap($description, 'div', ['class' => 'alert alert-info padded']);
     }
 
     public function name() {

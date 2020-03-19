@@ -20,7 +20,7 @@ class DiscussionCategory implements YagaRule {
     }
 
     public function form($form) {
-        $string    = $form->label('Yaga.Rules.DiscussionCategory.Criteria.Head', 'DiscussionCategory');
+        $string = $form->label('Yaga.Rules.DiscussionCategory.Criteria.Head', 'DiscussionCategory');
         $string .= $form->categoryDropDown('CategoryID');
         return $string;
     }
@@ -37,7 +37,7 @@ class DiscussionCategory implements YagaRule {
     }
 
     public function description() {
-        return wrap(Gdn::translate('Yaga.Rules.DiscussionCategory.Desc'), 'div', ['class' => 'InfoMessage']);
+        return wrap(Gdn::translate('Yaga.Rules.DiscussionCategory.Desc'), 'div', ['class' => 'alert alert-info padded']);
     }
 
     public function name() {

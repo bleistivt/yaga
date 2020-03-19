@@ -39,7 +39,7 @@ class DiscussionBodyLength implements YagaRule {
 
     public function description() {
         $description = sprintf(Gdn::translate('Yaga.Rules.DiscussionBodyLength.Desc'), Gdn::config('Vanilla.Comment.MaxLength'));
-        return wrap($description, 'div', ['class' => 'InfoMessage']);
+        return wrap($description, 'div', ['class' => 'alert alert-info padded']);
     }
 
     public function name() {
