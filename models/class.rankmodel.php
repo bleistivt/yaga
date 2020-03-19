@@ -36,36 +36,24 @@ class RankModel extends Gdn_Model {
     /**
      * Returns a list of all ranks
      *
-     * @return DataSet
+     * @return Gdn_DataSet
      */
     public function get($orderFields = '', $orderDirection = 'asc', $limit = false, $pageNumber = false) {
+        if ($orderFields !== '' || $orderDirection !== 'asc' || $limit !== false || $pageNumber !== false) {
+            return parent::get($orderFields, $orderDirection, $limit, $pageNumber);
+        }
+
+        // Cache any get() call with default arguments.
         if (empty(self::$_ranks)) {
             self::$_ranks = $this->SQL
                 ->select()
-                ->from('YagaRank')
+                ->from($this->Name)
                 ->orderBy('Sort')
                 ->get()
                 ->result();
         }
+
         return self::$_ranks;
-    }
-
-    /**
-     * Returns data for a specific rank
-     *
-     * @param int $rankID
-     * @return DataSet
-     */
-    public function getByID($rankID) {
-        $ranks = $this->get();
-
-        foreach ($ranks as $rank) {
-            if ($rank->RankID == $rankID) {
-                return $rank;
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -153,11 +141,10 @@ class RankModel extends Gdn_Model {
      */
     public function enable($rankID, $enable) {
         $enable = (!$enable) ? 0 : 1;
-        $this->SQL
-            ->update('YagaRank')
-            ->set('Enabled', $enable)
-            ->where('RankID', $rankID)
-            ->put();
+        $this->update(
+            ['Enabled' => $enable],
+            ['RankID' => $rankID]
+        );
     }
 
     /**
@@ -168,7 +155,7 @@ class RankModel extends Gdn_Model {
      * @param bool $activity Whether or not to insert an activity record.
      */
     public function set($rankID, $userID, $activity = false) {
-        $rank = $this->getByID($rankID);
+        $rank = $this->getID($rankID);
         $userModel = Gdn::userModel();
         $oldRankID = $userModel->getID($userID)->RankID;
 
@@ -279,6 +266,6 @@ class RankModel extends Gdn_Model {
         if ($newRoleIDs != $currentRoleIDs) {
             $userModel->saveRoles($userID, $newRoleIDs, false);
         }
-
     }
+
 }

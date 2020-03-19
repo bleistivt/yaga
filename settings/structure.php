@@ -46,14 +46,14 @@ if ($construct->tableExists()) {
 // Delete duplicates from GDN_Reactions that violate the UNIQUE constraint (user reacting to the same content twice).
 $construct->table('YagaReaction');
 if ($construct->tableExists()) {
-    $result = $sql->query("show index from ${px}YagaReaction where Key_name = 'UX_YagaReaction_Reaction'")->result();
+    $result = $sql->query("show index from {$px}YagaReaction where Key_name = 'UX_YagaReaction_Reaction'")->result();
     if (!$result) {
         $sql->query("
-            delete from ${px}YagaReaction
+            delete from {$px}YagaReaction
             where ReactionID in (
                 select * from (
                     select max(r.ReactionID)
-                    from ${px}YagaReaction as r
+                    from {$px}YagaReaction as r
                     group by r.InsertUserID, r.ParentID, r.ParentType
                     having count(r.ReactionID) > 1
                 ) as r2

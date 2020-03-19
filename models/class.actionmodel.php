@@ -17,7 +17,7 @@ class ActionModel extends Gdn_Model {
      * This is used as a cache.
      * @var object
      */
-    private static $_actions = null;
+    private $_actions = null;
 
     /**
      * Defines the related database table name.
@@ -30,34 +30,24 @@ class ActionModel extends Gdn_Model {
     /**
      * Returns a list of all available actions
      *
-     * @return dataset
+     * @return Gdn_DataSet
      */
     public function get($orderFields = '', $orderDirection = 'asc', $limit = false, $pageNumber = false) {
-        if (empty(self::$_actions)) {
-            self::$_actions = $this->SQL
+        if ($orderFields !== '' || $orderDirection !== 'asc' || $limit !== false || $pageNumber !== false) {
+            return parent::get($orderFields, $orderDirection, $limit, $pageNumber);
+        }
+
+        // Cache any get() call with default arguments.
+        if (empty($this->_actions)) {
+            $this->_actions = $this->SQL
                 ->select()
-                ->from('YagaAction')
+                ->from($this->Name)
                 ->orderBy('Sort')
                 ->get()
                 ->result();
         }
-        return self::$_actions;
-    }
 
-    /**
-     * Returns data for a specific action
-     *
-     * @param int $actionID
-     * @return dataset
-     */
-    public function getByID($actionID) {
-        $action = $this->SQL
-            ->select()
-            ->from('YagaAction')
-            ->where('ActionID', $actionID)
-            ->get()
-            ->firstRow();
-        return $action;
+        return $this->_actions;
     }
 
     /**
@@ -67,8 +57,7 @@ class ActionModel extends Gdn_Model {
      * @return bool
      */
     public function exists($actionID) {
-        $temp = $this->getByID($actionID);
-        return !empty($temp);
+        return !empty($this->getID($actionID));
     }
 
     /**
@@ -80,21 +69,25 @@ class ActionModel extends Gdn_Model {
      * @return boolean Whether or not the deletion was successful
      */
     public function deleteAction($actionID, $replacementID = null) {
-        if ($this->exists($actionID)) {
-            $this->SQL->delete('YagaAction', ['ActionID' => $actionID]);
-
-            // replace the reaction table to move reactions to a new action
-            if ($replacementID && $this->exists($replacementID)) {
-                $this->SQL->update('YagaReaction')
-                    ->set('ActionID', $replacementID)
-                    ->where('ActionID', $actionID)
-                    ->put();
-            } else {
-                $this->SQL->delete('YagaReaction', ['ActionID' => $actionID]);
-            }
-            return true;
+        if (!$this->exists($actionID)) {
+            return false;
         }
-        return false;
+
+        $this->deleteID($actionID);
+
+        // replace the reaction table to move reactions to a new action
+        $reactionModel = Gdn::getContainer()->get(ReactionModel::class);
+
+        if ($replacementID && $this->exists($replacementID)) {
+            $reactionModel->update(
+                ['ActionID' => $replacementID],
+                ['ActionID' => $actionID]
+            );
+        } else {
+            $reactionModel->delete(['ActionID' => $actionID]);
+        }
+
+        return true;
     }
 
     /**

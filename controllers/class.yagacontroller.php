@@ -152,7 +152,7 @@ class YagaController extends DashboardController {
 
         // Get list of badges from the model and pass to the view
         $userID = Gdn::session()->UserID;
-        $allBadges = $this->BadgeModel->getWithEarned($userID);
+        $allBadges = $this->BadgeAwardModel->getWithEarned($userID);
         $this->setData('Badges', $allBadges);
 
         $this->render('badges');
@@ -167,7 +167,7 @@ class YagaController extends DashboardController {
      */
     public function badgeDetail($badgeID, $slug = null) {
         $this->permission('Yaga.Badges.View');
-        $badge = $this->BadgeModel->getByID($badgeID);
+        $badge = $this->BadgeModel->getID($badgeID);
 
         if (!$badge) {
             throw NotFoundException('Badge');
@@ -175,7 +175,7 @@ class YagaController extends DashboardController {
 
         $userID = Gdn::session()->UserID;
         $awardCount = $this->BadgeAwardModel->getCount(['BadgeID' => $badgeID]);
-        $userBadgeAward = $this->BadgeAwardModel->exists($userID, $badgeID);
+        $userBadgeAward = $this->BadgeAwardModel->getWhere(['BadgeID' => $badgeID, 'UserID' => $userID])->firstRow();
         $recentAwards = $this->BadgeAwardModel->getRecent($badgeID);
 
         $this->setData('AwardCount', $awardCount);

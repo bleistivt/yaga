@@ -39,7 +39,7 @@ class ReactController extends Gdn_Controller {
      */
     public function index($type, $id, $actionID) {
         $type = strtolower($type);
-        $action = $this->ActionModel->getByID($actionID);
+        $action = $this->ActionModel->getID($actionID);
 
         // Make sure the action exists and the user is allowed to react
         if (!$action) {

@@ -30,51 +30,24 @@ class BadgeModel extends Gdn_Model {
     /**
      * Returns a list of all badges
      *
-     * @return DataSet
+     * @return Gdn_DataSet
      */
     public function get($orderFields = '', $orderDirection = 'asc', $limit = false, $pageNumber = false) {
+        if ($orderFields !== '' || $orderDirection !== 'asc' || $limit !== false || $pageNumber !== false) {
+            return parent::get($orderFields, $orderDirection, $limit, $pageNumber);
+        }
+
+        // Cache any get() call with default arguments.
         if (empty($this->_badges)) {
             $this->_badges = $this->SQL
                 ->select()
-                ->from('YagaBadge')
+                ->from($this->Name)
                 ->orderBy('Sort')
                 ->get()
                 ->result();
         }
+
         return $this->_badges;
-    }
-
-    /**
-     * Gets the badge list with an optional limit and offset
-     *
-     * @param int $limit
-     * @param int $offset
-     * @return DataSet
-     */
-    public function getLimit($limit = false, $offset = false) {
-        return $this->SQL
-            ->select()
-            ->from('YagaBadge')
-            ->orderBy('Sort')
-            ->limit($limit, $offset)
-            ->get()
-            ->result();
-    }
-
-    /**
-     * Returns data for a specific badge
-     *
-     * @param int $badgeID
-     * @return DataSet
-     */
-    public function getByID($badgeID) {
-        $badge = $this->SQL
-            ->select()
-            ->from('YagaBadge')
-            ->where('BadgeID', $badgeID)
-            ->get()
-            ->firstRow();
-        return $badge;
     }
 
     /**
@@ -85,11 +58,11 @@ class BadgeModel extends Gdn_Model {
      */
     public function enable($badgeID, $enable) {
         $enable = (!$enable) ? 0 : 1;
-        $this->SQL
-            ->update('YagaBadge')
-            ->set('Enabled', $enable)
-            ->where('BadgeID', $badgeID)
-            ->put();
+        $this->update(
+            ['Enabled' => $enable],
+            ['BadgeID' => $badgeID]
+        );
+
         $this->EventArguments['BadgeID'] = $badgeID;
         $this->EventArguments['Enable'] = (bool)$enable;
         $this->fireEvent('BadgeEnable');
@@ -103,65 +76,46 @@ class BadgeModel extends Gdn_Model {
      * @return boolean
      */
     public function deleteID($badgeID, $options = []) {
-        $badge = $this->getByID($badgeID);
-        if (!empty($badge)) {
-            try {
-                $this->Database->beginTransaction();
-                // Delete the badge
-                $this->SQL->delete('YagaBadge', ['BadgeID' => $badgeID]);
-
-                // Find the affected users
-                $userIDSet = $this->SQL
-                    ->select('UserID')
-                    ->from('YagaBadgeAward')
-                    ->where('BadgeID', $badgeID)
-                    ->get()
-                    ->resultArray();
-
-                $userIDs = array_column($userIDSet, 'UserID');
-
-                // Decrement their badge count
-                $this->SQL
-                    ->update('User')
-                    ->set('CountBadges', 'CountBadges - 1', false)
-                    ->where('UserID', $userIDs)
-                    ->put();
-
-                // Remove their points
-                foreach ($userIDs as $userID) {
-                    UserModel::givePoints($userID, -1 * $badge->AwardValue, 'Badge');
-                }
-                // Remove the award rows
-                $this->SQL->delete('YagaBadgeAward', ['BadgeID' => $badgeID]);
-
-                $this->Database->commitTransaction();
-            } catch(Exception $ex) {
-                $this->Database->rollbackTransaction();
-                throw $ex;
-            }
-            return true;
+        $badge = $this->getID($badgeID);
+        if (empty($badge)) {
+            return false;
         }
-        return false;
-    }
 
-    /**
-     * Get the full list of badges joined with the award data for a specific user
-     * This shouldn't really be here, but I can't think of a good place to put it
-     *
-     * @param int $userID
-     * @return DataSet
-     */
-    public function getWithEarned($userID) {
-        $px = $this->Database->DatabasePrefix;
-        $sql = 'select b.BadgeID, b.Name, b.Description, b.Photo, b.AwardValue, '
-            .'ba.UserID, ba.InsertUserID, ba.Reason, ba.DateInserted, '
-            .'ui.Name AS InsertUserName '
-            ."from {$px}YagaBadge as b "
-            ."left join {$px}YagaBadgeAward as ba ON b.BadgeID = ba.BadgeID and ba.UserID = :UserID "
-            ."left join {$px}User as ui on ba.InsertUserID = ui.UserID "
-            .'order by b.Sort';
+        try {
+            $this->Database->beginTransaction();
+            // Delete the badge
+            parent::deleteID($badgeID);
 
-        return $this->Database->query($sql, [':UserID' => $userID])->result();
+            $badgeAwardModel = Gdn::getContainer()->get(BadgeAwardModel::class);
+
+            // Find the affected users
+            $userIDSet = $badgeAwardModel
+                ->getWhere(['BadgeID' => $badgeID])
+                ->resultArray();
+
+            $userIDs = array_column($userIDSet, 'UserID');
+
+            // Decrement their badge count
+            $this->SQL
+                ->update('User')
+                ->set('CountBadges', 'CountBadges - 1', false)
+                ->where('UserID', $userIDs)
+                ->put();
+
+            // Remove their points
+            foreach ($userIDs as $userID) {
+                UserModel::givePoints($userID, -1 * $badge->AwardValue, 'Badge');
+            }
+            // Remove the award rows
+            $badgeAwardModel->delete(['BadgeID' => $badgeID]);
+
+            $this->Database->commitTransaction();
+        } catch(Exception $ex) {
+            $this->Database->rollbackTransaction();
+            throw $ex;
+        }
+
+        return true;
     }
 
     /**

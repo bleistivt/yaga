@@ -86,7 +86,7 @@ class RankController extends DashboardController {
         $edit = false;
         if ($rankID) {
             $this->title(Gdn::translate('Yaga.Rank.Edit'));
-            $this->Rank = $this->RankModel->getByID($rankID);
+            $this->Rank = $this->RankModel->getID($rankID);
             $this->Form->addHidden('RankID', $rankID);
             $edit = true;
         } else {
@@ -163,7 +163,7 @@ class RankController extends DashboardController {
      * @throws NotFoundException
      */
     public function delete($rankID) {
-        $rank = $this->RankModel->getByID($rankID);
+        $rank = $this->RankModel->getID($rankID);
 
         if (!$rank) {
             throw NotFoundException(Gdn::translate('Yaga.Rank'));
@@ -203,7 +203,7 @@ class RankController extends DashboardController {
         $this->permission('Yaga.Ranks.Manage');
         $this->setHighlightRoute('rank/settings');
 
-        $rank = $this->RankModel->getByID($rankID);
+        $rank = $this->RankModel->getID($rankID);
 
         $rank->Enabled = !$rank->Enabled;
         $this->RankModel->enable($rank->RankID, $rank->Enabled);

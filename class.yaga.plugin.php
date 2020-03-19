@@ -339,7 +339,7 @@ class YagaPlugin extends Gdn_Plugin {
 
         if ($rank && $rank->RankID != $user->RankID) {
             // Only promote automatically
-            $oldRank = $rankModel->getByID($user->RankID);
+            $oldRank = $rankModel->getID($user->RankID);
             if (($oldRank->Sort ?? 0) < $rank->Sort) {
                 $rankModel->set($rank->RankID, $userID, true);
             }
@@ -890,30 +890,37 @@ class YagaPlugin extends Gdn_Plugin {
      */
      protected function deleteUserData($userID, $options = [], &$data = null) {
         $sql = Gdn::sql();
+        $container = Gdn::getContainer();
+        $reactionTable = $container->get(ReactionModel::class)->Name;
+        $badgeAwardTable = $container->get(BadgeAwardModel::class)->Name;
 
         $deleteMethod = $options['DeleteMethod'] ?? 'delete';
         if ($deleteMethod == 'delete') {
             // Remove neutral/negative reactions
-            $actions = Gdn::getContainer()
+            $actions = $container
                 ->get(ActionModel::class)
                 ->getWhere(['AwardValue <' => 1])
                 ->result();
 
             foreach ($actions as $negative) {
-                Gdn::userModel()->getDelete('YagaReaction', ['InsertUserID' => $userID, 'ActionID' => $negative->ActionID], $data);
+                Gdn::userModel()->getDelete(
+                    $reactionTable,
+                    ['InsertUserID' => $userID, 'ActionID' => $negative->ActionID],
+                    $data
+                );
             }
         } elseif ($deleteMethod == 'wipe') {
             // Completely remove reactions
-            Gdn::userModel()->getDelete('YagaReaction', ['InsertUserID' => $userID], $data);
+            Gdn::userModel()->getDelete($reactionTable, ['InsertUserID' => $userID], $data);
         } else {
             // Leave reactions
         }
 
         // Remove the reactions they have received
-        Gdn::userModel()->getDelete('YagaReaction', ['ParentAuthorID' => $userID], $data);
+        Gdn::userModel()->getDelete($reactionTable, ['ParentAuthorID' => $userID], $data);
 
         // Remove their badges
-        Gdn::userModel()->getDelete('YagaBadgeAward', ['UserID' => $userID], $data);
+        Gdn::userModel()->getDelete($badgeAwardTable, ['UserID' => $userID], $data);
 
         // Blank the user's yaga information
         $sql->update('User')

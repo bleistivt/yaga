@@ -19,7 +19,7 @@ class ReactionModel extends Gdn_Model {
      * Used to cache the reactions
      * @var array
      */
-    private static $_reactions = [];
+    private $_reactions = [];
 
     /** @var ActionModel */
     private $actionModel;
@@ -44,14 +44,16 @@ class ReactionModel extends Gdn_Model {
      *
      * @param int $id
      * @param string $type
-     * @return DataSet
+     * @return Gdn_DataSet
      */
     public function getList($id, $type) {
         $px = $this->Database->DatabasePrefix;
+        $reactionTable = $this->Name;
+        $actionTable = $this->actionModel->Name;
 
         // try getting the record count from the cache
-        if (array_key_exists($type.$id, self::$_reactions)) {
-            $reactions = self::$_reactions[$type.$id];
+        if (array_key_exists($type.$id, $this->_reactions)) {
+            $reactions = $this->_reactions[$type.$id];
             $actions = $this->actionModel->get();
             // add the count
             foreach ($actions as &$action) {
@@ -67,10 +69,10 @@ class ReactionModel extends Gdn_Model {
 
         $sql = "select a.*, "
            ."(select count(r.ReactionID) "
-           ."from {$px}YagaReaction as r "
+           ."from {$px}{$reactionTable} as r "
            ."where r.ParentID = :ParentID and r.ParentType = :ParentType "
            ."and r.ActionID = a.ActionID) as Count "
-           ."from {$px}YagaAction AS a "
+           ."from {$px}{$actionTable} AS a "
            ."order by a.Sort";
 
         return $this->Database->query($sql, [':ParentID' => $id, ':ParentType' => $type])->result();
@@ -85,40 +87,22 @@ class ReactionModel extends Gdn_Model {
      */
     public function getRecord($id, $type) {
         // try getting the record from the cache
-        if (array_key_exists($type.$id, self::$_reactions)) {
-            return self::$_reactions[$type.$id];
-        } else {
-            $result = $this->SQL
-                ->select('a.*, r.InsertUserID as UserID, r.DateInserted')
-                ->from('YagaAction a')
-                ->join('YagaReaction r', 'a.ActionID = r.ActionID')
-                ->where('r.ParentID', $id)
-                ->where('r.ParentType', $type)
-                ->orderBy('r.DateInserted')
-                ->get()
-                ->result();
-            self::$_reactions[$type.$id] = $result;
-            return $result;
+        if (array_key_exists($type.$id, $this->_reactions)) {
+            return $this->_reactions[$type.$id];
         }
-    }
 
-    /**
-     * Return a list of reactions a user has received
-     *
-     * @param int $id
-     * @param string $type activity, comment, discussion
-     * @param int $userID
-     * @return DataSet
-     */
-    public function getByUser($id, $type, $userID) {
-        return $this->SQL
-            ->select()
-            ->from('YagaReaction')
-            ->where('ParentID', $id)
-            ->where('ParentType', $type)
-            ->where('InsertUserID', $userID)
+        $result = $this->SQL
+            ->select('a.*, r.InsertUserID as UserID, r.DateInserted')
+            ->from($this->actionModel->Name.' a')
+            ->join($this->Name.' r', 'a.ActionID = r.ActionID')
+            ->where('r.ParentID', $id)
+            ->where('r.ParentType', $type)
+            ->orderBy('r.DateInserted')
             ->get()
-            ->firstRow();
+            ->result();
+
+        $this->_reactions[$type.$id] = $result;
+        return $result;
     }
 
     /**
@@ -126,30 +110,13 @@ class ReactionModel extends Gdn_Model {
      *
      * @param int $userID
      * @param int $actionID
-     * @return DataSet
+     * @return Gdn_DataSet
      */
     public function getUserCount($userID, $actionID) {
         return $this->SQL
             ->select('ReactionID', 'count', 'RowCount')
-            ->from('YagaReaction')
+            ->from($this->Name)
             ->where(['ActionID' => $actionID, 'ParentAuthorID' => $userID])
-            ->get()
-            ->firstRow()
-            ->RowCount;
-    }
-
-    /**
-     * Return the count of actions taken by a user
-     *
-     * @param int $userID
-     * @param int $actionID
-     * @return DataSet
-     */
-    public function getUserTakenCount($userID, $actionID) {
-        return $this->SQL
-            ->select('ReactionID', 'count', 'RowCount')
-            ->from('YagaReaction')
-            ->where(['ActionID' => $actionID, 'InsertUserID' => $userID])
             ->get()
             ->firstRow()
             ->RowCount;
@@ -167,28 +134,41 @@ class ReactionModel extends Gdn_Model {
      * @param int $authorID
      * @param int $userID
      * @param int $actionID
-     * @return DataSet
+     * @return Gdn_DataSet
      */
     public function set($id, $type, $authorID, $userID, $actionID) {
         // clear the cache
-        unset(self::$_reactions[$type.$id]);
+        unset($this->_reactions[$type.$id]);
 
-        $eventArgs = ['ParentID' => $id, 'ParentType' => $type, 'ParentUserID' => $authorID, 'InsertUserID' => $userID, 'ActionID' => $actionID];
-        $newAction = $this->actionModel->getByID($actionID);
+        $eventArgs = [
+            'ParentID' => $id,
+            'ParentType' => $type,
+            'ParentUserID' => $authorID,
+            'InsertUserID' => $userID,
+            'ActionID' => $actionID
+        ];
+
+        $newAction = $this->actionModel->getID($actionID);
         $points = $score = $newAction->AwardValue;
-        $currentReaction = $this->getByUser($id, $type, $userID);
+
+        $currentReaction = $this->getWhere([
+            'ParentID' => $id,
+            'ParentType' => $type,
+            'InsertUserID' => $userID
+        ])->firstRow();
         $eventArgs['CurrentReaction'] = $currentReaction;
+
         $this->fireEvent('BeforeReactionSave', $eventArgs);
         //$now = DateTimeFormatter::timeStampToDateTime(time());
         $now = Gdn_Format::toDateTime();
 
         if ($currentReaction) {
-            $oldAction = $this->actionModel->getByID($currentReaction->ActionID);
+            $oldAction = $this->actionModel->getID($currentReaction->ActionID);
 
             if ($actionID == $currentReaction->ActionID) {
                 // remove the record
                 $reaction = $this->SQL->delete(
-                    'YagaReaction',
+                    $this->Name,
                     [
                         'ParentID' => $id,
                         'ParentType' => $type,
@@ -199,16 +179,18 @@ class ReactionModel extends Gdn_Model {
                 $eventArgs['Exists'] = false;
                 $score = 0;
                 $points = -1 * $oldAction->AwardValue;
+
             } else {
                 // update the record
                 $reaction = $this->SQL
-                    ->update('YagaReaction')
+                    ->update($this->Name)
                     ->set('ActionID', $actionID)
                     ->set('DateInserted', $now)
                     ->where('ParentID', $id)
                     ->where('ParentType', $type)
                     ->where('InsertUserID', $userID)
                     ->put();
+
                 $eventArgs['Exists'] = true;
                 $points = -1 * ($oldAction->AwardValue - $points);
             }
@@ -216,7 +198,7 @@ class ReactionModel extends Gdn_Model {
             // insert a record
             $reaction = $this->SQL
                 ->insert(
-                    'YagaReaction',
+                    $this->Name,
                     [
                         'ActionID' => $actionID,
                         'ParentID' =>    $id,
@@ -226,16 +208,20 @@ class ReactionModel extends Gdn_Model {
                         'DateInserted' => $now
                     ]
                 );
+
             $eventArgs['Exists'] = true;
         }
 
         // Update the parent item score
         $totalScore = $this->setUserScore($id, $type, $userID, $score);
         $eventArgs['TotalScore'] = $totalScore;
+
         // Give the user points commesurate with reaction activity
         UserModel::givePoints($authorID, $points, 'Reaction');
         $eventArgs['Points'] = $points;
+
         $this->fireEvent('AfterReactionSave', $eventArgs);
+
         return $reaction;
     }
 
@@ -248,14 +234,14 @@ class ReactionModel extends Gdn_Model {
      */
     public function prefetch($type, $ids) {
         if (!is_array($ids)) {
-                $ids = (array)$ids;
+            $ids = (array)$ids;
         }
 
         if (!empty($ids)) {
             $result = $this->SQL
                 ->select('a.*, r.InsertUserID as UserID, r.DateInserted, r.ParentID')
-                ->from('YagaAction a')
-                ->join('YagaReaction r', 'a.ActionID = r.ActionID')
+                ->from($this->actionModel->Name.' a')
+                ->join($this->Name.' r', 'a.ActionID = r.ActionID')
                 ->whereIn('r.ParentID', $ids)
                 ->where('r.ParentType', $type)
                 ->orderBy('r.DateInserted')
@@ -263,14 +249,14 @@ class ReactionModel extends Gdn_Model {
                 ->result();
 
             foreach ($ids as $id) {
-                self::$_reactions[$type.$id] = [];
+                $this->_reactions[$type.$id] = [];
             }
 
             $userIDs = [];
             // fill the cache
             foreach ($result as $reaction) {
                 $userIDs[] = $reaction->UserID;
-                self::$_reactions[$type.$reaction->ParentID][] = $reaction;
+                $this->_reactions[$type.$reaction->ParentID][] = $reaction;
             }
 
             // Prime the user cache
@@ -306,4 +292,5 @@ class ReactionModel extends Gdn_Model {
             return false;
         }
     }
+
 }

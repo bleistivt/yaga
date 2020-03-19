@@ -83,7 +83,7 @@ class BestController extends Gdn_Controller {
             return;
         }
 
-        $action = $this->ActionModel->getByID($id);
+        $action = $this->ActionModel->getID($id);
         if (!$action) {
             $this->index($page);
             return;

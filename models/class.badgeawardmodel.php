@@ -1,7 +1,5 @@
 <?php if (!defined('APPLICATION')) exit();
 
-use \Vanilla\Formatting\DateTimeFormatter;
-
 /* Copyright 2013 Zachary Doll */
 
 /**
@@ -13,13 +11,6 @@ use \Vanilla\Formatting\DateTimeFormatter;
  * @since 1.0
  */
 class BadgeAwardModel extends Gdn_Model {
-
-    /**
-     * Memory cache for getUnobtained()
-     * 
-     * @var unobtainedCache
-     */
-    private $unobtainedCache = [];
 
     /** @var BadgeModel */
     private $badgeModel;
@@ -39,12 +30,12 @@ class BadgeAwardModel extends Gdn_Model {
      *
      * @param int $badgeID
      * @param int $limit
-     * @return dataset
+     * @return Gdn_DataSet
      */
     public function getRecent($badgeID, $limit = 15) {
         return $this->SQL
             ->select('ba.UserID, ba.DateInserted, u.Name, u.Photo, u.Gender, u.Email')
-            ->from('YagaBadgeAward ba')
+            ->from($this->Name.' ba')
             ->join('User u', 'ba.UserID = u.UserID')
             ->where('BadgeID', $badgeID)
             ->orderBy('DateInserted', 'Desc')
@@ -62,82 +53,72 @@ class BadgeAwardModel extends Gdn_Model {
      * @param string $reason This is the reason the giver gave with the award
      */
     public function award($badgeID, $userID, $insertUserID = null, $reason = '') {
-        $this->badgeModel->getByID($badgeID);
-        $this->unobtainedCache[$userID] = null;
+        $badge = $this->badgeModel->getID($badgeID);
 
-        if (!empty($badge)) {
-            if (!$this->exists($userID, $badgeID)) {
-                $this->SQL->insert('YagaBadgeAward', [
-                    'BadgeID' => $badgeID,
-                    'UserID' => $userID,
-                    'InsertUserID' => $insertUserID,
-                    'Reason' => $reason,
-                    //'DateInserted' => DateTimeFormatter::timeStampToDateTime(time())
-                    'DateInserted' => Gdn_Format::toDateTime()
-                ]);
-
-                // Record the points for this badge
-                UserModel::givePoints($userID, $badge->AwardValue, 'Badge');
-
-                // Increment the user's badge count
-                $this->SQL->update('User')
-                    ->set('CountBadges', 'CountBadges + 1', false)
-                    ->where('UserID', $userID)
-                    ->put();
-
-                if (is_null($insertUserID)) {
-                    $insertUserID = Gdn::session()->UserID;
-                }
-
-                // Record some activity
-                $activityModel = new ActivityModel();
-
-                $activity = [
-                    'ActivityType' => 'BadgeAward',
-                    'ActivityUserID' => $userID,
-                    'RegardingUserID' => $insertUserID,
-                    'Photo' => asset($badge->Photo, true),
-                    'RecordType' => 'Badge',
-                    'RecordID' => $badgeID,
-                    'Route' => '/yaga/badges/'.$badge->BadgeID.'/'.rawurlencode($badge->Name),
-                    'HeadlineFormat' => Gdn::translate('Yaga.Badge.EarnedHeadlineFormat'),
-                    'Data' => [
-                        'Name' => $badge->Name
-                    ],
-                    'Story' => $badge->Description
-                ];
-
-                // Create a public record
-                $activityModel->queue($activity, false); // TODO: enable the grouped notifications after issue #1776 is resolved , ['GroupBy' => 'Route']);
-                // Notify the user of the award
-                $activity['NotifyUserID'] = $userID;
-                $activityModel->queue($activity, 'BadgeAward', ['Force' => true]);
-
-                // Actually save the activity
-                $activityModel->saveQueue();
-
-                $this->EventArguments['UserID'] = $userID;
-                $this->fireEvent('AfterBadgeAward');
-            }
+        if (empty($badge) || $this->exists($userID, $badgeID)) {
+            return;
         }
+
+        $this->insert([
+            'BadgeID' => $badgeID,
+            'UserID' => $userID,
+            'InsertUserID' => $insertUserID,
+            'Reason' => $reason
+        ]);
+
+        // Record the points for this badge
+        UserModel::givePoints($userID, $badge->AwardValue, 'Badge');
+
+        // Increment the user's badge count
+        $this->SQL->update('User')
+            ->set('CountBadges', 'CountBadges + 1', false)
+            ->where('UserID', $userID)
+            ->put();
+
+        if (is_null($insertUserID)) {
+            $insertUserID = Gdn::session()->UserID;
+        }
+
+        // Record some activity
+        $activityModel = new ActivityModel();
+
+        $activity = [
+            'ActivityType' => 'BadgeAward',
+            'ActivityUserID' => $userID,
+            'RegardingUserID' => $insertUserID,
+            'Photo' => asset($badge->Photo, true),
+            'RecordType' => 'Badge',
+            'RecordID' => $badgeID,
+            'Route' => '/yaga/badges/'.$badge->BadgeID.'/'.rawurlencode($badge->Name),
+            'HeadlineFormat' => Gdn::translate('Yaga.Badge.EarnedHeadlineFormat'),
+            'Data' => [
+                'Name' => $badge->Name
+            ],
+            'Story' => $badge->Description
+        ];
+
+        // Create a public record
+        $activityModel->queue($activity, false); // TODO: enable the grouped notifications after issue #1776 is resolved , ['GroupBy' => 'Route']);
+        // Notify the user of the award
+        $activity['NotifyUserID'] = $userID;
+        $activityModel->queue($activity, 'BadgeAward', ['Force' => true]);
+
+        // Actually save the activity
+        $activityModel->saveQueue();
+
+        $this->EventArguments['UserID'] = $userID;
+        $this->fireEvent('AfterBadgeAward');
     }
 
     /**
-     * Returns how many badges the user has of this particular id. It should only
-     * ever be 1 or zero.
+     * Returns true if a user has a badge of a particular ID.
      *
      * @param int $userID
      * @param int $badgeID
-     * @return int
+     * @return bool
      */
     public function exists($userID, $badgeID) {
-        return $this->SQL
-            ->select()
-            ->from('YagaBadgeAward')
-            ->where('BadgeID', $badgeID)
-            ->where('UserID', $userID)
-            ->get()
-            ->firstRow();
+        return !empty($this->getWhere(['BadgeID' => $badgeID, 'UserID' => $userID])->firstRow());
     }
 
     /**
@@ -150,32 +131,30 @@ class BadgeAwardModel extends Gdn_Model {
     public function getByUser($userID, $dataType = DATASET_TYPE_ARRAY) {
         return $this->SQL
             ->select()
-            ->from('YagaBadge b')
-            ->join('YagaBadgeAward ba', 'ba.BadgeID = b.BadgeID', 'left')
+            ->from($this->badgeModel->Name.' b')
+            ->join($this->Name.' ba', 'ba.BadgeID = b.BadgeID', 'left')
             ->where('ba.UserID', $userID)
             ->get()
             ->result($dataType);
     }
 
     /**
-     * Returns the list of unobtained but enabled badges for a specific user
-     * Despite its name, this function actually returns all badges and joins the given UserID, where awarded.
+     * Get the full list of badges joined with the award data for a specific user.
      *
      * @param int $userID
-     * @return DataSet
+     * @return Gdn_DataSet
      */
-    public function getUnobtained($userID) {
-        deprecated(__FUNCTION__);
-        if (!isset($this->unobtainedCache[$userID])) {
-            $px = $this->Database->DatabasePrefix;
-            $sql = 'select b.BadgeID, b.Enabled, b.RuleClass, b.RuleCriteria, '
-                .'ba.UserID '
-                ."from {$px}YagaBadge as b "
-                ."left join {$px}YagaBadgeAward as ba ON b.BadgeID = ba.BadgeID and ba.UserID = :UserID ";
-
-            $this->unobtainedCache[$userID] = $this->Database->query($sql, [':UserID' => $userID])->result();
-        }
-        return $this->unobtainedCache[$userID];
+    public function getWithEarned($userID) {
+        return $this->SQL
+            ->select('b.BadgeID, b.Name, b.Description, b.Photo, b.AwardValue')
+            ->select('ba.UserID, ba.InsertUserID, ba.Reason, ba.DateInserted')
+            ->select('ui.Name', '',  'InsertUserName')
+            ->from($this->badgeModel->Name.' b')
+            ->join($this->Name.' ba', 'b.BadgeID = ba.BadgeID and ba.UserID = '.intval($userID), 'left')
+            ->join('User ui', 'ba.InsertUserID = ui.UserID', 'left')
+            ->orderBy('b.Sort')
+            ->get()
+            ->result();
     }
 
     /**

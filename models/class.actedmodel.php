@@ -42,6 +42,7 @@ class ActedModel extends Gdn_Model {
      */
     private function getItems($method, $limit, $offset, $userID = false, $actionID = false) {
         $px = $this->SQL->Database->DatabasePrefix;
+        $reactionTable = $this->reactionModel->Name;
 
         $this->EventArguments['Method'] = $method;
         $this->EventArguments['DatabasePrefix'] = $px;
@@ -101,7 +102,7 @@ class ActedModel extends Gdn_Model {
 
             from (
                 select ParentID, ParentType, max(DateInserted) as DateInserted
-                from {$px}YagaReaction {$where}
+                from {$px}{$reactionTable} {$where}
                 group by ParentID, ParentType
                 order by null
             ) as r

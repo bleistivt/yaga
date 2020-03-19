@@ -64,7 +64,7 @@ class ActionController extends DashboardController {
         $edit = false;
         $this->title(Gdn::translate('Yaga.Action.Add'));
         if ($actionID) {
-            $this->Action = $this->ActionModel->getByID($actionID);
+            $this->Action = $this->ActionModel->getID($actionID);
             $this->Form->addHidden('ActionID', $actionID);
             $edit = true;
             $this->title(Gdn::translate('Yaga.Action.Edit'));
@@ -170,7 +170,7 @@ class ActionController extends DashboardController {
         } else {
             $newID = $this->Form->save();
             if ($newID) {
-                $action = $this->ActionModel->getByID($newID);
+                $action = $this->ActionModel->getID($newID);
                 $actionRow = renderActionRow($action);
 
                 if ($edit) {

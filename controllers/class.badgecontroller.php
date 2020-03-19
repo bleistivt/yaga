@@ -63,7 +63,6 @@ class BadgeController extends DashboardController {
 
         // Get list of badges from the model and pass to the view
         list($offset, $limit) = offsetLimit($page, PagerModule::$DefaultPageSize);
-        //$this->setData('Badges', $this->BadgeModel->getLimit($limit, $offset));
 
         // This page cannot have a pager as this would interfere with sorting.
         $this->setData('Badges', $this->BadgeModel->get());
@@ -91,7 +90,7 @@ class BadgeController extends DashboardController {
         $edit = false;
         if ($badgeID) {
             $this->title(Gdn::translate('Yaga.Badge.Edit'));
-            $this->Badge = $this->BadgeModel->getByID($badgeID);
+            $this->Badge = $this->BadgeModel->getID($badgeID);
             $this->Form->addHidden('BadgeID', $badgeID);
             $edit = true;
         } else {
@@ -167,7 +166,7 @@ class BadgeController extends DashboardController {
      * @throws NotFoundException
      */
     public function delete($badgeID) {
-        $badge = $this->BadgeModel->getByID($badgeID);
+        $badge = $this->BadgeModel->getID($badgeID);
 
         if (!$badge) {
             throw NotFoundException(Gdn::translate('Yaga.Badge'));
@@ -207,7 +206,7 @@ class BadgeController extends DashboardController {
         $this->permission('Yaga.Badges.Manage');
         $this->setHighlightRoute('badge/settings');
 
-        $badge = $this->BadgeModel->getByID($badgeID);
+        $badge = $this->BadgeModel->getID($badgeID);
 
         $badge->Enabled = !$badge->Enabled;
         $this->BadgeModel->enable($badgeID, $badge->Enabled);
