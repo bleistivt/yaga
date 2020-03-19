@@ -533,7 +533,7 @@ class YagaController extends DashboardController {
         // Hash the image files
 		$files = self::_getFiles(PATH_UPLOADS.'/import/yaga/images');
         $this->setData('ImageCount', count($files));
-		foreach($files as $file) {
+		foreach ($files as $file) {
 			$hashes[] = md5_file($file);
 		}
 

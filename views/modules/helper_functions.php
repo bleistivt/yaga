@@ -93,8 +93,8 @@ function writePromotedContent($content, $sender) {
                 </span>
                 <span class="AuthorInfo">
                     <?php
-                    echo ' '.WrapIf(htmlspecialchars($author['Title'] ?? ''), 'span', ['class' => 'MItem AuthorTitle']);
-                    echo ' '.WrapIf(htmlspecialchars($author['Location'] ?? ''), 'span', ['class' => 'MItem AuthorLocation']);
+                    echo ' '.wrapIf(htmlspecialchars($author['Title'] ?? ''), 'span', ['class' => 'MItem AuthorTitle']);
+                    echo ' '.wrapIf(htmlspecialchars($author['Location'] ?? ''), 'span', ['class' => 'MItem AuthorLocation']);
                     $sender->fireEvent('AuthorInfo');
                     ?>
                 </span>

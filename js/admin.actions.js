@@ -1,10 +1,13 @@
 /* Copyright 2013 Zachary Doll */
+
 jQuery(document).ready(function ($) {
     $('#Actions tbody').sortable({
         axis: 'y',
         containment: 'parent',
         cursor: 'move',
-        cursorAt: {left: '10px'},
+        cursorAt: {
+            left: '10px'
+        },
         forcePlaceholderSize: true,
         items: 'tr',
         placeholder: 'Placeholder',
@@ -12,8 +15,7 @@ jQuery(document).ready(function ($) {
         tolerance: 'pointer',
         update: function () {
             $.post(
-                gdn.url('action/sort.json'),
-                {
+                gdn.url('action/sort.json'), {
                     'SortArray': $('#Actions tbody').sortable('toArray'),
                     'TransientKey': gdn.definition('TransientKey')
                 },
@@ -29,7 +31,7 @@ jQuery(document).ready(function ($) {
     var formSetup = function () {
         // Hide the advanced settings
         $('#AdvancedActionSettings').children('div').hide();
-        $('#AdvancedActionSettings span').click(function (){
+        $('#AdvancedActionSettings span').click(function () {
             $(this).siblings().slideToggle();
         });
 

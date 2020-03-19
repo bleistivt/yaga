@@ -11,7 +11,7 @@ echo heading($this->title());
 
 echo '<ul class="DataList Ranks">';
 
-foreach($this->data('Ranks') as $rank) {
+foreach ($this->data('Ranks') as $rank) {
     $row = '';
 
     // Construct the description of requirements only if it has auto enabled

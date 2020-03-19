@@ -2,7 +2,7 @@
 
 /* Copyright 2013 Zachary Doll */
 
-if(!isset($drop)) {
+if (!isset($drop)) {
     $drop = false; // Safe default - Set to true to drop the table if it already exists.
 }
 

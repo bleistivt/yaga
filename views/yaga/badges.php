@@ -10,7 +10,7 @@ echo heading($this->title());
 
 echo '<ul class="DataList Badges">';
 
-foreach($this->data('Badges') as $badge) {
+foreach ($this->data('Badges') as $badge) {
     // Don't show disabled badges
     //if (!$badge->Enabled) {
     //    continue;

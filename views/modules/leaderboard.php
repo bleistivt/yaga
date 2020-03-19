@@ -5,7 +5,8 @@
 echo '<div class="Box Leaderboard">';
 echo '<h4>'.$this->Title.'</h4>';
 echo '<ul class="PanelInfo">';
-foreach($this->Data as $leader) {
+
+foreach ($this->Data as $leader) {
 
     // Don't show users that have 0 or negative points
     if ($leader->Points <= 0) {

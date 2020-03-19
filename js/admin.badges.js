@@ -1,51 +1,52 @@
 /* Copyright 2013 Zachary Doll */
 
-// Poor mans cache
-var Cache = {
-    data: {},
-    remove: function(key) {
-        delete Cache.data[key];
-    },
-    exists: function(key) {
-        return Cache.data.hasOwnProperty(key) && Cache.data[key] !== null;
-    },
-    get: function(key) {
-        return Cache.data[key];
-    },
-    set: function(key, cachedData) {
-        Cache.remove(key);
-        Cache.data[key] = cachedData;
-    }
-};
+jQuery(document).ready(function ($) {
+    // Poor mans cache
+    var Cache = {
+        data: {},
+        remove: function (key) {
+            delete Cache.data[key];
+        },
+        exists: function (key) {
+            return Cache.data.hasOwnProperty(key) && Cache.data[key] !== null;
+        },
+        get: function (key) {
+            return Cache.data[key];
+        },
+        set: function (key, cachedData) {
+            Cache.remove(key);
+            Cache.data[key] = cachedData;
+        }
+    };
 
-jQuery(document).ready(function($) {
     $('#Badges tbody').sortable({
         axis: 'y',
         containment: 'parent',
         cursor: 'move',
-        cursorAt: {left: '10px'},
+        cursorAt: {
+            left: '10px'
+        },
         forcePlaceholderSize: true,
         items: 'tr',
         placeholder: 'Placeholder',
         opacity: .6,
         tolerance: 'pointer',
-        update: function() {
+        update: function () {
             $.post(
-                gdn.url('badge/sort.json'),
-                {
+                gdn.url('badge/sort.json'), {
                     'SortArray': $('#Badges tbody').sortable('toArray'),
                     'TransientKey': gdn.definition('TransientKey')
                 },
-                function(response) {
+                function (response) {
                     if (!response || !response.Result) {
                         alert("Oops - Didn't save order properly");
                     }
                 }
             );
         },
-        helper: function(e, ui) {
+        helper: function (e, ui) {
             // Preserve width of row
-            ui.children().each(function() {
+            ui.children().each(function () {
                 $(this).width($(this).width());
             });
             return ui;
@@ -53,32 +54,37 @@ jQuery(document).ready(function($) {
     });
 
     // Store the current inputs in the form
-    $(document).on('blur', '#Rule-Criteria input', function() {
+    $(document).on('blur', '#Rule-Criteria input', function () {
         $(this).attr('value', $(this).val());
     });
-    $(document).on('blur', '#Rule-Criteria select', function() {
+    $(document).on('blur', '#Rule-Criteria select', function () {
         var currentValue = $(this).val();
-        $(this).children('option').each(function() {$(this).removeAttr('selected'); });
+        $(this).children('option').each(function () {
+            $(this).removeAttr('selected');
+        });
         $(this).find("option[value='" + currentValue + "']")
             .attr('selected', 'selected')
             .prop('selected', true);
     });
 
     // This handles retrieving and displaying the different rule criteria forms
-    $("form.Badge select[name='RuleClass']").focus(function() {
+    $("form.Badge select[name='RuleClass']").focus(function () {
         // Save the current form to the current value's cache on focus
         var Rule = $(this).val();
         var RuleForm = $('#Rule-Criteria').html();
         var RuleDesc = $('#Rule-Description').html();
-        Cache.set(Rule, {'Form' : RuleForm, 'Description' : RuleDesc});
-    }).change(function() {
+        Cache.set(Rule, {
+            'Form': RuleForm,
+            'Description': RuleDesc
+        });
+    }).change(function () {
         // Grab the form from cache or ajax on change
         var NewRule = $(this).val();
         if (Cache.exists(NewRule)) {
-            $('#Rule-Criteria').fadeOut(function() {
+            $('#Rule-Criteria').fadeOut(function () {
                 $(this).html(Cache.get(NewRule).Form).fadeIn();
             });
-            $('#Rule-Description').fadeOut(function() {
+            $('#Rule-Description').fadeOut(function () {
                 $(this).html(Cache.get(NewRule).Description).fadeIn();
             });
         } else {
@@ -88,18 +94,23 @@ jQuery(document).ready(function($) {
                 url: url,
                 global: false,
                 type: 'GET',
-                data: { 'DeliveryMethod' : 'JSON' },
+                data: {
+                    'DeliveryMethod': 'JSON'
+                },
                 dataType: 'json',
-                success: function(data) {
-                    Cache.set(NewRule, {'Form': data.CriteriaForm, 'Description': data.Description});
-                    $('#Rule-Criteria').fadeOut(function() {
+                success: function (data) {
+                    Cache.set(NewRule, {
+                        'Form': data.CriteriaForm,
+                        'Description': data.Description
+                    });
+                    $('#Rule-Criteria').fadeOut(function () {
                         $(this).html(Cache.get(NewRule).Form).fadeIn();
                     });
-                    $('#Rule-Description').fadeOut(function() {
+                    $('#Rule-Description').fadeOut(function () {
                         $(this).html(Cache.get(NewRule).Description).fadeIn();
                     });
                 },
-                error: function(jqXHR) {
+                error: function (jqXHR) {
                     gdn.informError(jqXHR);
                 }
             });

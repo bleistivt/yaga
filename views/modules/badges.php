@@ -5,7 +5,8 @@
 echo '<div id="Badges" class="Box Badges">';
 echo '<h4>'.$this->Title.'</h4>';
 echo '<div class="PhotoGrid">';
-foreach($this->Data as $badge) {
+
+foreach ($this->Data as $badge) {
     echo anchor(
         img(
             $badge['Photo'],
