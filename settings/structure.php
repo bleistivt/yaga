@@ -43,7 +43,7 @@ if ($construct->tableExists()) {
     $construct->renameTable($px.'Rank', $px.'YagaRank', false);
 }
 
-// Delete duplicates from GDN_Reactions that violate the UNIQUE constraint (user reacting to the same content twice).
+// Delete duplicates from GDN_YagaReaction that violate the UNIQUE constraint (user reacting to the same content twice).
 $construct->table('YagaReaction');
 if ($construct->tableExists()) {
     $result = $sql->query("show index from {$px}YagaReaction where Key_name = 'UX_YagaReaction_Reaction'")->result();
@@ -56,6 +56,24 @@ if ($construct->tableExists()) {
                     from {$px}YagaReaction as r
                     group by r.InsertUserID, r.ParentID, r.ParentType
                     having count(r.ReactionID) > 1
+                ) as r2
+        )", 'delete');
+    }
+}
+
+// Delete duplicates from GDN_YagaBadgeAward that violate the UNIQUE constraint (user receiving to the same badge twice).
+$construct->table('YagaBadgeAward');
+if ($construct->tableExists()) {
+    $result = $sql->query("show index from {$px}YagaBadgeAward where Key_name = 'UX_YagaBadgeAward_Award'")->result();
+    if (!$result) {
+        $sql->query("
+            delete from {$px}YagaBadgeAward
+            where BadgeAwardID in (
+                select * from (
+                    select max(a.BadgeAwardID)
+                    from {$px}YagaBadgeAward as a
+                    group by a.BadgeID, a.UserID
+                    having count(a.BadgeAwardID) > 1
                 ) as r2
         )", 'delete');
     }
@@ -100,8 +118,8 @@ $construct->table('YagaBadge')
 // Tracks the actual awarding of badges
 $construct->table('YagaBadgeAward')
     ->primaryKey('BadgeAwardID')
-    ->column('BadgeID', 'int', false, 'index.UserBadges')
-    ->column('UserID', 'int', false, 'index.UserBadges')
+    ->column('BadgeID', 'int', false, ['index', 'unique.Award'])
+    ->column('UserID', 'int', false, ['index', 'unique.Award'])
     ->column('InsertUserID', 'int', null)
     ->column('Reason', 'text', null)
     ->column('DateInserted', 'datetime')
