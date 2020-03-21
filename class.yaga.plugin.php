@@ -600,7 +600,7 @@ class YagaPlugin extends Gdn_Plugin {
             if ($sender->data('Discussion')) {
                 Gdn::getContainer()
                     ->get(ReactionModel::class)
-                    ->prefetch('discussion', $sender->Data['Discussion']->DiscussionID);
+                    ->prefetch('discussion', $sender->data('Discussion.DiscussionID'));
             }
 
             if (isset($sender->Data['Comments'])) {

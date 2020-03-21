@@ -61,7 +61,7 @@ if ($construct->tableExists()) {
     }
 }
 
-// Delete duplicates from GDN_YagaBadgeAward that violate the UNIQUE constraint (user receiving to the same badge twice).
+// Delete duplicates from GDN_YagaBadgeAward that violate the UNIQUE constraint (user receiving the same badge twice).
 $construct->table('YagaBadgeAward');
 if ($construct->tableExists()) {
     $result = $sql->query("show index from {$px}YagaBadgeAward where Key_name = 'UX_YagaBadgeAward_Award'")->result();
