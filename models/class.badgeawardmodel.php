@@ -12,6 +12,13 @@
  */
 class BadgeAwardModel extends Gdn_Model {
 
+    /**
+     * This is used as a cache.
+     * @var array
+     */
+    private $_badgeAwards = [];
+
+
     /** @var BadgeModel */
     private $badgeModel;
 
@@ -58,6 +65,9 @@ class BadgeAwardModel extends Gdn_Model {
         if (empty($badge) || $this->exists($userID, $badgeID)) {
             return;
         }
+
+        // Clear the cache.
+        unset($this->_badgeAwards[$userID]);
 
         $this->insert([
             'BadgeID' => $badgeID,
@@ -136,6 +146,20 @@ class BadgeAwardModel extends Gdn_Model {
             ->where('ba.UserID', $userID)
             ->get()
             ->result($dataType);
+    }
+
+    /**
+     * Returns the badge IDs a user has already received from the memory cache.
+     *
+     * @param int $userID
+     * @param string $dataType
+     * @return mixed
+     */
+    public function getAwards($userID) {
+        if (!isset($this->_badgeAwards[$userID])) {
+            $this->_badgeAwards[$userID] = array_column($this->getWhere(['UserID' => $userID])->resultArray(), 'BadgeID');
+        }
+        return $this->_badgeAwards[$userID];
     }
 
     /**

@@ -674,13 +674,15 @@ class YagaPlugin extends Gdn_Plugin {
         $user = $session->User;
 
         $badges = Gdn::getContainer()->get(BadgeModel::class)->get();
-
-        //$interactionRules = RulesController::getInteractionRules();
+        $awards = Gdn::getContainer()->get(BadgeAwardModel::class)->getAwards($userID);
+        $interactionRules = RulesController::getInteractionRules();
 
         $rules = [];
         foreach ($badges as $badge) {
             // The badge award needs to be processed
-            if (!$badge->Enabled/* || !array_key_exists($badge->RuleClass, $interactionRules)*/) {
+            $hasInteraction = array_key_exists($badge->RuleClass, $interactionRules);
+            $obtained = array_key_exists($badge->BadgeID, $awards);
+            if (!$badge->Enabled || !($hasInteraction || !$obtained)) {
                 continue;
             }
 
