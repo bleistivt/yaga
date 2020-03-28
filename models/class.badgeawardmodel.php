@@ -132,7 +132,7 @@ class BadgeAwardModel extends Gdn_Model {
     }
 
     /**
-     * Returns the badges a user has already received
+     * Returns the badges a user has already received.
      *
      * @param int $userID
      * @param string $dataType
@@ -152,8 +152,7 @@ class BadgeAwardModel extends Gdn_Model {
      * Returns the badge IDs a user has already received from the memory cache.
      *
      * @param int $userID
-     * @param string $dataType
-     * @return mixed
+     * @return array
      */
     public function getAwards($userID) {
         if (!isset($this->_badgeAwards[$userID])) {
