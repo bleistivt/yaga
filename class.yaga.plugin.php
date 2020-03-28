@@ -675,12 +675,12 @@ class YagaPlugin extends Gdn_Plugin {
 
         $badges = Gdn::getContainer()->get(BadgeModel::class)->get();
 
-        $interactionRules = RulesController::getInteractionRules();
+        //$interactionRules = RulesController::getInteractionRules();
 
         $rules = [];
         foreach ($badges as $badge) {
             // The badge award needs to be processed
-            if (!$badge->Enabled || !array_key_exists($badge->RuleClass, $interactionRules)) {
+            if (!$badge->Enabled/* || !array_key_exists($badge->RuleClass, $interactionRules)*/) {
                 continue;
             }
 
@@ -691,7 +691,7 @@ class YagaPlugin extends Gdn_Plugin {
                 $rules[$class] = $rule;
             } else {
                 if (!array_key_exists('UnknownRule', $rules)) {
-                $rules['UnkownRule'] = new UnknownRule();
+                    $rules['UnkownRule'] = new UnknownRule();
                 }
                 $rules[$class] = $rules['UnkownRule'];
             }

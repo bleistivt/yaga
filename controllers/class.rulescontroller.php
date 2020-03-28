@@ -63,8 +63,7 @@ class RulesController extends Gdn_Controller {
             // TODO: Don't reuse badge model?
             $model = Gdn::getContainer()->get(BadgeModel::class);
             $model->EventArguments['Rules'] = &$tempRules;
-            $model->FireAs = 'Yaga';
-            $model->fireEvent('AfterGetRules');
+            $model->fireAs('Yaga')->fireEvent('AfterGetRules');
 
             asort($tempRules);
             if (empty($tempRules)) {
