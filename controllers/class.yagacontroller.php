@@ -25,13 +25,14 @@ class YagaController extends DashboardController {
     public function initialize() {
         parent::initialize();
         $this->Application = 'Yaga';
+        $this->ApplicationFolder = 'yaga';
         Gdn_Theme::section('Dashboard');
         if ($this->Menu) {
             $this->Menu->highlightRoute('/yaga');
         }
         $this->setHighlightRoute('yaga/settings');
 
-        $this->addCssFile('yaga.css');
+        $this->addCssFile('yaga.css', 'plugins/yaga');
         $this->removeCssFile('magnific-popup.css');
     }
 
@@ -87,7 +88,7 @@ class YagaController extends DashboardController {
         ]);
         $this->ConfigurationModule = $configModule;
 
-        $this->render('settings');
+        $this->render('settings', '', 'plugins/yaga');
     }
 
     /**
@@ -119,13 +120,13 @@ class YagaController extends DashboardController {
     public function ranks() {
         $this->permission('Yaga.Ranks.View');
         $this->frontendStyle();
-        $this->addCssFile('ranks.css');
+        $this->addCssFile('ranks.css', 'plugins/yaga');
         $this->title(Gdn::translate('Yaga.Ranks.All'));
 
         // Get list of ranks from the model and pass to the view
         $this->setData('Ranks', $this->RankModel->get());
 
-        $this->render('ranks');
+        $this->render('ranks', '', 'plugins/yaga');
     }
 
     /**
@@ -141,7 +142,7 @@ class YagaController extends DashboardController {
     public function badges($badgeID = false, $slug = null) {
         $this->permission('Yaga.Badges.View');
         $this->frontendStyle();
-        $this->addCssFile('badges.css');
+        $this->addCssFile('badges.css', 'plugins/yaga');
         $this->addModule('BadgesModule');
 
         if (is_numeric($badgeID)) {
@@ -155,7 +156,7 @@ class YagaController extends DashboardController {
         $allBadges = $this->BadgeAwardModel->getWithEarned($userID);
         $this->setData('Badges', $allBadges);
 
-        $this->render('badges');
+        $this->render('badges', '', 'plugins/yaga');
     }
 
     /**
@@ -185,7 +186,7 @@ class YagaController extends DashboardController {
 
         $this->title(Gdn::translate('Yaga.Badge.View').$badge->Name);
 
-        $this->render('badgedetail');
+        $this->render('badgedetail', '', 'plugins/yaga');
     }
 
     /**
@@ -230,9 +231,9 @@ class YagaController extends DashboardController {
         }
 
         if ($this->Form->errorCount() == 0 && $this->Form->isPostBack()) {
-            $this->render('transport-success');
+            $this->render('transport-success', '', 'plugins/yaga');
         } else {
-            $this->render();
+            $this->render('import', '', 'plugins/yaga');
         }
     }
 
@@ -262,7 +263,7 @@ class YagaController extends DashboardController {
         if ($this->Form->errorCount() == 0 && $this->Form->isPostBack()) {
             $this->render('transport-success');
         } else {
-            $this->render('import');
+            $this->render('import', '', 'plugins/yaga');
         }
     }
 
