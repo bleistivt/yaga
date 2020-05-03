@@ -26,7 +26,8 @@ class BadgeController extends DashboardController {
         'Checkboxes',
         'Save',
         'Enabled',
-        'Photo'
+        'Photo',
+        'PhotoUpload'
     ];
 
     /**
