@@ -1,7 +1,7 @@
 {
     "name": "Yet Another Gamification Application",
     "description": "Yaga provides customizable reactions, badges, and ranks for your Vanilla forum software. Increase user activity by letting users react to content with emotions. Give users badges based on statistics and engagement in your community. Create and award custom badges for special events and recognition. Award Ranks which can confer different (configurable) permissions based on community perception and participation.",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "url": "http://github.com/bleistivt/yaga",
     "license": "GPLv2",
     "mobileFriendly": true,
