@@ -981,7 +981,7 @@ class YagaPlugin extends Gdn_Plugin {
      */
     public function setup() {
         if (Gdn::config('EnabledApplications.Yaga')) {
-            throw new Gdn_UserExeption('Please disable your old Yaga installation under "Applications" before enabling this plugin.');
+            throw new Gdn_UserException('Please disable your old Yaga installation under "Applications" before enabling this plugin.');
         }
 
         $config = Gdn::config();
