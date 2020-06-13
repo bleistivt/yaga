@@ -88,7 +88,7 @@ echo $this->Form->errors();
             <?php echo $this->Form->label('Award Value', 'AwardValue'); ?>
         </div>
         <div class="input-wrap">
-            <?php echo $this->Form->textBox('AwardValue'); ?>
+            <?php echo $this->Form->textBox('AwardValue', ['type' => 'number']); ?>
         </div>
     </li>
     <li class="form-group">
@@ -96,7 +96,7 @@ echo $this->Form->errors();
             <?php echo $this->Form->label('Automatically Award', 'Enabled'); ?>
         </div>
         <div class="input-wrap">
-            <?php echo $this->Form->checkBox('Enabled'); ?>
+            <?php echo $this->Form->toggle('Enabled'); ?>
         </div>
     </li>
 </ul>
