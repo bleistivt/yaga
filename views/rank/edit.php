@@ -30,7 +30,7 @@ echo $this->Form->errors();
             <?php echo $this->Form->label('Yaga.Ranks.PointsReq', 'PointReq'); ?>
         </div>
         <div class="input-wrap">
-            <?php echo $this->Form->textBox('PointReq'); ?>
+            <?php echo $this->Form->textBox('PointReq', ['type' => 'number']); ?>
         </div>
     </li>
     <li class="form-group">
@@ -38,7 +38,7 @@ echo $this->Form->errors();
             <?php echo $this->Form->label('Yaga.Ranks.PostsReq', 'PostReq'); ?>
         </div>
         <div class="input-wrap">
-            <?php echo $this->Form->textBox('PostReq'); ?>
+            <?php echo $this->Form->textBox('PostReq', ['type' => 'number']); ?>
         </div>
     </li>
     <li class="form-group">
@@ -54,7 +54,7 @@ echo $this->Form->errors();
             <?php echo $this->Form->label('Automatically Award', 'Enabled'); ?>
         </div>
         <div class="input-wrap">
-            <?php echo $this->Form->checkBox('Enabled'); ?>
+            <?php echo $this->Form->toggle('Enabled'); ?>
         </div>
     </li>
 </ul>
