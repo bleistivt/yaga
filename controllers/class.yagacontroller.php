@@ -60,30 +60,28 @@ class YagaController extends DashboardController {
         $configModule->initialize([
             'Yaga.Reactions.Enabled' => [
                 'LabelCode' => 'Yaga.Reactions.Use',
-                'Control' => 'Checkbox'
+                'Control' => 'toggle'
             ],
             'Yaga.Badges.Enabled' => [
                 'LabelCode' => 'Yaga.Badges.Use',
-                'Control' => 'Checkbox'
+                'Control' => 'toggle'
             ],
             'Yaga.Ranks.Enabled' => [
                 'LabelCode' => 'Yaga.Ranks.Use',
-                'Control' => 'Checkbox'
+                'Control' => 'toggle'
             ],
             'Yaga.MenuLinks.Show' => [
                 'LabelCode' => 'Yaga.MenuLinks.Show',
-                'Control' => 'Checkbox'
+                'Control' => 'toggle'
             ],
             'Yaga.LeaderBoard.Enabled' => [
                 'LabelCode' => 'Yaga.LeaderBoard.Use',
-                'Control' => 'Checkbox'
+                'Control' => 'toggle'
             ],
             'Yaga.LeaderBoard.Limit' => [
                 'LabelCode' => 'Yaga.LeaderBoard.Max',
                 'Control' => 'Textbox',
-                'Options' => [
-                    'Size' => 45
-                ]
+                'Options' => ['type' => 'number']
             ]
         ]);
         $this->ConfigurationModule = $configModule;
