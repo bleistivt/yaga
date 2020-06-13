@@ -122,6 +122,9 @@ only screen and (max-device-width: 480px) {
     background-position: 16px 16px;
     background-repeat: no-repeat;
 }
+.ReactButton.Quote .ReactSprite.ReactQuote {
+    background-image: none!important;
+}
 input + .ReactSprite {
     vertical-align: middle;
 }
