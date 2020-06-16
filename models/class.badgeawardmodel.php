@@ -18,14 +18,16 @@ class BadgeAwardModel extends Gdn_Model {
      */
     private $_badgeAwards = [];
 
-
     /** @var BadgeModel */
     private $badgeModel;
+    
+    /** @var Gdn_Session */
+    private $session;
 
     /**
      * Defines the related database table name.
      */
-    public function __construct(?BadgeModel $badgeModel = null) {
+    public function __construct(?BadgeModel $badgeModel = null, ?Gdn_Session $session = null) {
         parent::__construct('YagaBadgeAward');
         $this->PrimaryKey = 'BadgeAwardID';
 
@@ -34,8 +36,12 @@ class BadgeAwardModel extends Gdn_Model {
         if ($badgeModel === null) {
             $badgeModel = Gdn::getContainer()->get(BadgeModel::class);
         }
+        if ($session === null) {
+            $session = Gdn::getContainer()->get(Gdn_Session::class);
+        }
 
         $this->badgeModel = $badgeModel;
+        $this->session = $session;
     }
 
     /**
@@ -92,7 +98,7 @@ class BadgeAwardModel extends Gdn_Model {
             ->put();
 
         if (is_null($insertUserID)) {
-            $insertUserID = Gdn::session()->UserID;
+            $insertUserID = $this->session->UserID;
         }
 
         // Record some activity
@@ -174,6 +180,77 @@ class BadgeAwardModel extends Gdn_Model {
             ->orderBy('b.Sort')
             ->get()
             ->result();
+    }
+
+    /**
+     * Check for outstanding badge awards.
+     *
+     * @param mixed $sender The sending object
+     * @param string $handler The event name to check associated rules for awards
+     */
+    public function executeHooks($sender, $handler) {
+        if (!Gdn::config('Yaga.Badges.Enabled') || !$this->session->isValid()) {
+            return;
+        }
+
+        // Let's us use __FUNCTION__ in the original hook
+        $hook = strtolower(str_ireplace('_Handler', '', $handler));
+
+        $badges = $this->badgeModel->get();
+        $interactionRules = RulesController::getInteractionRules();
+
+        $rules = [];
+        foreach ($badges as $badge) {
+            // The badge award needs to be processed
+            $hasInteraction = array_key_exists($badge->RuleClass, $interactionRules);
+            $obtained = $this->exists($this->session->UserID, $badge->BadgeID);
+            if (!$badge->Enabled || !($hasInteraction || !$obtained)) {
+                continue;
+            }
+
+            // Create a rule object if needed
+            $class = $badge->RuleClass;
+            if (!in_array($class, $rules) && class_exists($class)) {
+                $rule = new $class();
+                $rules[$class] = $rule;
+            } else {
+                if (!array_key_exists('UnknownRule', $rules)) {
+                    $rules['UnkownRule'] = new UnknownRule();
+                }
+                $rules[$class] = $rules['UnkownRule'];
+            }
+
+            $rule = $rules[$class];
+
+            // Only check awards for rules that use this hook
+            $hooks = array_map('strtolower', $rule->hooks());
+            if (!in_array($hook, $hooks)) {
+                continue;
+            }
+            
+            $criteria = (object)dbdecode($badge->RuleCriteria);
+            $result = $rule->award($sender, $this->session->User, $criteria);
+            if (!$result) {
+                continue;
+            }
+            
+            $awardedUserIDs = [];
+            if (is_array($result)) {
+                $awardedUserIDs = $result;
+            } elseif (is_numeric($result)) {
+                $awardedUserIDs[] = $result;
+            } else {
+                $awardedUserIDs[] = $this->session->UserID;
+            }
+
+            $systemUserID = Gdn::userModel()->getSystemUserID();
+            foreach ($awardedUserIDs as $awardedUserID) {
+                if ($awardedUserID == $systemUserID) {
+                    continue;
+                }
+                $this->award($badge->BadgeID, $awardedUserID, $this->session->UserID);
+            }
+        }
     }
 
     /**
