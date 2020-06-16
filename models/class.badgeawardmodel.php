@@ -197,7 +197,7 @@ class BadgeAwardModel extends Gdn_Model {
         $hook = strtolower(str_ireplace('_Handler', '', $handler));
 
         $badges = $this->badgeModel->get();
-        $interactionRules = RulesController::getInteractionRules();
+        $interactionRules = $this->badgeModel->getInteractionRules();
 
         $rules = [];
         foreach ($badges as $badge) {
@@ -210,16 +210,9 @@ class BadgeAwardModel extends Gdn_Model {
 
             // Create a rule object if needed
             $class = $badge->RuleClass;
-            if (!in_array($class, $rules) && class_exists($class)) {
-                $rule = new $class();
-                $rules[$class] = $rule;
-            } else {
-                if (!array_key_exists('UnknownRule', $rules)) {
-                    $rules['UnkownRule'] = new UnknownRule();
-                }
-                $rules[$class] = $rules['UnkownRule'];
+            if (!in_array($class, $rules)) {
+                $rules[$class] = $this->badgeModel->createRule($class);
             }
-
             $rule = $rules[$class];
 
             // Only check awards for rules that use this hook

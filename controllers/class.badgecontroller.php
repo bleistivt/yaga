@@ -67,7 +67,7 @@ class BadgeController extends DashboardController {
 
         // This page cannot have a pager as this would interfere with sorting.
         $this->setData('Badges', $this->BadgeModel->get());
-        $this->setData('Rules', RulesController::getRules());
+        $this->setData('Rules', $this->BadgeModel->getRules());
 
         $this->render();
     }
@@ -84,7 +84,7 @@ class BadgeController extends DashboardController {
         $this->Form->setModel($this->BadgeModel);
 
         // Only allow editing if some rules exist
-        if (!RulesController::getRules()) {
+        if (!$this->BadgeModel->getRules()) {
             throw new Gdn_UserException(Gdn::translate('Yaga.Error.NoRules'));
         }
 
@@ -327,4 +327,26 @@ class BadgeController extends DashboardController {
 
         $this->renderData();
     }
+
+    /**
+     * This creates a new rule object in a safe way and renders its criteria form.
+     *
+     * @param string $ruleClass
+     */
+    public function ruleCriteriaForm($ruleClass) {
+        if (class_exists($ruleClass) && in_array('YagaRule', class_implements($ruleClass))) {
+            $rule = new $ruleClass();
+            $this->Form->setStyles('bootstrap');
+
+            $this->renderData([
+                'CriteriaForm' => $rule->form($this->Form),
+                'RuleClass' => $ruleClass,
+                'Name' => $rule->name(),
+                'Description' => $rule->description()
+            ]);
+        } else {
+            $this->renderException(new Gdn_UserException(Gdn::translate('Yaga.Error.Rule404')));
+        }
+    }
+
 }

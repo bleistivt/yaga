@@ -20,6 +20,13 @@ class BadgeModel extends Gdn_Model {
     private $_badges = null;
 
     /**
+     * Memory cache for getInteractionRules()
+     * 
+     * @var interactionRulesCache
+     */
+    private $_interactionRulesCache = null;
+
+    /**
      * Defines the related database table name.
      */
     public function __construct() {
@@ -132,6 +139,85 @@ class BadgeModel extends Gdn_Model {
             $this->setField($badgeID, 'Sort', $index);
         }
         return true;
+    }
+
+    /**
+     * This checks the cache for current rule set and expires once a day.
+     * It loads all php files in the rules folder and selects only those that
+     * implement the 'YagaRule' interface.
+     *
+     * @return array Rules that are currently available to use. The class names
+     * are keys and the friendly names are values.
+     */
+    public function getRules() {
+        $rules = Gdn::cache()->get('Yaga.Badges.Rules');
+
+        // rule files must always be loaded
+        foreach (glob(PATH_PLUGINS.'/yaga/library/rules/*.php') as $filename) {
+            include_once $filename;
+        }
+
+        if ($rules === Gdn_Cache::CACHEOP_FAILURE) {
+            $tempRules = [];
+            foreach (get_declared_classes() as $className) {
+                if (in_array('YagaRule', class_implements($className))) {
+                    $rule = new $className();
+                    $tempRules[$className] = $rule->name();
+                }
+            }
+
+            $this->EventArguments['Rules'] = &$tempRules;
+            $this->fireAs('Yaga')->fireEvent('AfterGetRules');
+
+            asort($tempRules);
+            $rules = dbencode(empty($tempRules) ? false : $tempRules);
+            Gdn::cache()->store('Yaga.Badges.Rules', $rules, [Gdn_Cache::FEATURE_EXPIRY => Gdn::config('Yaga.Rules.CacheExpire', 86400)]);
+        }
+
+        return dbdecode($rules);
+    }
+
+    /**
+     * Create a new rule object in a safe way.
+     *
+     * @return YagaRule
+     */
+    public function createRule($class) {
+        if (class_exists($class)) {
+            return new $class();
+        } else {
+            return new UnknownRule();
+        }
+    }
+
+    /**
+     * This checks the cache for current rule set that can be triggered for a user
+     * by another user. It loads all rules and selects only those that return true
+     * on its `Interacts()` method.
+     *
+     * @return array Rules that are currently available to use that are interactive.
+     */
+    public function getInteractionRules() {
+        if ($this->_interactionRulesCache === null) {
+            $rules = Gdn::cache()->get('Yaga.Badges.InteractionRules');
+            if ($rules === Gdn_Cache::CACHEOP_FAILURE) {
+                $allRules = $this->getRules();
+
+                $tempRules = [];
+                foreach ($allRules as $className => $name) {
+                    $rule = new $className();
+                    if ($rule->interacts()) {
+                        $tempRules[$className] = $name;
+                    }
+                }
+                $rules = dbencode(empty($tempRules) ? false : $tempRules);
+                Gdn::cache()->store('Yaga.Badges.InteractionRules', $rules, [Gdn_Cache::FEATURE_EXPIRY => Gdn::config('Yaga.Rules.CacheExpire', 86400)]);
+            }
+
+            $this->_interactionRulesCache = dbdecode($rules);
+        }
+        
+        return $this->_interactionRulesCache;
     }
 
 }

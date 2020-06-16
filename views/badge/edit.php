@@ -3,7 +3,7 @@
 /* Copyright 2013 Zachary Doll */
 
 // Grab the rules so we can render the first criteria form by default
-$rules = RulesController::getRules();
+$rules = $this->BadgeModel->getRules();
 $ruleClass = key($rules);
 
 // Use the defined rule class if we are editing
@@ -11,11 +11,7 @@ if (property_exists($this, 'Badge')) {
     $ruleClass = $this->Badge->RuleClass;
 }
 
-if (class_exists($ruleClass)) {
-    $rule = new $ruleClass();
-} else {
-    $rule = new UnknownRule();
-}
+$rule = $this->BadgeModel->createRule($ruleClass);
 
 echo heading($this->title());
 

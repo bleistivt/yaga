@@ -89,7 +89,7 @@ jQuery(document).ready(function ($) {
             });
         } else {
             // Grab the form via ajax
-            var url = gdn.url('/rules/getcriteriaform/' + NewRule);
+            var url = gdn.url('/badge/rulecriteriaform/' + NewRule);
             $.ajax({
                 url: url,
                 global: false,
