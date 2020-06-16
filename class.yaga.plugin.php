@@ -722,8 +722,6 @@ class YagaPlugin extends Gdn_Plugin {
                 $awardedUserIDs[] = $userID;
             }
 
-            $badgeAwardModel = Gdn::getContainer()->get(BadgeAwardModel::class);
-
             $systemUserID = Gdn::userModel()->getSystemUserID();
             foreach ($awardedUserIDs as $awardedUserID) {
                 if ($awardedUserID == $systemUserID) {
