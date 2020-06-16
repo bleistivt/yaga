@@ -58,16 +58,17 @@ class YagaPlugin extends Gdn_Plugin {
     public function base_getAppSettingsMenuItems_handler($sender) {
         $menu = $sender->EventArguments['SideMenu'];
         $section = 'Gamification';
-        $menu->addItem($section, $section);
+        $menu->addItem($section, Gdn::translate($section));
         $menu->addLink($section, Gdn::translate('Settings'), 'yaga/settings', 'Garden.Settings.Manage');
         if (Gdn::config('Yaga.Reactions.Enabled')) {
-            $menu->addLink($section, Gdn::translate('Yaga.Reactions'), 'action/settings', 'Yaga.Reactions.Manage');
+            // We need to provide a translation default without dots here as this is used as a class name.
+            $menu->addLink($section, Gdn::translate('Yaga.Reactions', 'Reactions'), 'action/settings', 'Yaga.Reactions.Manage');
         }
         if (Gdn::config('Yaga.Badges.Enabled')) {
-            $menu->addLink($section, Gdn::translate('Yaga.Badges'), 'badge/settings', 'Yaga.Badges.Manage');
+            $menu->addLink($section, Gdn::translate('Yaga.Badges', 'Badges'), 'badge/settings', 'Yaga.Badges.Manage');
         }
         if (Gdn::config('Yaga.Ranks.Enabled')) {
-            $menu->addLink($section, Gdn::translate('Yaga.Ranks'), 'rank/settings', 'Yaga.Ranks.Manage');
+            $menu->addLink($section, Gdn::translate('Yaga.Ranks', 'Ranks'), 'rank/settings', 'Yaga.Ranks.Manage');
         }
     }
 
