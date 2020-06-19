@@ -67,10 +67,7 @@ echo $this->Form->errors();
     </li>
     <li class="form-group">
         <div class="label-wrap">
-            <?php
-            echo $this->Form->label('Css Class', 'CssClass');
-            echo wrap(Gdn::translate('Optional'), 'div', ['class' => 'info']);
-            ?>
+            <?php echo $this->Form->label('Css Class', 'CssClass'); ?>
         </div>
         <div class="input-wrap">
             <?php echo $this->Form->textBox('CssClass'); ?>
