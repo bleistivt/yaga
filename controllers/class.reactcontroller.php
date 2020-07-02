@@ -50,57 +50,21 @@ class ReactController extends Gdn_Controller {
             throw PermissionException();
         }
 
-        $item = null;
-        $anchorID = '#'.ucfirst($type).'_';
-        $itemOwnerID = 0;
+        $item = $this->ReactionModel->getReactionItem($type, $id);
 
-        if (in_array($type, ['discussion', 'comment'])) {
-            $item = getRecord($type, $id);
-        } elseif ($type == 'activity') {
-            $model = new ActivityModel();
-            $item = $model->getID($id, DATASET_TYPE_ARRAY);
-        } else {
-            $this->EventArguments = [
-                'TypeFound' => false,
-                'TargetType' => $type,
-                'TargetID' => $id,
-                'Item' => &$item,
-                'AnchorID' => &$anchorID,
-                'ItemOwnerID' => &$itemOwnerID
-            ];
-            $this->fireEvent('CustomType');
-
-            if (!$this->EventArguments['TypeFound']) {
-                throw new Gdn_UserException(Gdn::translate('Yaga.Action.InvalidTargetType'));
-            }
-        }
-
-        if ($item) {
-            $anchor = $anchorID.$id;
-        } else {
+        if (empty($item)) {
             throw new Gdn_UserException(Gdn::translate('Yaga.Action.InvalidTargetID'));
         }
 
+        $anchor = '#'.ucfirst($type).'_'.$id;
         $userID = Gdn::session()->UserID;
 
-        switch($type) {
-            case 'comment':
-            case 'discussion':
-                $itemOwnerID = $item['InsertUserID'];
-                break;
-            case 'activity':
-                $itemOwnerID = $item['RegardingUserID'];
-                break;
-            default:
-                break;
-        }
-
-        if ($itemOwnerID == $userID) {
+        if ($item['InsertUserID'] == $userID) {
             throw new Gdn_UserException(Gdn::translate('Yaga.Error.ReactToOwn'));
         }
 
         // It has passed through the gauntlet
-        $this->ReactionModel->set($id, $type, $itemOwnerID, $userID, $actionID);
+        $this->ReactionModel->set($id, $type, $item['InsertUserID'], $userID, $actionID);
 
         $this->jsonTarget($anchor.' .ReactMenu', renderReactionList($id, $type), 'ReplaceWith');
         $this->jsonTarget($anchor.' .ReactionRecord', renderReactionRecord($id, $type), 'ReplaceWith');

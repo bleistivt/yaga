@@ -1,6 +1,7 @@
 <?php if (!defined('APPLICATION')) exit();
 
-use \Vanilla\Formatting\DateTimeFormatter;
+use Garden\EventManager;
+use Vanilla\Formatting\DateTimeFormatter;
 
 /* Copyright 2013 Zachary Doll */
 
@@ -27,15 +28,19 @@ class ReactionModel extends Gdn_Model {
     /** @var UserModel */
     private $userModel;
 
+    /** @var EventManager */
+    private $eventManager;
+
     /**
      * Defines the related database table name.
      */
-    public function __construct(ActionModel $actionModel, UserModel $userModel) {
+    public function __construct(ActionModel $actionModel, UserModel $userModel, EventManager $eventManager) {
         parent::__construct('YagaReaction');
         $this->PrimaryKey = 'ReactionID';
 
         $this->actionModel = $actionModel;
         $this->userModel = $userModel;
+        $this->eventManager = $eventManager;
     }
 
     /**
@@ -261,6 +266,80 @@ class ReactionModel extends Gdn_Model {
             // Prime the user cache
             $this->userModel->getIDs($userIDs);
         }
+    }
+
+    /**
+     * This function fetches items that users can react to.
+     *
+     * Events: yaga_getReactionItem
+     *
+     * @param string $type The type of the item
+     * @param int $id The items ID
+     * @return array
+     */
+    public function getReactionItem($type, $id) {
+        $container = Gdn::getContainer();
+        $row = [];
+
+        if ($type === 'discussion') {
+            $row = $container
+                ->get(DiscussionModel::class)
+                ->getID($id, DATASET_TYPE_ARRAY);
+
+            if ($row) {
+                $row['DisplayBest'] = true;
+                $row['Url'] = discussionUrl($row);
+                $category = CategoryModel::categories($row['CategoryID']);
+                $row['PermissionCategoryID'] = $category['PermissionCategoryID'] ?? -1;
+            }
+        } elseif ($type === 'comment') {
+            $row = $container
+                ->get(CommentModel::class)
+                ->getID($id, DATASET_TYPE_ARRAY);
+
+            if ($row) {
+                $row['DisplayBest'] = true;
+                $row['Url'] = url("/discussion/comment/{$id}#Comment_{$id}", true);
+
+                $discussion = $container
+                    ->get(DiscussionModel::class)
+                    ->getID($row['DiscussionID'], DATASET_TYPE_ARRAY);
+
+                $row['Name'] = $discussion['Name'] ?? '';
+                $category = CategoryModel::categories($discussion['CategoryID']);
+                $row['PermissionCategoryID'] = $category['PermissionCategoryID'] ?? -1;
+            }
+        } elseif ($type === 'activity') {
+            $row = $container
+                ->get(ActivityModel::class)
+                ->getID($id, DATASET_TYPE_ARRAY);
+
+            if ($row) {
+                $row['InsertUserID'] = $row['RegardingUserID'];
+                $row['DisplayBest'] = false;
+            }
+        } else {
+            /**
+             * In order to extend reactions, if the $type can be handled, a plugin should handle
+             * the "yaga_getReactionItem" event by returning an array structured as follows:
+             *
+             * int InsertUserID: The ID of the user who should receive reactions and points for this item
+             * bool DisplayBest: If set to true, this item will be shown on "best" and "reactions" pages.
+             *
+             * If "DisplayBest" is set to true, these additional fields are required:
+             *
+             * string Url: The URL to this item
+             * string Name: The title of this item
+             * datetime DateInserted: The date of this item
+             * string Body: The content of this item
+             * string Format: The formatter to use for the "Body" field
+             * int PermissionCategoryID: The permission category ID of this item (view permissions required)
+             * float Score: The current score of this item (see "yaga_setUserScore" event)
+             */
+            $row = array_pop($this->eventManager->fire('yaga_getReactionItem', $type, $id)) ?? [];
+        }
+
+        return $row;
     }
 
     /**

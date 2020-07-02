@@ -89,7 +89,7 @@ $construct->table('YagaReaction')
     ->column('ParentAuthorID', 'int', false, ['index', 'index.Profile'])
     ->column('DateInserted', 'datetime', false, 'index.Record')
     ->column('Latest', 'tinyint(1)', '0')
-    ->column('ParentCategoryID', 'int', true)
+    ->column('ParentPermissionCategoryID', 'int', true)
     ->column('ParentDateInserted', 'datetime', true)
     ->column('ParentScore', 'float', true)
     ->set($explicit, $drop);

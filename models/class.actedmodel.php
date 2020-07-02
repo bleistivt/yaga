@@ -260,9 +260,9 @@ class ActedModel extends Gdn_Model {
         $content = [];
 
         foreach ($records as $record) {
-            $item = $this->getRecord($record['ParentType'], $record['ParentID']);
+            $item = $this->reactionModel->getRecord($record['ParentType'], $record['ParentID']);
 
-            if (!$item) {
+            if (empty($item)) {
                 // Item not found or no active handler for this item.
                 continue;
             }
@@ -284,53 +284,6 @@ class ActedModel extends Gdn_Model {
         }
 
         return (object)['Content' => $content, 'TotalRecords' => false];
-    }
-
-    /**
-     * getRecord() without permission checks as permissions are already applied in getItems().
-     *
-     * @since 1.1
-     * @param string $recordType
-     * @param int $id
-     * @return array
-     */
-    protected function getRecord($recordType, $id) {
-        if (in_array($recordType, ['discussion', 'comment'])) {
-            $container = Gdn::getContainer();
-            $discussionModel = $container->get(DiscussionModel::class);
-
-            if ($recordType === 'discussion') {
-                $row = $discussionModel->getID($id, DATASET_TYPE_ARRAY);
-
-                if ($row) {
-                    $row['ShareUrl'] = $row['Url'] = discussionUrl($row);
-                    return $row;
-                }
-            } else {
-                $row = $container->get(CommentModel::class)->getID($id, DATASET_TYPE_ARRAY);
-
-                if ($row) {
-                    $row['Url'] = url("/discussion/comment/{$id}#Comment_{$id}", true);
-
-                    $discussion = $discussionModel->getID($row['DiscussionID'], DATASET_TYPE_ARRAY);
-                    if ($discussion) {
-                        $row['ShareUrl'] = $row['Url'] = $discussion['Url'] = discussionUrl($discussion);
-                        $row['Name'] = $discussion['Name'];
-                        $row['Discussion'] = $discussion;
-
-                        return $row;
-                    }
-                }
-            }
-            return false;
-
-        } else {
-            $this->EventArguments['Type'] = $recordType;
-            $this->EventArguments['ID'] = $id;
-            $this->EventArguments['Record'] = false;
-            $this->fireEvent('GetCustomRecord');
-            return $this->EventArguments['Record'];
-        }
     }
 
 }
