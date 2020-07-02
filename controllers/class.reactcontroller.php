@@ -46,9 +46,7 @@ class ReactController extends Gdn_Controller {
             throw new Gdn_UserException(Gdn::translate('Yaga.Action.Invalid'));
         }
 
-        if (!Gdn::session()->checkPermission($action->Permission)) {
-            throw PermissionException();
-        }
+        $this->permission($action->Permission);
 
         $item = $this->ReactionModel->getReactionItem($type, $id);
 
@@ -61,6 +59,10 @@ class ReactController extends Gdn_Controller {
 
         if ($item['InsertUserID'] == $userID) {
             throw new Gdn_UserException(Gdn::translate('Yaga.Error.ReactToOwn'));
+        }
+
+        if (isset($item['PermissionCategoryID'])) {
+            $this->permission('Vanilla.Discussions.View', true, 'Category', $item['PermissionCategoryID']);
         }
 
         // It has passed through the gauntlet
