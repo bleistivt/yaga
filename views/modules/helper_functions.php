@@ -17,7 +17,7 @@ use \Vanilla\Formatting\DateTimeFormatter;
  * @param string $px
  */
 function writeModuleDiscussion($discussion, $px = 'Bookmark') {
-    // $dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
+    $dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
 
 ?>
 <li id="<?php echo "{$px}_{$discussion->DiscussionID}"; ?>" class="<?php echo cssClass($discussion); ?>">
@@ -39,8 +39,7 @@ function writeModuleDiscussion($discussion, $px = 'Bookmark') {
 
             echo newComments($discussion);
 
-            //echo '<span class="MItem">'.$dateFormatter->formatDate($badge->DateInserted, true).userAnchor($last).'</span>';
-            echo '<span class="MItem">'.Gdn_Format::date($badge->DateInserted, 'html').userAnchor($last).'</span>';
+            echo '<span class="MItem">'.$dateFormatter->formatDate($badge->DateInserted, true).userAnchor($last).'</span>';
         ?>
      </div>
 </li>
@@ -60,7 +59,7 @@ function writePromotedContent($content, $sender) {
         $userPhotoFirst = Gdn::config('Vanilla.Comment.UserPhotoFirst', true);
     }
 
-    // $dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
+    $dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
 
     $contentType = $content['ItemType'];
     $contentID = $content['ContentID'];
@@ -103,8 +102,7 @@ function writePromotedContent($content, $sender) {
                 <span class="MItem DateCreated">
                     <?php
                         echo anchor(
-                            //$dateFormatter->formatDate($content['DateInserted'], true),
-                            Gdn_Format::date($content['DateInserted'], 'html'),
+                            $dateFormatter->formatDate($content['DateInserted'], true),
                             $contentURL,
                             'Permalink',
                             ['rel' => 'nofollow']

@@ -8,7 +8,7 @@ $badge = $this->data('Badge');
 $userBadgeAward = $this->data('UserBadgeAward', false);
 $recentAwards = $this->data('RecentAwards', false);
 $awardCount = $this->data('AwardCount', 0);
-// $dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
+$dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
 
 echo wrap(
     img($badge->Photo, ['class' => 'BadgePhotoDisplay']).
@@ -25,8 +25,7 @@ if ($userBadgeAward) {
         userPhoto(Gdn::session()->User).
         Gdn::translate('Yaga.Badge.Earned').' '.
         wrap(
-            //$dateFormatter->formatDate($userBadgeAward->DateInserted, true),
-            Gdn_Format::date($userBadgeAward->DateInserted, 'html'),
+            $dateFormatter->formatDate($userBadgeAward->DateInserted, true),
             'span',
             ['class' => 'DateReceived']
         ),
@@ -52,8 +51,7 @@ if ($recentAwards) {
                 userPhoto($user).
                 userAnchor($user).' '.
                 wrap(
-                    //$dateFormatter->formatDate($award->DateInserted, true),
-                    Gdn_Format::date($award->DateInserted, 'html'),
+                    $dateFormatter->formatDate($award->DateInserted, true),
                     'span',
                     ['class' => 'DateReceived']
                 ),

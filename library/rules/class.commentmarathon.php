@@ -3,7 +3,7 @@
 use \Vanilla\Formatting\DateTimeFormatter;
 
 /**
- * This rule awards badges based on a user's comment count withing a specified time frame.
+ * This rule awards badges based on a user's comment count within a specified time frame.
  *
  * @author Zachary Doll
  * @since 1.0
@@ -12,8 +12,7 @@ use \Vanilla\Formatting\DateTimeFormatter;
 class CommentMarathon implements YagaRule {
 
     public function award($sender, $user, $criteria) {
-        //$targetDate = DateTimeFormatter::timeStampToDateTime((int)strtotime($criteria->Duration.' '.$criteria->Period.' ago'));
-        $targetDate = Gdn_Format::toDateTime(strtotime($criteria->Duration.' '.$criteria->Period.' ago'));
+        $targetDate = DateTimeFormatter::timeStampToDateTime((int)strtotime($criteria->Duration.' '.$criteria->Period.' ago'));
 
         $count = Gdn::sql()
             ->select('count(CommentID) as Count')

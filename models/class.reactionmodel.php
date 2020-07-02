@@ -159,8 +159,7 @@ class ReactionModel extends Gdn_Model {
         $eventArgs['CurrentReaction'] = $currentReaction;
 
         $this->fireEvent('BeforeReactionSave', $eventArgs);
-        //$now = DateTimeFormatter::timeStampToDateTime(time());
-        $now = Gdn_Format::toDateTime();
+        $now = DateTimeFormatter::timeStampToDateTime(time());
 
         if ($currentReaction) {
             $oldAction = $this->actionModel->getID($currentReaction->ActionID);

@@ -4,7 +4,7 @@
 
 use \Vanilla\Formatting\DateTimeFormatter;
 
-// $dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
+$dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
 
 echo heading($this->title());
 
@@ -23,8 +23,7 @@ foreach ($this->data('Badges') as $badge) {
         $readClass = '';
         $awardDescription = sprintf(
             Gdn::translate('Yaga.Badge.Earned.Format'),
-            //$dateFormatter->formatDate($badge->DateInserted, true),
-            Gdn_Format::date($badge->DateInserted, 'html'),
+            $dateFormatter->formatDate($badge->DateInserted, true),
             $badge->InsertUserName
         );
         if ($badge->Reason) {
