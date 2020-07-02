@@ -1,6 +1,6 @@
 <?php if (!defined('APPLICATION')) exit();
 
-use \Vanilla\Formatting\DateTimeFormatter;
+use Vanilla\Formatting\DateTimeFormatter;
 
 /**
  * Contains render functions that can be used cross controller

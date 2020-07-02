@@ -2,7 +2,7 @@
 
 /* Copyright 2015 Zachary Doll */
 
-use \Vanilla\Formatting\DateTimeFormatter;
+use Vanilla\Formatting\DateTimeFormatter;
 
 $user = (Gdn::session()->User) ?: (object)['RankID' => 0];
 $dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);

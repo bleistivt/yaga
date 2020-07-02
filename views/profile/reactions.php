@@ -2,7 +2,7 @@
 
 /* Copyright 2013 Zachary Doll */
 
-use \Vanilla\Formatting\DateTimeFormatter;
+use Vanilla\Formatting\DateTimeFormatter;
 
 $contents = $this->data('Content');
 $dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);

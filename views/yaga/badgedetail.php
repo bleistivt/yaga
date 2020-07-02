@@ -2,7 +2,7 @@
 
 /* Copyright 2013 Zachary Doll */
 
-use \Vanilla\Formatting\DateTimeFormatter;
+use Vanilla\Formatting\DateTimeFormatter;
 
 $badge = $this->data('Badge');
 $userBadgeAward = $this->data('UserBadgeAward', false);

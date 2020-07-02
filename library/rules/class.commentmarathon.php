@@ -1,6 +1,6 @@
 <?php if (!defined('APPLICATION')) exit();
 
-use \Vanilla\Formatting\DateTimeFormatter;
+use Vanilla\Formatting\DateTimeFormatter;
 
 /**
  * This rule awards badges based on a user's comment count within a specified time frame.

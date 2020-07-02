@@ -8,7 +8,7 @@
  * @copyright (c) 2013-2014, Zachary Doll
  */
 
-use \Vanilla\Formatting\DateTimeFormatter;
+use Vanilla\Formatting\DateTimeFormatter;
 
 /**
  * Writes a discussion out for use in a module
