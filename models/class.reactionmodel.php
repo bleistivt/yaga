@@ -136,14 +136,16 @@ class ReactionModel extends Gdn_Model {
      *
      * @param int $id
      * @param string $type activity, comment, discussion
-     * @param int $authorID
+     * @param array|int $item The item to react to or just the InsertUserID
      * @param int $userID
      * @param int $actionID
      * @return Gdn_DataSet
      */
-    public function set($id, $type, $authorID, $userID, $actionID) {
+    public function set($id, $type, $item, $userID, $actionID) {
         // clear the cache
         unset($this->_reactions[$type.$id]);
+        
+        $authorID = is_array($item) ? $item['InsertUserID'] : $item;
 
         $eventArgs = [
             'ParentID' => $id,

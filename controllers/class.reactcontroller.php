@@ -66,7 +66,7 @@ class ReactController extends Gdn_Controller {
         }
 
         // It has passed through the gauntlet
-        $this->ReactionModel->set($id, $type, $item['InsertUserID'], $userID, $actionID);
+        $this->ReactionModel->set($id, $type, $item, $userID, $actionID);
 
         $this->jsonTarget($anchor.' .ReactMenu', renderReactionList($id, $type), 'ReplaceWith');
         $this->jsonTarget($anchor.' .ReactionRecord', renderReactionRecord($id, $type), 'ReplaceWith');
