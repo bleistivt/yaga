@@ -26,12 +26,17 @@ class BadgeModel extends Gdn_Model {
      */
     private $_interactionRulesCache = null;
 
+    /** @var EventManager */
+    private $eventManager;
+
     /**
      * Defines the related database table name.
      */
-    public function __construct() {
+    public function __construct(EventManager $eventManager) {
         parent::__construct('YagaBadge');
         $this->PrimaryKey = 'BadgeID';
+
+        $this->eventManager = $eventManager;
     }
 
     /**
@@ -165,6 +170,8 @@ class BadgeModel extends Gdn_Model {
                     $tempRules[$className] = $rule->name();
                 }
             }
+
+            $tempRules = $this->eventManager->fireFilter('yaga_getRules', $tempRules);
 
             $this->EventArguments['Rules'] = &$tempRules;
             $this->fireAs('Yaga')->fireEvent('AfterGetRules');
