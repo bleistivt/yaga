@@ -217,7 +217,7 @@ class ReactionModel extends Gdn_Model {
         }
 
         // Update the parent item score
-        $totalScore = $this->setUserScore($id, $type, $userID, $score);
+        $totalScore = $this->setUserScore($type, $id, $userID, $score);
         $eventArgs['TotalScore'] = $totalScore;
 
         // Give the user points commesurate with reaction activity
@@ -343,32 +343,25 @@ class ReactionModel extends Gdn_Model {
     }
 
     /**
-     * This updates the items score for future use in ranking and a best of controller
+     * This updates the items score.
      *
+     * Events: yaga_setUserScore
+     *
+     * @param string $type The type of the item
      * @param int $id The items ID
-     * @param string $type The type of the item (only supports 'discussion' and 'comment'
      * @param int $userID The user that is scoring the item
      * @param int $score What they give it
      * @return int Total score if request was successful, false if not.
      */
-    private function setUserScore($id, $type, $userID, $score) {
-        $model = false;
-        switch($type) {
-            default:
-                return false;
-            case 'discussion':
-                $model = new DiscussionModel();
-                break;
-            case 'comment':
-                $model = new CommentModel();
-                break;
+    private function setUserScore($type, $id, $userID, $score) {
+        if ($type === 'discussion') {
+            return (new DiscussionModel())->setUserScore($id, $userID, $score);
+        } elseif ($type === 'comment') {
+            return (new CommentModel())->setUserScore($id, $userID, $score);
+        } elseif ($type === 'activity') {
+            return 0;
         }
-
-        if ($model) {
-            return $model->setUserScore($id, $userID, $score);
-        } else {
-            return false;
-        }
+        return array_pop($this->eventManager->fire('yaga_setUserScore', $type, $id, $userID, $score)) ?? 0;
     }
 
 }
