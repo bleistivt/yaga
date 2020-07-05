@@ -16,6 +16,16 @@ use Vanilla\Formatting\DateTimeFormatter;
 
 class ReactionModel extends Gdn_Model {
 
+    public const TYPE_DISCUSSION = "discussion";
+    public const TYPE_COMMENT = "comment";
+    public const TYPE_ACTIVITY = "activity";
+
+    public const ITEMS_PROFILE_REACTION = "received";
+    public const ITEMS_PROFILE_BEST = "best";
+    public const ITEMS_BEST_REACTION = "action";
+    public const ITEMS_BEST_ALL = "bestof";
+    public const ITEMS_BEST_RECENT = "recent";
+
     /**
      * Used to cache the reactions
      * @var array
@@ -283,7 +293,7 @@ class ReactionModel extends Gdn_Model {
         $container = Gdn::getContainer();
         $row = [];
 
-        if ($type === 'discussion') {
+        if ($type === self::TYPE_DISCUSSION) {
             $row = $container
                 ->get(DiscussionModel::class)
                 ->getID($id, DATASET_TYPE_ARRAY);
@@ -294,7 +304,7 @@ class ReactionModel extends Gdn_Model {
                 $category = CategoryModel::categories($row['CategoryID']);
                 $row['PermissionCategoryID'] = $category['PermissionCategoryID'] ?? -1;
             }
-        } elseif ($type === 'comment') {
+        } elseif ($type === self::TYPE_COMMENT) {
             $row = $container
                 ->get(CommentModel::class)
                 ->getID($id, DATASET_TYPE_ARRAY);
@@ -311,7 +321,7 @@ class ReactionModel extends Gdn_Model {
                 $category = CategoryModel::categories($discussion['CategoryID']);
                 $row['PermissionCategoryID'] = $category['PermissionCategoryID'] ?? -1;
             }
-        } elseif ($type === 'activity') {
+        } elseif ($type === self::TYPE_ACTIVITY) {
             $row = $container
                 ->get(ActivityModel::class)
                 ->getID($id, DATASET_TYPE_ARRAY);
@@ -356,11 +366,11 @@ class ReactionModel extends Gdn_Model {
      * @return int Total score if request was successful, false if not.
      */
     private function setUserScore($type, $id, $userID, $score) {
-        if ($type === 'discussion') {
+        if ($type === self::TYPE_DISCUSSION) {
             return (new DiscussionModel())->setUserScore($id, $userID, $score);
-        } elseif ($type === 'comment') {
+        } elseif ($type === self::TYPE_COMMENT) {
             return (new CommentModel())->setUserScore($id, $userID, $score);
-        } elseif ($type === 'activity') {
+        } elseif ($type === self::TYPE_ACTIVITY) {
             return 0;
         }
         return array_pop($this->eventManager->fire('yaga_setUserScore', $type, $id, $userID, $score)) ?? 0;
