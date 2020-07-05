@@ -229,7 +229,7 @@ class ReactionModel extends Gdn_Model {
         }
 
         // Update the parent item score
-        $totalScore = $this->setUserScore($type, $id, $userID, $score);
+        $totalScore = $this->setUserScore($type, $id, $userID, $score, $points);
         $eventArgs['TotalScore'] = $totalScore;
 
         // Give the user points commesurate with reaction activity
@@ -363,9 +363,10 @@ class ReactionModel extends Gdn_Model {
      * @param int $id The items ID
      * @param int $userID The user that is scoring the item
      * @param int $score What they give it
+     * @param int $change The increment/decrement represented by this score change
      * @return int Total score if request was successful, false if not.
      */
-    private function setUserScore($type, $id, $userID, $score) {
+    private function setUserScore($type, $id, $userID, $score, $change) {
         if ($type === self::TYPE_DISCUSSION) {
             return (new DiscussionModel())->setUserScore($id, $userID, $score);
         } elseif ($type === self::TYPE_COMMENT) {
@@ -373,7 +374,7 @@ class ReactionModel extends Gdn_Model {
         } elseif ($type === self::TYPE_ACTIVITY) {
             return 0;
         }
-        return array_pop($this->eventManager->fire('yaga_setUserScore', $type, $id, $userID, $score)) ?? 0;
+        return array_pop($this->eventManager->fire('yaga_setUserScore', $type, $id, $userID, $score, $change)) ?? 0;
     }
 
 }
