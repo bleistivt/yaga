@@ -394,7 +394,7 @@ class ReactionModel extends Gdn_Model {
 
         // Fetch the item if none was supplied.
         if (empty($item)) {
-            $item = $this->getReactionItem($type, $id)
+            $item = $this->getReactionItem($type, $id);
         }
 
         // Should this be shown on "best" pages?

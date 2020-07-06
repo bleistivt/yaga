@@ -826,7 +826,8 @@ class YagaPlugin extends Gdn_Plugin {
      protected function deleteUserData($userID, $options = [], &$data = null) {
         $sql = Gdn::sql();
         $container = Gdn::getContainer();
-        $reactionTable = $container->get(ReactionModel::class)->Name;
+        $reactionModel = $container->get(ReactionModel::class);
+        $reactionTable = $reactionModel->Name;
         $badgeAwardTable = $container->get(BadgeAwardModel::class)->Name;
 
         $deleteMethod = $options['DeleteMethod'] ?? 'delete';
@@ -853,6 +854,15 @@ class YagaPlugin extends Gdn_Plugin {
 
         // Remove the reactions they have received
         Gdn::userModel()->getDelete($reactionTable, ['ParentAuthorID' => $userID], $data);
+
+        // Refresh denormalized reaction data.
+        if (isset($data[$reactionTable])) {
+            foreach($data[$reactionTable] as $reaction) {
+                if ($reaction['Latest'] > 0) {
+                    $reactionModel->setLatestItem($reaction['ParentType'], $reaction['ParentID']);
+                }
+            }
+        }
 
         // Remove their badges
         Gdn::userModel()->getDelete($badgeAwardTable, ['UserID' => $userID], $data);
