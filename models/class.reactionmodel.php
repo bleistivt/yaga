@@ -20,11 +20,11 @@ class ReactionModel extends Gdn_Model {
     public const TYPE_COMMENT = 'comment';
     public const TYPE_ACTIVITY = 'activity';
 
-    public const ITEMS_PROFILE_REACTION = 'received';
-    public const ITEMS_PROFILE_BEST = 'best';
-    public const ITEMS_BEST_REACTION = 'action';
-    public const ITEMS_BEST_ALL = 'bestof';
-    public const ITEMS_BEST_RECENT = 'recent';
+    public const ITEMS_PROFILE_REACTION = 'received'; //index: Profile
+    public const ITEMS_PROFILE_BEST = 'best'; //index: LatestScore
+    public const ITEMS_BEST_REACTION = 'action'; //index: Best
+    public const ITEMS_BEST_ALL = 'bestof'; //index: LatestScore
+    public const ITEMS_BEST_RECENT = 'recent'; //index: LatestDate
 
     /**
      * Used to cache the reactions
@@ -286,6 +286,78 @@ class ReactionModel extends Gdn_Model {
     }
 
     /**
+     * Fetch "best" content by various criteria
+     *
+     * @param string $method
+     * @param int $actionID
+     * @param int $userID
+     * @param int $limit
+     * @param int $offset
+     * @return object
+     */
+    public function getBest($method, $limit, $offset, $actionID = false, $userID = false) {
+        $session = Gdn::session();
+        $permissions = $session->getPermissionsArray()['Vanilla.Discussions.View'] ?? [0];
+
+        $this->SQL->from($this->Name)->whereIn('ParentPermissionCategoryID', $permissions);
+
+        // Is this on a profie page (user context)?
+        if ($method === self::ITEMS_PROFILE_REACTION || $method === self::ITEMS_PROFILE_BEST) {
+            $this->SQL->where('ParentAuthorID', $userID);
+        }
+
+        // Group by specific reaction or any reacton?
+        if ($method === self::ITEMS_PROFILE_REACTION || $method === self::ITEMS_BEST_REACTION) {
+            $this->SQL->where('Latest >', 0);
+            $this->SQL->where('ActionID', $actionID);
+        } else {
+            $this->SQL->where('Latest', 2);
+        }
+
+        if ($method === self::ITEMS_PROFILE_REACTION || $method === self::ITEMS_BEST_RECENT) {
+            $this->SQL->orderBy('ParentDateInserted', 'desc');
+        } else {
+            $this->SQL->orderBy('ParentScore', 'desc');
+        }
+
+        $records = $this->SQL->limit($limit, $offset)->get()->resultArray();
+        $content = [];
+
+        foreach ($records as $record) {
+            $item = $this->getReactionItem($record['ParentType'], $record['ParentID']);
+
+            // Check the permission again in case the cached version is outdated.
+            $hasPermission = $session->checkPermission(
+                'Vanilla.Discussions.View',
+                true,
+                'Category',
+                $item['PermissionCategoryID']
+            );
+            if (empty($item) || !$hasPermission) {
+                $this->setLatestItem($record['ParentType'], $record['ParentID'], $item);
+                continue;
+            }
+
+            // Fill the reaction cache to reduce the amount of queries.
+            $this->prefetch($record['ParentType'], $record['ParentID']);
+
+            $item['ItemType'] = $record['ParentType'];
+            $item['ContentID'] = $record['ParentID'];
+            $item['ContentURL'] = $item['Url'];
+
+            // Titles are escaped in the view.
+            $item['Name'] = htmlspecialchars_decode($item['Name']);
+
+            // Attach User
+            $item['Author'] = Gdn::userModel()->getID($item['InsertUserID'] ?? false);
+
+            $content[] = $item;
+        }
+
+        return (object)['Content' => $content, 'TotalRecords' => false];
+    }
+
+    /**
      * This function fetches items that users can react to.
      *
      * Events: yaga_getReactionItem
@@ -389,7 +461,7 @@ class ReactionModel extends Gdn_Model {
      * @param int $id The items ID
      * @param array $item The item
      */
-    private function setLatestItem($type, $id, $item = []) {
+    public function setLatestItem($type, $id, $item = []) {
         $table = $this->Database->DatabasePrefix.$this->Name;
 
         // Fetch the item if none was supplied.
@@ -468,7 +540,9 @@ class ReactionModel extends Gdn_Model {
             return;
         }
 
-        $chunk = DBAModel::$ChunkSize;
+        // Because this is a quite expensive operation, only process 1000 records at once.
+        $chunk = (int)(DBAModel::$ChunkSize / 10);
+
         // We cannot use DBAModel::primaryKeyRange here because of DI problems.
         $range = $this->SQL
             ->select($this->PrimaryKey, 'min', 'MinValue')

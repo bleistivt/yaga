@@ -186,8 +186,8 @@ class YagaPlugin extends Gdn_Plugin {
         $sender->addDefinition('ExpandText', Gdn::translate('(more)'));
         $sender->addDefinition('CollapseText', Gdn::translate('(less)'));
 
-        $model = Gdn::getContainer()->get(ActedModel::class);
-        $data = $model->getReceived($sender->User->UserID, $actionID, $limit, $offset);
+        $model = Gdn::getContainer()->get(ReactionModel::class);
+        $data = $model->getBest($model::ITEMS_PROFILE_REACTION, $limit, $offset, $actionID, $sender->User->UserID);
 
         $sender->setData('Content', $data->Content);
 
@@ -254,8 +254,8 @@ class YagaPlugin extends Gdn_Plugin {
         $sender->addDefinition('ExpandText', Gdn::translate('(more)'));
         $sender->addDefinition('CollapseText', Gdn::translate('(less)'));
 
-        $model = Gdn::getContainer()->get(ActedModel::class);
-        $data = $model->getBest($sender->User->UserID, $limit, $offset);
+        $model = Gdn::getContainer()->get(ReactionModel::class);
+        $data = $model->getBest($model::ITEMS_PROFILE_BEST, $limit, $offset, false, $sender->User->UserID);
 
         $sender->setData('Content', $data->Content);
 

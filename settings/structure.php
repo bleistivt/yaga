@@ -83,15 +83,15 @@ if ($construct->tableExists()) {
 $construct->table('YagaReaction')
     ->primaryKey('ReactionID')
     ->column('InsertUserID', 'int', false, ['index', 'unique.Reaction'])
-    ->column('ActionID', 'int', false, ['index', 'index.Profile'])
+    ->column('ActionID', 'int', false, ['index', 'index.Profile', 'index.Best'])
     ->column('ParentID', 'int', false, ['index.Record', 'unique.Reaction'])
     ->column('ParentType', 'varchar(100)', false, ['index.Record', 'unique.Reaction'])
     ->column('ParentAuthorID', 'int', false, ['index', 'index.Profile'])
     ->column('DateInserted', 'datetime', false, 'index.Record')
-    ->column('Latest', 'tinyint(1)', '0')
+    ->column('Latest', 'tinyint(1)', '0', ['index.LatestDate', 'index.LatestScore'])
     ->column('ParentPermissionCategoryID', 'int', true)
-    ->column('ParentDateInserted', 'datetime', true)
-    ->column('ParentScore', 'float', true)
+    ->column('ParentDateInserted', 'datetime', true, ['index.LatestDate', 'index.Profile'])
+    ->column('ParentScore', 'float', true, ['index.LatestScore', 'index.Best'])
     ->set($explicit, $drop);
 
 // Describes actions that can be taken on a comment, discussion or activity

@@ -20,7 +20,7 @@ class BestController extends Gdn_Controller {
      * @var array These objects will be created on instantiation and available via
      * $this->ObjectName
      */
-    public $Uses = ['ActedModel', 'ActionModel'];
+    public $Uses = ['ReactionModel', 'ActionModel'];
 
     /**
      * Initializes a frontend controller with the Best Filter, New Discussion, and
@@ -51,7 +51,7 @@ class BestController extends Gdn_Controller {
     public function index($page = 0) {
         list($offset, $limit) = self::_translatePage($page);
         $this->title(Gdn::translate('Yaga.BestContent.Recent'));
-        $this->_content = $this->ActedModel->getRecent($limit, $offset);
+        $this->_content = $this->ReactionModel->getBest(ReactionModel::ITEMS_BEST_RECENT, $limit, $offset);
         $this->_buildPager($offset, $limit, '/best/%1$s/');
         $this->setData('ActiveFilter', 'Recent');
         $this->render('index');
@@ -65,7 +65,7 @@ class BestController extends Gdn_Controller {
     public function allTime($page = 0) {
         list($offset, $limit) = self::_translatePage($page);
         $this->title(Gdn::translate('Yaga.BestContent.AllTime'));
-        $this->_content = $this->ActedModel->getBest(null, $limit, $offset);
+        $this->_content = $this->ReactionModel->getBest(ReactionModel::ITEMS_BEST_ALL, $limit, $offset);
         $this->_buildPager($offset, $limit, '/best/alltime/%1$s/');
         $this->setData('ActiveFilter', 'AllTime');
         $this->render('index');
@@ -91,7 +91,7 @@ class BestController extends Gdn_Controller {
 
         list($offset, $limit) = self::_translatePage($page);
         $this->title(sprintf(Gdn::translate('Yaga.BestContent.Action'), $action->Name));
-        $this->_content = $this->ActedModel->getAction($id, $limit, $offset);
+        $this->_content = $this->ReactionModel->getBest(ReactionModel::ITEMS_BEST_REACTION, $limit, $offset, $id);
         $this->_buildPager($offset, $limit, '/best/action/'.$id.'/%1$s/');
         $this->setData('ActiveFilter', $id);
         $this->render('index');
