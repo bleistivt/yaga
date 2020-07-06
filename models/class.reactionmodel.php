@@ -301,7 +301,7 @@ class ReactionModel extends Gdn_Model {
 
         $this->SQL->from($this->Name)->whereIn('ParentPermissionCategoryID', $permissions);
 
-        // Is this on a profie page (user context)?
+        // Is this on a profile page (user context)?
         if ($method === self::ITEMS_PROFILE_REACTION || $method === self::ITEMS_PROFILE_BEST) {
             $this->SQL->where('ParentAuthorID', $userID);
         }
@@ -321,6 +321,23 @@ class ReactionModel extends Gdn_Model {
         }
 
         $records = $this->SQL->limit($limit, $offset)->get()->resultArray();
+
+        // Repeat the query for the total count.
+        $this->SQL->from($this->Name)->whereIn('ParentPermissionCategoryID', $permissions);
+
+        if ($method === self::ITEMS_PROFILE_REACTION || $method === self::ITEMS_PROFILE_BEST) {
+            $this->SQL->where('ParentAuthorID', $userID);
+        }
+
+        if ($method === self::ITEMS_PROFILE_REACTION || $method === self::ITEMS_BEST_REACTION) {
+            $this->SQL->where('Latest >', 0);
+            $this->SQL->where('ActionID', $actionID);
+        } else {
+            $this->SQL->where('Latest', 2);
+        }
+
+        $total = $this->SQL->select('ReactionID', 'count', 'RowCount')->get()->firstRow()->RowCount;
+
         $content = [];
 
         foreach ($records as $record) {
@@ -354,7 +371,7 @@ class ReactionModel extends Gdn_Model {
             $content[] = $item;
         }
 
-        return (object)['Content' => $content, 'TotalRecords' => false];
+        return (object)['Content' => $content, 'TotalRecords' => $total];
     }
 
     /**
