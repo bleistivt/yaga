@@ -388,23 +388,19 @@ class ReactionModel extends Gdn_Model {
      * @param string $type The type of the item
      * @param int $id The items ID
      * @param array $item The item
-     * @return array The modified rows
      */
     private function setLatestItem($type, $id, $item = []) {
         $table = $this->Database->DatabasePrefix.$this->Name;
 
-        $null = [
-            'Latest' => 0,
-            'ParentPermissionCategoryID' => null,
-            'ParentDateInserted' => null,
-            'ParentScore' => null
-        ];
+        // Fetch the item if none was supplied.
+        if (empty($item)) {
+            $item = $this->getReactionItem($type, $id)
+        }
 
-        $insert = ['Latest' => 1];
-        if (!empty($item) && $item['DisplayBest']) {
-            $insert['ParentPermissionCategoryID'] = $item['PermissionCategoryID'];
-            $insert['ParentDateInserted'] = $item['DateInserted'];
-            $insert['ParentScore'] = $item['Score'];
+        // Should this be shown on "best" pages?
+        if (empty($item) || $item['DisplayBest'] === false) {
+            $this->SQL->put($this->Name, ['Latest' => 0], ['ParentID' => $id, 'ParentType' => $type]);
+            return;
         }
 
         $this->Database->beginTransaction();
@@ -418,6 +414,7 @@ class ReactionModel extends Gdn_Model {
             ->query($sql, [':ParentID' => $id, ':ParentType' => $type])
             ->resultArray();
 
+        // Find the latest reaction of each action type.
         $latest = [];
         $actionIDs = [];
         foreach ($result as $reaction) {
@@ -428,15 +425,34 @@ class ReactionModel extends Gdn_Model {
         }
 
         if (!empty($latest)) {
-            // 1 = latest reaction of an action, 2 = latest reaction overall
-            $this->SQL->put($this->Name, $null, ['ParentID' => $id, 'ParentType' => $type]);
-            $this->SQL->put($this->Name, $insert, ['ReactionID' => $latest]);
+            $this->SQL->put(
+                $this->Name,
+                [
+                    'Latest' => 0,
+                    'ParentPermissionCategoryID' => null,
+                    'ParentDateInserted' => null,
+                    'ParentScore' => null
+                ],
+                ['ParentID' => $id, 'ParentType' => $type]
+            );
+
+            // 1 = latest reaction of an action
+            $this->SQL->put(
+                $this->Name,
+                [
+                    'Latest' => 1,
+                    'ParentPermissionCategoryID' => $item['PermissionCategoryID'],
+                    'ParentDateInserted' => $item['DateInserted'],
+                    'ParentScore' => $item['Score']
+                ],
+                ['ReactionID' => $latest]
+            );
+
+            // 2 = latest reaction overall
             $this->SQL->put($this->Name, ['Latest' => 2], ['ReactionID' => $latest[0]]);
         }
 
         $this->Database->commitTransaction();
-
-        return $result;
     }
 
     /**
@@ -471,11 +487,7 @@ class ReactionModel extends Gdn_Model {
             ->resultArray();
 
         foreach($items as $item) {
-            $this->setLatestItem(
-                $item['ParentType'],
-                $item['ParentID'],
-                $this->getReactionItem($item['ParentType'], $item['ParentID']);
-            );
+            $this->setLatestItem($item['ParentType'], $item['ParentID']);
         }
 
         return [
