@@ -469,7 +469,16 @@ class ReactionModel extends Gdn_Model {
         }
 
         $chunk = DBAModel::$ChunkSize;
-        list($min, $max) = (new DBAModel())->primaryKeyRange($this->Name);
+        // We cannot use DBAModel::primaryKeyRange here because of DI problems.
+        $range = $this->SQL
+            ->select($this->PrimaryKey, 'min', 'MinValue')
+            ->select($this->PrimaryKey, 'max', 'MaxValue')
+            ->from($this->Name)
+            ->get()
+            ->firstRow();
+        $min = $range->MinValue ?? 0;
+        $max = $range->MaxValue ?? 0;
+
         if (!$from) {
             $from = $min;
             $to = $min + $chunk - 1;
