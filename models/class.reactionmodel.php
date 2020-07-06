@@ -393,6 +393,13 @@ class ReactionModel extends Gdn_Model {
     private function setLatestItem($type, $id, $item = []) {
         $table = $this->Database->DatabasePrefix.$this->Name;
 
+        $null = [
+            'Latest' => 0,
+            'ParentPermissionCategoryID' => null,
+            'ParentDateInserted' => null,
+            'ParentScore' => null
+        ];
+
         $insert = ['Latest' => 1];
         if (!empty($item) && $item['DisplayBest']) {
             $insert['ParentPermissionCategoryID'] = $item['PermissionCategoryID'];
@@ -402,6 +409,7 @@ class ReactionModel extends Gdn_Model {
 
         $this->Database->beginTransaction();
 
+        // Selecting for update locks the corresponding rows for reads on InnoDB.
         $sql = "select ReactionID, ActionID from {$table} "
            ."where ParentID = :ParentID and ParentType = :ParentType "
            ."order by DateInserted desc for update";
@@ -420,7 +428,8 @@ class ReactionModel extends Gdn_Model {
         }
 
         if (!empty($latest)) {
-            $this->SQL->put($this->Name, ['Latest' => 0], ['ParentID' => $id, 'ParentType' => $type]);
+            // 1 = latest reaction of an action, 2 = latest reaction overall
+            $this->SQL->put($this->Name, $null, ['ParentID' => $id, 'ParentType' => $type]);
             $this->SQL->put($this->Name, $insert, ['ReactionID' => $latest]);
             $this->SQL->put($this->Name, ['Latest' => 2], ['ReactionID' => $latest[0]]);
         }
@@ -428,6 +437,55 @@ class ReactionModel extends Gdn_Model {
         $this->Database->commitTransaction();
 
         return $result;
+    }
+
+    /**
+     * Used by the DBA controller to update denormalized reaction data via dba/counts
+     *
+     * @param string $column
+     * @param int $userID
+     * @return boolean
+     * @throws Gdn_UserException
+     */
+    public function counts($column, $from = false, $to = false) {
+        if ($column !== 'Latest') {
+            return;
+        }
+
+        $chunk = DBAModel::$ChunkSize;
+        list($min, $max) = (new DBAModel())->primaryKeyRange($this->Name);
+        if (!$from) {
+            $from = $min;
+            $to = $min + $chunk - 1;
+        }
+        $from = (int)$from;
+        $to = (int)$to;
+
+        $items = $this->SQL
+            ->select('ParentID, ParentType')
+            ->from($this->Name)
+            ->where('ReactionID >=', $from)
+            ->where('ReactionID <=', $to)
+            ->groupBy('ParentID, ParentType')
+            ->get()
+            ->resultArray();
+
+        foreach($items as $item) {
+            $this->setLatestItem(
+                $item['ParentType'],
+                $item['ParentID'],
+                $this->getReactionItem($item['ParentType'], $item['ParentID']);
+            );
+        }
+
+        return [
+            'Complete' => $to >= $max,
+            'Percent' => min(round($to * 100 / $max), 100).'%',
+            'Args' => [
+                'from' => $to + 1,
+                'to' => $to + $chunk
+            ]
+        ];
     }
 
 }

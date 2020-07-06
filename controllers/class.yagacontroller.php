@@ -266,6 +266,25 @@ class YagaController extends DashboardController {
     }
 
     /**
+     * Proxy endpoint for DBA methods. See YagaPlugin::dbaController_countJobs_handler
+     *
+     * @param string $method
+     */
+    public function dba($method = '', $from = false, $to = false) {
+        $this->permission('Garden.Settings.Manage');
+        $data = [];
+
+        if ($method === 'countbadges') {
+            $data = Gdn::getContainer()->get(BadgeAwardModel::class)->counts('CountBadges');
+        } elseif ($method === 'latestreaction') {
+            $data = Gdn::getContainer()->get(ReactionModel::class)->counts('Latest', $from, $to);
+        }
+
+        $this->setData('Result', $data);
+        $this->renderData();
+    }
+
+    /**
      * This searches through the submitted checkboxes and constructs an array of
      * Yaga sections to be included in the transport file.
      *

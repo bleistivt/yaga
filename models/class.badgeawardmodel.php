@@ -27,18 +27,9 @@ class BadgeAwardModel extends Gdn_Model {
     /**
      * Defines the related database table name.
      */
-    public function __construct(?BadgeModel $badgeModel = null, ?Gdn_Session $session = null) {
+    public function __construct(BadgeModel $badgeModel, Gdn_Session $session) {
         parent::__construct('YagaBadgeAward');
         $this->PrimaryKey = 'BadgeAwardID';
-
-        // This is required for dba/counts which doesn't use the container (yet).
-        // https://github.com/vanilla/vanilla/pull/10620
-        if ($badgeModel === null) {
-            $badgeModel = Gdn::getContainer()->get(BadgeModel::class);
-        }
-        if ($session === null) {
-            $session = Gdn::getContainer()->get(Gdn_Session::class);
-        }
 
         $this->badgeModel = $badgeModel;
         $this->session = $session;

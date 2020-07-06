@@ -889,23 +889,15 @@ class YagaPlugin extends Gdn_Plugin {
      }
 
     /**
-     * Add update routines to the DBA controller
+     * Add update routines to the DBA controller.
+     * These do not use dba/counts.json directly, because of a DI issue:
+     * https://github.com/vanilla/vanilla/pull/10620
      *
      * @param DbaController $sender
      */
     public function dbaController_countJobs_handler($sender) {
-        $counts = [
-            'BadgeAward' => ['CountBadges']
-        ];
-
-        foreach ($counts as $table => $columns) {
-            foreach ($columns as $column) {
-                $name = "Recalculate $table.$column";
-                $url = "/dba/counts.json?".http_build_query(['table' => $table, 'column' => $column]);
-
-                $sender->Data['Jobs'][$name] = $url;
-            }
-        }
+        $sender->Data['Jobs']['Recalculate BadgeAward.CountBadges'] = '/yaga/dba/countbadges.json?';
+        $sender->Data['Jobs']['Recalculate Reaction.Latest'] = '/yaga/dba/latestreaction.json?';
     }
 
     /**
