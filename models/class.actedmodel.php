@@ -260,7 +260,7 @@ class ActedModel extends Gdn_Model {
         $content = [];
 
         foreach ($records as $record) {
-            $item = $this->reactionModel->getRecord($record['ParentType'], $record['ParentID']);
+            $item = $this->reactionModel->getReactionItem($record['ParentType'], $record['ParentID']);
 
             if (empty($item)) {
                 // Item not found or no active handler for this item.

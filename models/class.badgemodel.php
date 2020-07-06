@@ -1,5 +1,7 @@
 <?php if (!defined('APPLICATION')) exit();
 
+use Garden\EventManager;
+
 /* Copyright 2013 Zachary Doll */
 
 /**

@@ -16,15 +16,15 @@ use Vanilla\Formatting\DateTimeFormatter;
 
 class ReactionModel extends Gdn_Model {
 
-    public const TYPE_DISCUSSION = "discussion";
-    public const TYPE_COMMENT = "comment";
-    public const TYPE_ACTIVITY = "activity";
+    public const TYPE_DISCUSSION = 'discussion';
+    public const TYPE_COMMENT = 'comment';
+    public const TYPE_ACTIVITY = 'activity';
 
-    public const ITEMS_PROFILE_REACTION = "received";
-    public const ITEMS_PROFILE_BEST = "best";
-    public const ITEMS_BEST_REACTION = "action";
-    public const ITEMS_BEST_ALL = "bestof";
-    public const ITEMS_BEST_RECENT = "recent";
+    public const ITEMS_PROFILE_REACTION = 'received';
+    public const ITEMS_PROFILE_BEST = 'best';
+    public const ITEMS_BEST_REACTION = 'action';
+    public const ITEMS_BEST_ALL = 'bestof';
+    public const ITEMS_BEST_RECENT = 'recent';
 
     /**
      * Used to cache the reactions
@@ -154,13 +154,15 @@ class ReactionModel extends Gdn_Model {
     public function set($id, $type, $item, $userID, $actionID) {
         // clear the cache
         unset($this->_reactions[$type.$id]);
-        
-        $authorID = is_array($item) ? $item['InsertUserID'] : $item;
+
+        if (!is_array($item)) {
+            $item = ['InsertUserID' => $item, 'DisplayBest' => false];
+        }
 
         $eventArgs = [
             'ParentID' => $id,
             'ParentType' => $type,
-            'ParentUserID' => $authorID,
+            'ParentUserID' => $item['InsertUserID'],
             'InsertUserID' => $userID,
             'ActionID' => $actionID
         ];
@@ -217,9 +219,9 @@ class ReactionModel extends Gdn_Model {
                     $this->Name,
                     [
                         'ActionID' => $actionID,
-                        'ParentID' =>    $id,
+                        'ParentID' => $id,
                         'ParentType' => $type,
-                        'ParentAuthorID' => $authorID,
+                        'ParentAuthorID' => $item['InsertUserID'],
                         'InsertUserID' => $userID,
                         'DateInserted' => $now
                     ]
@@ -229,11 +231,14 @@ class ReactionModel extends Gdn_Model {
         }
 
         // Update the parent item score
-        $totalScore = $this->setUserScore($type, $id, $userID, $score, $points);
-        $eventArgs['TotalScore'] = $totalScore;
+        $item['Score'] = $this->setUserScore($type, $id, $userID, $score, $points);
+        $eventArgs['TotalScore'] = $item['Score'];
+
+        // Set the "latest" flag.
+        $this->setLatestItem($type, $id, $item);
 
         // Give the user points commesurate with reaction activity
-        UserModel::givePoints($authorID, $points, 'Reaction');
+        UserModel::givePoints($item['InsertUserID'], $points, 'Reaction');
         $eventArgs['Points'] = $points;
 
         $this->fireEvent('AfterReactionSave', $eventArgs);
@@ -348,7 +353,7 @@ class ReactionModel extends Gdn_Model {
              * int PermissionCategoryID: The permission category ID of this item (view permissions required)
              * float Score: The current score of this item (see "yaga_setUserScore" event)
              */
-            $row = array_pop($this->eventManager->fire('yaga_getReactionItem', $type, $id)) ?? [];
+            $row = $this->eventManager->fire('yaga_getReactionItem', $type, $id)[0] ?? [];
         }
 
         return $row;
@@ -374,7 +379,55 @@ class ReactionModel extends Gdn_Model {
         } elseif ($type === self::TYPE_ACTIVITY) {
             return 0;
         }
-        return array_pop($this->eventManager->fire('yaga_setUserScore', $type, $id, $userID, $score, $change)) ?? 0;
+        return $this->eventManager->fire('yaga_setUserScore', $type, $id, $userID, $score, $change)[0] ?? 0;
+    }
+
+    /**
+     * Atomically set the "latest" flag on a reaction record group.
+     *
+     * @param string $type The type of the item
+     * @param int $id The items ID
+     * @param array $item The item
+     * @return array The modified rows
+     */
+    private function setLatestItem($type, $id, $item = []) {
+        $table = $this->Database->DatabasePrefix.$this->Name;
+
+        $insert = ['Latest' => 1];
+        if (!empty($item) && $item['DisplayBest']) {
+            $insert['ParentPermissionCategoryID'] = $item['PermissionCategoryID'];
+            $insert['ParentDateInserted'] = $item['DateInserted'];
+            $insert['ParentScore'] = $item['Score'];
+        }
+
+        $this->Database->beginTransaction();
+
+        $sql = "select ReactionID, ActionID from {$table} "
+           ."where ParentID = :ParentID and ParentType = :ParentType "
+           ."order by DateInserted desc for update";
+
+        $result = $this->Database
+            ->query($sql, [':ParentID' => $id, ':ParentType' => $type])
+            ->resultArray();
+
+        $latest = [];
+        $actionIDs = [];
+        foreach ($result as $reaction) {
+            if (!in_array($reaction['ActionID'], $actionIDs)) {
+                $latest[] = $reaction['ReactionID'];
+                $actionIDs[] = $reaction['ActionID'];
+            }
+        }
+
+        if (!empty($latest)) {
+            $this->SQL->put($this->Name, ['Latest' => 0], ['ParentID' => $id, 'ParentType' => $type]);
+            $this->SQL->put($this->Name, $insert, ['ReactionID' => $latest]);
+            $this->SQL->put($this->Name, ['Latest' => 2], ['ReactionID' => $latest[0]]);
+        }
+
+        $this->Database->commitTransaction();
+
+        return $result;
     }
 
 }
