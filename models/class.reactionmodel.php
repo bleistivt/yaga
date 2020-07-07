@@ -320,7 +320,7 @@ class ReactionModel extends Gdn_Model {
             $this->SQL->orderBy('ParentScore', 'desc');
         }
 
-        $records = $this->SQL->limit($limit, $offset)->get()->resultArray();
+        $records = $this->SQL->select('ParentType, ParentID')->limit($limit, $offset)->get()->resultArray();
 
         // Repeat the query for the total count.
         $this->SQL->from($this->Name)->whereIn('ParentPermissionCategoryID', $permissions);
