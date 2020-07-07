@@ -276,6 +276,8 @@ class YagaController extends DashboardController {
 
         if ($method === 'countbadges') {
             $data = Gdn::getContainer()->get(BadgeAwardModel::class)->counts('CountBadges');
+        } elseif ($method === 'userpoints') {
+            $data = Gdn::getContainer()->get(BadgeAwardModel::class)->counts('Points');
         } elseif ($method === 'latestreaction') {
             $data = Gdn::getContainer()->get(ReactionModel::class)->counts('Latest', $from, $to);
         }

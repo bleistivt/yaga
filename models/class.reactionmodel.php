@@ -555,7 +555,7 @@ class ReactionModel extends Gdn_Model {
      */
     public function counts($column, $from = false, $to = false) {
         if ($column !== 'Latest') {
-            return;
+            throw new Gdn_UserException("Unknown column $column");
         }
 
         // Because this is a quite expensive operation, only process 1000 records at once.

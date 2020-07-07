@@ -20,7 +20,7 @@ class BadgeAwardModel extends Gdn_Model {
 
     /** @var BadgeModel */
     private $badgeModel;
-    
+
     /** @var Gdn_Session */
     private $session;
 
@@ -211,13 +211,13 @@ class BadgeAwardModel extends Gdn_Model {
             if (!in_array($hook, $hooks)) {
                 continue;
             }
-            
+
             $criteria = (object)dbdecode($badge->RuleCriteria);
             $result = $rule->award($sender, $this->session->User, $criteria);
             if (!$result) {
                 continue;
             }
-            
+
             $awardedUserIDs = [];
             if (is_array($result)) {
                 $awardedUserIDs = $result;
@@ -246,27 +246,41 @@ class BadgeAwardModel extends Gdn_Model {
      * @throws Gdn_UserException
      */
     public function counts($column, $userID = null) {
-        if ($userID) {
-            $where = ['UserID' => $userID];
+        if ($column === 'CountBadges') {
+            $this->Database->query(DBAModel::getCountSQL(
+                'count',
+                'User', 'YagaBadgeAward',
+                'CountBadges', 'BadgeAwardID',
+                'UserID', 'UserID',
+                ($userID ? ['UserID' => $userID] : null)
+            ));
+
+        } elseif ($column === 'Points') {
+            $px = $this->Database->DatabasePrefix;
+
+            $reactionTable = Gdn::getContainer()->get(ReactionModel::class)->Name;
+            $actionTable = Gdn::getContainer()->get(ActionModel::class)->Name;
+            $badgeAwardTable = $this->Name;
+            $badgeTable = $this->badgeModel->Name;
+
+            $this->Database->query("
+                update {$px}User u set u.Points =
+                (
+                  select sum(a.AwardValue) from {$px}{$reactionTable} r
+                  inner join {$px}{$actionTable} a on r.ActionID = a.ActionID
+                  where u.UserID = r.ParentAuthorID
+                ) + (
+                  select sum(b.AwardValue) from {$px}{$badgeAwardTable} ba
+                  inner join {$px}{$badgeTable} b on ba.BadgeID = b.BadgeID
+                  where u.UserID = ba.UserID
+                )
+            ".($userID ? ' where u.UserID = '.intval($userID) : ''));
+
         } else {
-            $where = null;
+            throw new Gdn_UserException("Unknown column $column");
         }
 
-        $result = ['Complete' => true];
-        switch($column) {
-            case 'CountBadges':
-                $this->Database->query(DBAModel::getCountSQL(
-                    'count',
-                    'User', 'YagaBadgeAward',
-                    'CountBadges', 'BadgeAwardID',
-                    'UserID', 'UserID',
-                    $where
-                ));
-                break;
-            default:
-                throw new Gdn_UserException("Unknown column $column");
-        }
-        return $result;
+        return ['Complete' => true];
     }
 
 }

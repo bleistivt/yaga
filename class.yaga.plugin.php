@@ -876,9 +876,6 @@ class YagaPlugin extends Gdn_Plugin {
             ])
             ->where('UserID', $userID)
             ->put();
-
-        // Trigger a system wide point recount
-        // TODO: Look into point re-calculation
     }
 
     /**
@@ -906,8 +903,11 @@ class YagaPlugin extends Gdn_Plugin {
      * @param DbaController $sender
      */
     public function dbaController_countJobs_handler($sender) {
-        $sender->Data['Jobs']['Recalculate BadgeAward.CountBadges'] = '/yaga/dba/countbadges.json?';
+        $sender->Data['Jobs']['Recalculate User.CountBadges'] = '/yaga/dba/countbadges.json?';
         $sender->Data['Jobs']['Recalculate Reaction.Latest'] = '/yaga/dba/latestreaction.json?';
+        if (Gdn::config('Yaga.Dba.PointRecalculation')) {
+            $sender->Data['Jobs']['Recalculate User.Points'] = '/yaga/dba/userpoints.json?';
+        }
     }
 
     /**
