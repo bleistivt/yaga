@@ -82,8 +82,8 @@ if ($construct->tableExists()) {
 // Tracks the data associated with reacting to content
 $construct->table('YagaReaction')
     ->primaryKey('ReactionID')
-    ->column('InsertUserID', 'int', false, ['index', 'unique.Reaction'])
-    ->column('ActionID', 'int', false, ['index', 'index.Profile', 'index.Best'])
+    ->column('InsertUserID', 'int', false, 'unique.Reaction')
+    ->column('ActionID', 'int', false, ['index.Profile', 'index.Best'])
     ->column('ParentID', 'int', false, ['index.Record', 'unique.Reaction'])
     ->column('ParentType', 'varchar(100)', false, ['index.Record', 'unique.Reaction'])
     ->column('ParentAuthorID', 'int', false, ['index', 'index.Profile'])
