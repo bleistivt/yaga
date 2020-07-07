@@ -18,7 +18,7 @@ class Yaga {
      */
     public static function actedModel() {
         deprecated(__FUNCTION__, 'Gdn::getContainer');
-        return Gdn::getContainer()->get(ActedModel::class);
+        return new ActedModel(Gdn::getContainer()->get(ReactionModel::class));
     }
 
     /**

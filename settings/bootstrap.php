@@ -1,8 +1,6 @@
 <?php if (!defined('APPLICATION')) exit();
 
 Gdn::getContainer()
-    ->rule(ActedModel::class)
-        ->setShared(true)
     ->rule(ActionModel::class)
         ->setShared(true)
     ->rule(ReactionModel::class)

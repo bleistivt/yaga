@@ -27,6 +27,7 @@ class ActedModel extends Gdn_Model {
     public function __construct(ReactionModel $reactionModel) {
         parent::__construct();
 
+        deprecated('ActedModel', 'ReactionModel::getBest');
         $this->reactionModel = $reactionModel;
     }
 
