@@ -62,7 +62,7 @@ class BestController extends Gdn_Controller {
      *
      * @param int $page What page of content should be shown
      */
-    public function allTime($page = 0) {
+    public function alltime($page = 0) {
         list($offset, $limit) = self::_translatePage($page);
         $this->title(Gdn::translate('Yaga.BestContent.AllTime'));
         $this->_content = $this->ReactionModel->getBest(ReactionModel::ITEMS_BEST_ALL, $limit, $offset);

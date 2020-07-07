@@ -19,3 +19,4 @@ $Configuration['Yaga']['BestContent']['PerPage'] = 10; // Per page limit on the 
 $Configuration['Yaga']['Ranks']['Photo'] = 'plugins/yaga/design/images/default_promotion.png'; // Default photo used for ranks activity items
 $Configuration['Yaga']['Badges']['DefaultPhoto'] = 'plugins/yaga/design/images/default_badge.png'; // Default photo used for badges pages
 $Configuration['Yaga']['Reactions']['RecordLimit'] = 10; // The number of user avatars to show before collapsing them in the reaction record
+$Configuration['Yaga']['Profile']['FullPagers'] = true; // Should full pagination be displayed in profile "best" pages?
