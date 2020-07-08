@@ -265,15 +265,15 @@ class BadgeAwardModel extends Gdn_Model {
 
             $this->Database->query("
                 update {$px}User u set u.Points =
-                (
+                coalesce((
                   select sum(a.AwardValue) from {$px}{$reactionTable} r
                   inner join {$px}{$actionTable} a on r.ActionID = a.ActionID
                   where u.UserID = r.ParentAuthorID
-                ) + (
+                ), 0) + coalesce((
                   select sum(b.AwardValue) from {$px}{$badgeAwardTable} ba
                   inner join {$px}{$badgeTable} b on ba.BadgeID = b.BadgeID
                   where u.UserID = ba.UserID
-                )
+                ), 0)
             ".($userID ? ' where u.UserID = '.intval($userID) : ''));
 
         } else {
