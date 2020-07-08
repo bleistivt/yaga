@@ -425,28 +425,25 @@ class ReactionModel extends Gdn_Model {
                 $row['InsertUserID'] = $row['RegardingUserID'];
                 $row['DisplayBest'] = false;
             }
-        } else {
-            /**
-             * In order to extend reactions, if the $type can be handled, a plugin should handle
-             * the "yaga_getReactionItem" event by returning an array structured as follows:
-             *
-             * int InsertUserID: The ID of the user who should receive reactions and points for this item
-             * bool DisplayBest: If set to true, this item will be shown on "best" and "reactions" pages.
-             *
-             * If "DisplayBest" is set to true, these additional fields are required:
-             *
-             * string Url: The URL to this item
-             * string Name: The title of this item
-             * datetime DateInserted: The date of this item
-             * string Body: The content of this item
-             * string Format: The formatter to use for the "Body" field
-             * int PermissionCategoryID: The permission category ID of this item (view permissions required)
-             * float Score: The current score of this item (see "yaga_setUserScore" event)
-             */
-            $row = $this->eventManager->fire('yaga_getReactionItem', $type, $id)[0] ?? [];
         }
-
-        return $row;
+        /**
+         * In order to extend reactions, if the $type can be handled, a plugin should handle
+         * the "yaga_getReactionItem" event by returning an array structured as follows:
+         *
+         * int InsertUserID: The ID of the user who should receive reactions and points for this item
+         * bool DisplayBest: If set to true, this item will be shown on "best" and "reactions" pages.
+         *
+         * If "DisplayBest" is set to true, these additional fields are required:
+         *
+         * string Url: The URL to this item
+         * string Name: The title of this item
+         * datetime DateInserted: The date of this item
+         * string Body: The content of this item
+         * string Format: The formatter to use for the "Body" field
+         * int PermissionCategoryID: The permission category ID of this item (view permissions required)
+         * float Score: The current score of this item (see "yaga_setUserScore" event)
+         */
+        return $this->eventManager->fireFilter('yaga_getReactionItem', $row, $type, $id);
     }
 
     /**
@@ -462,14 +459,13 @@ class ReactionModel extends Gdn_Model {
      * @return int Total score if request was successful, false if not.
      */
     private function setUserScore($type, $id, $userID, $score, $change) {
+        $total = 0;
         if ($type === self::TYPE_DISCUSSION) {
-            return (new DiscussionModel())->setUserScore($id, $userID, $score);
+            $total = (new DiscussionModel())->setUserScore($id, $userID, $score);
         } elseif ($type === self::TYPE_COMMENT) {
-            return (new CommentModel())->setUserScore($id, $userID, $score);
-        } elseif ($type === self::TYPE_ACTIVITY) {
-            return 0;
+            $total = (new CommentModel())->setUserScore($id, $userID, $score);
         }
-        return $this->eventManager->fire('yaga_setUserScore', $type, $id, $userID, $score, $change)[0] ?? 0;
+        return $this->eventManager->fireFilter('yaga_setUserScore', $total, $type, $id, $userID, $score, $change);
     }
 
     /**
