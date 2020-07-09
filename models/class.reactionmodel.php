@@ -379,9 +379,6 @@ class ReactionModel extends Gdn_Model {
             $item['ContentID'] = $record['ParentID'];
             $item['ContentURL'] = $item['Url'];
 
-            // Titles are escaped in the view.
-            $item['Name'] = htmlspecialchars_decode($item['Name']);
-
             // Attach User
             $item['Author'] = $this->userModel->getID($item['InsertUserID'] ?? false);
 
@@ -416,29 +413,31 @@ class ReactionModel extends Gdn_Model {
                 ->firstRow(DATASET_TYPE_ARRAY);
 
             if ($row) {
+                // Titles are escaped in the view.
+                $row['Name'] = htmlspecialchars_decode($row['Name']);
                 $row['DisplayBest'] = true;
                 $row['Url'] = discussionUrl($row);
                 $category = CategoryModel::categories($row['CategoryID']);
                 $row['PermissionCategoryID'] = $category['PermissionCategoryID'] ?? -1;
             }
+
         } elseif ($type === self::TYPE_COMMENT) {
             //$row = $container->get(CommentModel::class)->getID($id, DATASET_TYPE_ARRAY);
             $row = $this->SQL
-                ->getWhere('Comment', ['CommentID' => $id])
-                ->firstRow(DATASET_TYPE_ARRAY);
+                ->select('d.CategoryID, d.Name, c.*')
+                ->from('Comment c')
+                ->where('c.CommentID', $id)
+                ->join('Discussion d', 'c.DiscussionID = d.DiscussionID')
+                ->get()->firstRow(DATASET_TYPE_ARRAY);
 
             if ($row) {
+                $row['Name'] = htmlspecialchars_decode($row['Name'] ?? '');
                 $row['DisplayBest'] = true;
                 $row['Url'] = url("/discussion/comment/{$id}#Comment_{$id}", true);
-
-                $discussion = $this->SQL
-                    ->getWhere('Discussion', ['DiscussionID' => $row['DiscussionID']])
-                    ->firstRow(DATASET_TYPE_ARRAY);
-
-                $row['Name'] = $discussion['Name'] ?? '';
-                $category = CategoryModel::categories($discussion['CategoryID']);
+                $category = CategoryModel::categories($row['CategoryID']);
                 $row['PermissionCategoryID'] = $category['PermissionCategoryID'] ?? -1;
             }
+
         } elseif ($type === self::TYPE_ACTIVITY) {
             //$row = $container->get(ActivityModel::class)->getID($id, DATASET_TYPE_ARRAY);
             $row = $this->SQL
