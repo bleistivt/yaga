@@ -238,7 +238,7 @@ class ReactionModel extends Gdn_Model {
         $this->setLatestItem($type, $id, $item);
 
         // Give the user points commesurate with reaction activity
-        UserModel::givePoints($item['InsertUserID'], $points, 'Reaction');
+        $this->userModel::givePoints($item['InsertUserID'], $points, 'Reaction');
         $eventArgs['Points'] = $points;
 
         $this->fireEvent('AfterReactionSave', $eventArgs);
@@ -300,7 +300,9 @@ class ReactionModel extends Gdn_Model {
         $permissions = $session->getPermissionsArray()['Vanilla.Discussions.View'] ?? [0];
         $inProfile = $method === self::ITEMS_PROFILE_REACTION || $method === self::ITEMS_PROFILE_BEST;
 
-        $this->SQL->from($this->Name)->whereIn('ParentPermissionCategoryID', $permissions);
+        $this->SQL
+            ->from($this->Name)
+            ->whereIn('ParentPermissionCategoryID', $permissions);
 
         // Is this on a profile page (user context)?
         if ($inProfile) {
@@ -321,11 +323,16 @@ class ReactionModel extends Gdn_Model {
             $this->SQL->orderBy('ParentScore', 'desc');
         }
 
-        $records = $this->SQL->select('ParentType, ParentID')->limit($limit, $offset)->get()->resultArray();
+        $records = $this->SQL
+            ->select('ParentType, ParentID, ParentAuthorID')
+            ->limit($limit, $offset)
+            ->get()->resultArray();
 
         // Repeat the query for the total count.
         if ($inProfile && Gdn::config('Yaga.Profile.FullPagers')) {
-            $this->SQL->from($this->Name)->whereIn('ParentPermissionCategoryID', $permissions);
+            $this->SQL
+                ->from($this->Name)
+                ->whereIn('ParentPermissionCategoryID', $permissions);
 
             $this->SQL->where('ParentAuthorID', $userID);
 
@@ -336,10 +343,16 @@ class ReactionModel extends Gdn_Model {
                 $this->SQL->where('Latest', 2);
             }
 
-            $total = $this->SQL->select('ReactionID', 'count', 'RowCount')->get()->firstRow()->RowCount;
+            $total = $this->SQL
+                ->select('ReactionID', 'count', 'RowCount')
+                ->get()->firstRow()->RowCount;
         }
 
         $content = [];
+
+        // Prime the user cache.
+        $this->userModel->getIDs(array_column($records, 'ParentAuthorID'));
+        $prefetch = [];
 
         foreach ($records as $record) {
             $item = $this->getReactionItem($record['ParentType'], $record['ParentID']);
@@ -356,8 +369,11 @@ class ReactionModel extends Gdn_Model {
                 continue;
             }
 
-            // Fill the reaction cache to reduce the amount of queries.
-            $this->prefetch($record['ParentType'], $record['ParentID']);
+            if (isset($prefetch[$record['ParentType']])) {
+                $prefetch[$record['ParentType']][] = $record['ParentID'];
+            } else {
+                $prefetch[$record['ParentType']] = [$record['ParentID']];
+            }
 
             $item['ItemType'] = $record['ParentType'];
             $item['ContentID'] = $record['ParentID'];
@@ -367,9 +383,14 @@ class ReactionModel extends Gdn_Model {
             $item['Name'] = htmlspecialchars_decode($item['Name']);
 
             // Attach User
-            $item['Author'] = Gdn::userModel()->getID($item['InsertUserID'] ?? false);
+            $item['Author'] = $this->userModel->getID($item['InsertUserID'] ?? false);
 
             $content[] = $item;
+        }
+
+        // Fill the reaction cache to reduce the amount of queries.
+        foreach ($prefetch as $type => $ids) {
+            $this->prefetch($type, $ids);
         }
 
         return (object)['Content' => $content, 'TotalRecords' => $total ?? false];
@@ -385,13 +406,14 @@ class ReactionModel extends Gdn_Model {
      * @return array
      */
     public function getReactionItem($type, $id) {
-        $container = Gdn::getContainer();
+        //$container = Gdn::getContainer();
         $row = [];
 
         if ($type === self::TYPE_DISCUSSION) {
-            $row = $container
-                ->get(DiscussionModel::class)
-                ->getID($id, DATASET_TYPE_ARRAY);
+            //$row = $container->get(DiscussionModel::class)->getID($id, DATASET_TYPE_ARRAY);
+            $row = $this->SQL
+                ->getWhere('Discussion', ['DiscussionID' => $id])
+                ->firstRow(DATASET_TYPE_ARRAY);
 
             if ($row) {
                 $row['DisplayBest'] = true;
@@ -400,26 +422,28 @@ class ReactionModel extends Gdn_Model {
                 $row['PermissionCategoryID'] = $category['PermissionCategoryID'] ?? -1;
             }
         } elseif ($type === self::TYPE_COMMENT) {
-            $row = $container
-                ->get(CommentModel::class)
-                ->getID($id, DATASET_TYPE_ARRAY);
+            //$row = $container->get(CommentModel::class)->getID($id, DATASET_TYPE_ARRAY);
+            $row = $this->SQL
+                ->getWhere('Comment', ['CommentID' => $id])
+                ->firstRow(DATASET_TYPE_ARRAY);
 
             if ($row) {
                 $row['DisplayBest'] = true;
                 $row['Url'] = url("/discussion/comment/{$id}#Comment_{$id}", true);
 
-                $discussion = $container
-                    ->get(DiscussionModel::class)
-                    ->getID($row['DiscussionID'], DATASET_TYPE_ARRAY);
+                $discussion = $this->SQL
+                    ->getWhere('Discussion', ['DiscussionID' => $row['DiscussionID']])
+                    ->firstRow(DATASET_TYPE_ARRAY);
 
                 $row['Name'] = $discussion['Name'] ?? '';
                 $category = CategoryModel::categories($discussion['CategoryID']);
                 $row['PermissionCategoryID'] = $category['PermissionCategoryID'] ?? -1;
             }
         } elseif ($type === self::TYPE_ACTIVITY) {
-            $row = $container
-                ->get(ActivityModel::class)
-                ->getID($id, DATASET_TYPE_ARRAY);
+            //$row = $container->get(ActivityModel::class)->getID($id, DATASET_TYPE_ARRAY);
+            $row = $this->SQL
+                ->getWhere('Activity', ['ActivityID' => $id])
+                ->firstRow(DATASET_TYPE_ARRAY);
 
             if ($row) {
                 $row['InsertUserID'] = $row['RegardingUserID'];
