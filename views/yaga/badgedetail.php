@@ -36,12 +36,14 @@ if ($userBadgeAward) {
 
 if ($awardCount) {
     echo wrap(plural($awardCount, 'Yaga.Badge.EarnedBySingle', 'Yaga.Badge.EarnedByPlural'), 'p', ['class' => 'BadgeCountDisplay']);
-}
-else {
+} else {
     echo wrap(Gdn::translate('Yaga.Badge.EarnedByNone'), 'p');
 }
 
 if ($recentAwards) {
+    // Prefetch users for userPhoto()
+    Gdn::userModel()->getIDs(array_column($recentAwards, 'UserID'));
+
     echo wrap(Gdn::translate('Yaga.Badge.RecentRecipients'), 'h2');
     echo '<div class="RecentRecipients">';
     foreach ($recentAwards as $award) {
