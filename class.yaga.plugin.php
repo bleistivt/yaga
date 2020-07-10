@@ -299,6 +299,17 @@ class YagaPlugin extends Gdn_Plugin {
     }
 
     /**
+     * Add pages with duplicated content to robots.txt to prevent indexing.
+     *
+     * @param Robots $robots
+     */
+    public function robots_init(Vanilla\Web\Robots $robots) {
+        $robots->addRule('Disallow: /best/');
+        $robots->addRule('Disallow: /profile/best/');
+        $robots->addRule('Disallow: /profile/reactions/');
+    }
+
+    /**
      * Check for rank progress when the user model gets updated
      *
      * @param UserModel $sender
