@@ -24,9 +24,6 @@ class ReactController extends Gdn_Controller {
     public function initialize() {
         parent::initialize();
         $this->Application = 'Yaga';
-        if (!$this->Request->isPostBack()) {
-            throw PermissionException('Javascript');
-        }
     }
 
     /**
@@ -38,6 +35,10 @@ class ReactController extends Gdn_Controller {
      * @throws Gdn_UserException
      */
     public function index($type, $id, $actionID) {
+        if (!$this->Request->isPostBack()) {
+            throw permissionException('Javascript');
+        }
+
         $type = strtolower($type);
         $action = $this->ActionModel->getID($actionID);
 
