@@ -299,6 +299,17 @@ class YagaPlugin extends Gdn_Plugin {
     }
 
     /**
+     * Handle merging discussions.
+     * @param Gdn_Controller $sender
+     */
+    public function base_transformDiscussionToComment_handler($sender, $args) {
+        Gdn::getContainer()->get(ReactionModel::class)->update(
+            ['ParentID' => $args['TargetComment']['CommentID'], 'ParentType' => 'comment'],
+            ['ParentID' => $args['SourceDiscussion']['DiscussionID'], 'ParentType' => 'discussion']
+        );
+    }
+
+    /**
      * Add pages with duplicated content to robots.txt to prevent indexing.
      *
      * @param Robots $robots
