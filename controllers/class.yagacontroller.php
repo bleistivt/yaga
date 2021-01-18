@@ -343,7 +343,7 @@ class YagaController extends DashboardController {
         // Add actions
         if ($include['Action']) {
             $info['Action'] = 'actions.json';
-            $actions = $this->ActionModel()->get('Sort', 'asc');
+            $actions = $this->ActionModel->get('Sort', 'asc');
             $this->setData('ActionCount', count($actions));
             $actionData = dbencode($actions);
             $fh->addFromString('actions.json', $actionData);
@@ -353,7 +353,7 @@ class YagaController extends DashboardController {
         // Add ranks and associated image
         if ($include['Rank']) {
             $info['Rank'] = 'ranks.json';
-            $ranks = $this->RankModel()->get('Level', 'asc');
+            $ranks = $this->RankModel->get('Level', 'asc');
             $this->setData('RankCount', count($ranks));
             $rankData = dbencode($ranks);
             $fh->addFromString('ranks.json', $rankData);
@@ -364,7 +364,7 @@ class YagaController extends DashboardController {
         // Add badges and associated images
         if ($include['Badge']) {
             $info['Badge'] = 'badges.json';
-            $badges = $this->BadgeModel()->get();
+            $badges = $this->BadgeModel->get();
             $this->setData('BadgeCount', count($badges));
             $badgeData = dbencode($badges);
             $fh->addFromString('badges.json', $badgeData);
