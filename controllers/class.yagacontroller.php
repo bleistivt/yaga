@@ -383,6 +383,9 @@ class YagaController extends DashboardController {
         }
 
         foreach ($filteredImages as $image) {
+            if (!file_exists('./'.$image)) {
+                continue;
+            }
             $image = ltrim($image, '/');
             if ($fh->addFile('./'.$image, 'images/'.$image) === false) {
                 $this->Form->addError(sprintf(Gdn::translate('Yaga.Error.AddFile'), $fh->getStatusString()));
