@@ -259,7 +259,7 @@ class YagaController extends DashboardController {
         }
 
         if ($this->Form->errorCount() == 0 && $this->Form->isPostBack()) {
-            $this->render('transport-success');
+            $this->render('transport-success', '', 'plugins/yaga');
         } else {
             $this->render('import', '', 'plugins/yaga');
         }
@@ -353,7 +353,7 @@ class YagaController extends DashboardController {
         // Add ranks and associated image
         if ($include['Rank']) {
             $info['Rank'] = 'ranks.json';
-            $ranks = $this->RankModel->get('Level', 'asc');
+            $ranks = $this->RankModel->get('Sort', 'asc');
             $this->setData('RankCount', count($ranks));
             $rankData = dbencode($ranks);
             $fh->addFromString('ranks.json', $rankData);
