@@ -14,7 +14,7 @@ echo wrap(Gdn::translate('Yaga.Actions.Settings.Desc'), 'div', ['class' => 'padd
         <thead>
             <tr>
                 <th><?php echo Gdn::translate('Name'); ?></th>
-                <th class="column-lg"><?php echo Gdn::translate('Description'); ?></th>
+                <th class="column-lg"><?php echo Gdn::translate('Tooltip'); ?></th>
                 <th><?php echo Gdn::translate('Award Value'); ?></th>
                 <th><?php echo Gdn::translate('Preview'); ?></th>
                 <th class="options"></th>

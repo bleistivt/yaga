@@ -43,14 +43,6 @@ echo $this->Form->errors();
     </li>
     <li class="form-group">
         <div class="label-wrap">
-            <?php echo $this->Form->label('Description', 'Description'); ?>
-        </div>
-        <div class="input-wrap">
-            <?php echo $this->Form->textBox('Description'); ?>
-        </div>
-    </li>
-    <li class="form-group">
-        <div class="label-wrap">
             <?php echo $this->Form->label('Tooltip', 'Tooltip'); ?>
         </div>
         <div class="input-wrap">

@@ -180,6 +180,8 @@ class ActionController extends DashboardController {
                     $this->jsonTarget('#Actions', $actionRow, 'Append');
                     $this->informMessage(Gdn::translate('Yaga.Action.Added'));
                 }
+
+                redirectTo('/action/settings');
             }
         }
 

@@ -101,7 +101,7 @@ if (!function_exists('renderActionRow')) {
 
         $tr .= '<td><strong>'.$action->Name.'</strong></td>';
 
-        $tr .= '<td>'.$action->Description.'</td>';
+        $tr .= '<td>'.$action->Tooltip.'</td>';
 
         $tr .= '<td>'.plural($action->AwardValue, '%s Point', '%s Points').'</td>';
 
@@ -116,7 +116,7 @@ if (!function_exists('renderActionRow')) {
         $tr .= '</td>';
 
         $tr .= '<td class="options">';
-        $tr .= renderYagaOptionButtons('action/edit/'.$action->ActionID, 'action/delete/'.$action->ActionID);
+        $tr .= renderYagaOptionButtons('action/edit/'.$action->ActionID, 'action/delete/'.$action->ActionID, false);
         $tr .= '</td>';
 
         $tr .= '</tr>';
