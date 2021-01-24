@@ -20,3 +20,5 @@ If the old folder still exists, Vanilla will autoload wrong classes and the plug
 
 Upon installation, all tables and data will be converted automatically.
 You may need to run `utility/structure` twice.
+
+If you are upgrading from YAGA 2.0.x or earlier, also run `dba/counts` once (tick "Recalculate Reaction.Latest").
