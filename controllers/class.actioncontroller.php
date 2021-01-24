@@ -168,6 +168,23 @@ class ActionController extends DashboardController {
                 $this->Form->setData(['Permission' => 'Yaga.Reactions.Add']);
             }
         } else {
+            // Handle the photo upload
+            $upload = new Gdn_Upload();
+            $tmpImage = $upload->validateUpload('PhotoUpload', false);
+
+            if ($tmpImage) {
+                // Generate the target image name
+                $targetImage = $upload->generateTargetName(PATH_UPLOADS, false);
+                $imageBaseName = pathinfo($targetImage, PATHINFO_BASENAME);
+
+                // Save the uploaded image
+                $parts = $upload->saveAs($tmpImage, 'yaga/'.$imageBaseName);
+                $assetRoot = Gdn::request()->urlDomain(true).Gdn::request()->assetRoot();
+                $relativeUrl = stringBeginsWith($parts['Url'], $assetRoot, true, true);
+
+                $this->Form->setFormValue('Photo', $relativeUrl);
+            }
+
             $newID = $this->Form->save();
             if ($newID) {
                 $action = $this->ActionModel->getID($newID);
@@ -241,6 +258,31 @@ class ActionController extends DashboardController {
         $this->setData('Title', Gdn::translate('Yaga.Action.Delete'));
         $this->render();
     }
+
+    /**
+     * Remove the photo association of an action. This does not remove the actual file.
+     *
+     * @param int $actionID
+     * @param string $transientKey
+     */
+    public function deletePhoto($actionID = false) {
+            // Check permission
+            $this->permission('Yaga.Reactions.Manage');
+
+            $redirectUrl = 'action/edit/'.$actionID;
+
+            if (Gdn::request()->isAuthenticatedPostBack(true)) {
+                $this->ActionModel->setField($actionID, 'Photo', null);
+                $this->informMessage(Gdn::translate('Yaga.Action.PhotoDeleted'));
+            }
+
+            if ($this->_DeliveryType == DELIVERY_TYPE_ALL) {
+                redirectTo($redirectUrl);
+            } else {
+                $this->RedirectUrl = url($redirectUrl);
+                $this->render('blank', 'utility', 'dashboard');
+            }
+     }
 
     /**
      * This takes in a sort array and updates the action sort order.

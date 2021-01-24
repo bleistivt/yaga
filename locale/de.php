@@ -42,6 +42,7 @@ $Definition['Yaga.Action.InvalidTargetType'] = 'Ungültiges Reaktions-Ziel';
 $Definition['Yaga.Action.Move'] = 'Die <em>%s</em> Aktionen verschieben?';
 $Definition['Yaga.Action.PermDesc'] = 'Ein Benutzer wird folgende Berechtigungen benötigen um diese Aktion zu verwenden. Die Standard-Berechtigung heißt "Yaga.Reactions.Add".';
 $Definition['Yaga.ActionUpdated'] = 'Die Aktion wurde erfolgreich geändert!';
+$Definition['Yaga.Action.PhotoDeleted'] = 'Aktions-Foto entfernt';
 $Definition['Yaga.Actions.Current'] = 'Aktivierte Reaktionen';
 $Definition['Yaga.Actions.Desc'] = 'Aktionen werden unter benutzergenerierten Inhalten wie Diskussionen, Kommentare und Aktivitäten angezeigt. Andere Benutzer können diese als "Reaktion" auf den Inhalt auswählen. Der ursprüngliche Verfasser erhält hierfür Punkte. Dies erzeugt eine positive Rückkopplung für positive <em>und</em> negative Aktionen.';
 $Definition['Yaga.Actions.Manage'] = 'Reaktionen bearbeiten';

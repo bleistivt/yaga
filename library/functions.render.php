@@ -33,7 +33,8 @@ if (!function_exists('renderReactionList')) {
                     wrap($action->Name, 'span', ['class' => 'ReactLabel']), 'react/'.$type.'/'.$id.'/'.$action->ActionID,
                     [
                         'class' => 'Hijack ReactButton',
-                        'title' => $action->Tooltip
+                        'title' => $action->Tooltip,
+                        'rel' => 'nofollow'
                     ]
                 );
             }

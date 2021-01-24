@@ -40,7 +40,7 @@ if (!function_exists('renderActionRow')) {
     }
 }
 
-echo heading($this->title(), Gdn::translate('Yaga.Action.Add'), 'action/add', 'js-modal btn btn-primary');
+echo heading($this->title(), Gdn::translate('Yaga.Action.Add'), 'action/add', 'btn btn-primary');
 
 echo helpAsset(Gdn::translate('Yaga.Action'), Gdn::translate('Yaga.Actions.Desc'));
 

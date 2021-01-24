@@ -42,6 +42,7 @@ $Definition['Yaga.Action.InvalidTargetType'] = 'Invalid React Target';
 $Definition['Yaga.Action.Move'] = 'Move the %s reactions?';
 $Definition['Yaga.Action.PermDesc'] = "A user will need the following permission to use this action. The default is 'Yaga.Reactions.Add'.";
 $Definition['Yaga.ActionUpdated'] = 'Action updated successfully!';
+$Definition['Yaga.Action.PhotoDeleted'] = 'Action photo has been deleted.';
 $Definition['Yaga.Actions.Current'] = 'Current Actions';
 $Definition['Yaga.Actions.Desc'] = "Actions are shown underneath user generated content such as discussions, comments, and activity items. Other users can select one as a 'reaction'. The owner of the original item will receive points based on the reactions of others. This forms a positive feedback loop for both positive <em>and</em> negative actions.";
 $Definition['Yaga.Actions.Manage'] = 'Manage Actions';
