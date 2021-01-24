@@ -32,7 +32,7 @@ echo $this->Form->errors();
             if ($photo) {
                 echo '<br />'.anchor(
                     Gdn::translate('Delete Photo'),
-                    combinePaths(['rank/deletephoto', Gdn::session()->transientKey()]),
+                    'rank/deletephoto',
                     'btn btn-primary js-modal-confirm',
                     ['data-body' => sprintf(Gdn::translate('Are you sure you want to delete this %s?'), Gdn::translate('Photo'))]
                 );

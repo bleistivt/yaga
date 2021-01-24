@@ -31,7 +31,7 @@ echo $this->Form->errors();
                 if ($photo !== Gdn::config('Yaga.Badges.DefaultPhoto')) {
                     echo '<br />'.anchor(
                         Gdn::translate('Delete Photo'),
-                        combinePaths(['badge/deletephoto', $this->Badge->BadgeID, Gdn::session()->transientKey()]),
+                        'badge/deletephoto/'.$this->Badge->BadgeID,
                         'btn btn-primary js-modal-confirm',
                         ['data-body' => sprintf(Gdn::translate('Are you sure you want to delete this %s?'), Gdn::translate('Photo'))]
                     );

@@ -223,13 +223,13 @@ class BadgeController extends DashboardController {
      * @param int $badgeID
      * @param string $transientKey
      */
-    public function deletePhoto($badgeID = false, $transientKey = '') {
+    public function deletePhoto($badgeID = false) {
             // Check permission
             $this->permission('Yaga.Badges.Manage');
 
             $redirectUrl = 'badge/edit/'.$badgeID;
 
-            if (Gdn::session()->validateTransientKey($transientKey)) {
+            if (Gdn::request()->isAuthenticatedPostBack(true)) {
                 $this->BadgeModel->setField($badgeID, 'Photo', Gdn::config('Yaga.Badges.DefaultPhoto'));
                 $this->informMessage(Gdn::translate('Yaga.Badge.PhotoDeleted'));
             }
