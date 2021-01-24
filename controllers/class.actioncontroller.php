@@ -170,6 +170,7 @@ class ActionController extends DashboardController {
         } else {
             // Handle the photo upload
             $upload = new Gdn_Upload();
+            $upload->allowFileExtension('svg');
             $tmpImage = $upload->validateUpload('PhotoUpload', false);
 
             if ($tmpImage) {

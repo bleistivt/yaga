@@ -49,6 +49,7 @@ class RankController extends DashboardController {
         if ($this->Form->isPostBack() == true) {
             // Handle the photo upload
             $upload = new Gdn_Upload();
+            $upload->allowFileExtension('svg');
             $tmpImage = $upload->validateUpload('PhotoUpload', false);
 
             if ($tmpImage) {
