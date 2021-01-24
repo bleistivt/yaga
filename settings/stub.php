@@ -2,7 +2,7 @@
 
 /* Copyright 2013-2016 Zachary Doll */
 
-$sql = Gdn::database()->sql();
+$sql = Gdn::sql();
 
 // Only insert default actions if none exist
 $row = $sql->get('YagaAction', '', 'asc', 1)->firstRow(DATASET_TYPE_ARRAY);
