@@ -1,4 +1,4 @@
-# YAGA for Vanilla 3.2 and up
+# YAGA for Vanilla 3.3 and up
 
 This is a fork of the great YAGA (Yet Another Gamification Application) for Vanilla forums by @hgtonight.
 All of the original credit goes to him.
