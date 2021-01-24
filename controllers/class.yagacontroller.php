@@ -348,6 +348,9 @@ class YagaController extends DashboardController {
             $actionData = dbencode($actions);
             $fh->addFromString('actions.json', $actionData);
             $hashes[] = md5($actionData);
+            foreach ($actions as $action) {
+                array_push($images, $action->Photo);
+            }
         }
 
         // Add ranks and associated image
