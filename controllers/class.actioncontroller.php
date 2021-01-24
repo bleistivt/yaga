@@ -171,13 +171,10 @@ class ActionController extends DashboardController {
             $newID = $this->Form->save();
             if ($newID) {
                 $action = $this->ActionModel->getID($newID);
-                $actionRow = renderActionRow($action);
 
                 if ($edit) {
-                    $this->jsonTarget('#ActionID_'.$this->Action->ActionID, $actionRow, 'ReplaceWith');
                     $this->informMessage(Gdn::translate('Yaga.ActionUpdated'));
                 } else {
-                    $this->jsonTarget('#Actions', $actionRow, 'Append');
                     $this->informMessage(Gdn::translate('Yaga.Action.Added'));
                 }
 

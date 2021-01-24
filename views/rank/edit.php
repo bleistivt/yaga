@@ -2,6 +2,67 @@
 
 /* Copyright 2013-2014 Zachary Doll */
 
+if (!function_exists('renderPerkPermissionForm')) {
+
+    /**
+     * Render a simple permission perk form
+     *
+     * @since 1.0
+     * @param string $perm The permission you want to grant/revoke
+     * @param string $label Translation code used on the form
+     */
+    function renderPerkPermissionForm($perm, $label) {
+        $form = Gdn::controller()->Form;
+        $fieldname = 'Perm'.$perm;
+
+        $string = '<div class="label-wrap">';
+        $string .= $form->label($label, $fieldname);
+        $string .= '</div><div class="input-wrap">';
+        $string .= $form->dropdown($fieldname, [
+            '' => Gdn::translate('Default'),
+            'grant' => Gdn::translate('Grant'),
+            'revoke' => Gdn::translate('Revoke')
+        ]);
+        $string .= '</div>';
+
+        return $string;
+    }
+}
+
+if (!function_exists('renderPerkConfigurationForm')) {
+
+    /**
+     * Render a perk form for the specified configuration
+     *
+     * @since 1.0
+     * @param string $config The configuration you want to override (i.e. 'Vanilla.EditTimeout')
+     * @param string $label Translation code used on the form
+     * @param array $options The options you want shown instead of default/enable/disable.
+     */
+    function renderPerkConfigurationForm($config, $label, $options = null) {
+        if (is_null($options)) {
+            // Default to a true/false/default array
+            $options = [
+                '' => Gdn::translate('Default'),
+                1 => Gdn::translate('Enabled'),
+                0 => Gdn::translate('Disabled')
+            ];
+        }
+        // Add a default option
+        $options = ['' => Gdn::translate('Default')] + $options;
+        $form = Gdn::controller()->Form;
+        $fieldname = 'Conf'.$config;
+
+        $string = '<div class="label-wrap">';
+        $string .= $form->label($label, $fieldname);
+        $string .= '</div><div class="input-wrap">';
+        $string .= $form->dropdown($fieldname, $options);
+        $string .= '</div>';
+
+        return $string;
+    }
+}
+
 echo heading($this->title());
 
 echo $this->Form->open();
