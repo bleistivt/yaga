@@ -10,8 +10,7 @@ if (!$row) {
     $sql->insert('YagaAction', [
         'ActionID' => 1,
         'Name' => 'Promote',
-        'Description' => 'This post deserves to be featured on the best of page!',
-        'Tooltip' => 'Click me if this content should be featured.',
+        'Tooltip' => 'Click me if this content should be featured on the best of page!',
         'CssClass' => 'ReactPointUp',
         'AwardValue' => 5,
         'Permission' => 'Garden.Curation.Manage',
@@ -21,8 +20,7 @@ if (!$row) {
     $sql->insert('YagaAction', [
         'ActionID' => 2,
         'Name' => 'Insightful',
-        'Description' => 'This post brings new meaning to the discussion.',
-        'Tooltip' => 'Insightful',
+        'Tooltip' => 'This post brings new meaning to the discussion.',
         'CssClass' => 'ReactEye2',
         'AwardValue' => 1,
         'Permission' => 'Yaga.Reactions.Add',
@@ -31,8 +29,7 @@ if (!$row) {
     $sql->insert('YagaAction', [
         'ActionID' => 3,
         'Name' => 'Awesome',
-        'Description' => 'This post is made of pure win.',
-        'Tooltip' => 'Awesome',
+        'Tooltip' => 'This post is made of pure win.',
         'CssClass' => 'ReactHeart',
         'AwardValue' => 1,
         'Permission' => 'Yaga.Reactions.Add',
@@ -41,8 +38,7 @@ if (!$row) {
     $sql->insert('YagaAction', [
         'ActionID' => 4,
         'Name' => 'LOL',
-        'Description' => 'This post is funny.',
-        'Tooltip' => 'LOL',
+        'Tooltip' => 'This post is funny.',
         'CssClass' => 'ReactWink',
         'AwardValue' => 1,
         'Permission' => 'Yaga.Reactions.Add',
@@ -51,8 +47,7 @@ if (!$row) {
     $sql->insert('YagaAction', [
         'ActionID' => 5,
         'Name' => 'WTF',
-        'Description' => 'This post is all sorts of shocking.',
-        'Tooltip' => 'WTF',
+        'Tooltip' => 'This post is all sorts of shocking.',
         'CssClass' => 'ReactShocked',
         'AwardValue' => 1,
         'Permission' => 'Yaga.Reactions.Add',
@@ -61,8 +56,7 @@ if (!$row) {
     $sql->insert('YagaAction', [
         'ActionID' => 6,
         'Name' => 'Spam',
-        'Description' => 'This post is spam.',
-        'Tooltip' => 'Spam',
+        'Tooltip' => 'This post is spam.',
         'CssClass' => 'ReactWarning',
         'AwardValue' => -5,
         'Permission' => 'Garden.Curation.Manage',
