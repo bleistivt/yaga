@@ -8,6 +8,7 @@
     "hasLocale": true,
     "settingsUrl": "/yaga/settings",
     "settingsPermission": "Garden.Settings.Manage",
+    "usePopupSettings": false,
     "key": "yaga",
     "type": "addon",
     "priority": 10,
