@@ -28,8 +28,8 @@ if (!function_exists('renderReactionList')) {
             if (checkPermission($action->Permission)) {
                 $countString = ($showCount && $action->Count) ? $action->Count : '';
                 $actionsString .= anchor(
-                    wrap('&nbsp;', 'span', ['class' => 'ReactSprite React-'.$action->ActionID.' '.$action->CssClass]) .
-                    wrapIf($countString, 'span', ['class' => 'Count']) .
+                    renderYagaActionIcon($action, 'React').
+                    wrapIf($countString, 'span', ['class' => 'Count']).
                     wrap($action->Name, 'span', ['class' => 'ReactLabel']), 'react/'.$type.'/'.$id.'/'.$action->ActionID,
                     [
                         'class' => 'Hijack ReactButton',
@@ -73,7 +73,7 @@ if (!function_exists('renderReactionRecord')) {
                     $dateFormatter->formatDate($reaction->DateInserted, false, '%B %e, %Y')
                 );
                 $string = userPhoto($user, ['Size' => 'Small', 'title' => $dateTitle]);
-                $string .= '<span class="ReactSprite Reaction-'.$reaction->ActionID.' '.$reaction->CssClass.'"></span>';
+                $string .= renderYagaActionIcon($reaction, 'React');
                 $wrapttributes = ['class' => 'UserReactionWrap', 'data-userid' => $user->UserID, 'title' => $dateTitle];
                 $recordsString .= wrap($string, 'span', $wrapttributes);
             }
@@ -86,6 +86,31 @@ if (!function_exists('renderReactionRecord')) {
         return wrap($recordsString, 'div', ['class' => 'ReactionRecord']);
     }
 
+}
+
+if (!function_exists('renderYagaActionIcon')) {
+
+    /**
+     * Renders an action icon which may be an image or an emoji.
+     *
+     * @since 2.1
+     * @param object $url The action.
+     * @param string $id The class determining the display type (button vs avatar).
+     */
+    function renderYagaActionIcon($action, $class) {
+        $content = '';
+        $type = 'YagaReactSprite';
+
+        if ($action->Photo) {
+            $content = img($action->Photo, ['class' => 'YagaReactionImage']);
+            $type = 'YagaReactPhoto';
+        } elseif ($action->Emoji) {
+            $content = $action->Emoji;
+            $type = 'YagaReactEmoji';
+        }
+
+        return wrap($content, 'span', ['class' => $type.' '.$class.'-'.$action->ActionID.' '.$action->CssClass]);
+    }
 }
 
 if (!function_exists('renderYagaToggle')) {

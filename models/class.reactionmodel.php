@@ -83,12 +83,12 @@ class ReactionModel extends Gdn_Model {
         }
 
         $sql = "select a.*, "
-           ."(select count(r.ReactionID) "
-           ."from {$px}{$reactionTable} as r "
-           ."where r.ParentID = :ParentID and r.ParentType = :ParentType "
-           ."and r.ActionID = a.ActionID) as Count "
-           ."from {$px}{$actionTable} AS a "
-           ."order by a.Sort";
+            ."(select count(r.ReactionID) "
+            ."from {$px}{$reactionTable} as r "
+            ."where r.ParentID = :ParentID and r.ParentType = :ParentType "
+            ."and r.ActionID = a.ActionID) as Count "
+            ."from {$px}{$actionTable} AS a "
+            ."order by a.Sort";
 
         return $this->Database->query($sql, [':ParentID' => $id, ':ParentType' => $type])->result();
     }

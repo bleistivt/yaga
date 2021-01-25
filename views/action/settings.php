@@ -22,7 +22,7 @@ if (!function_exists('renderActionRow')) {
 
         $tr .= '<td>';
         $tr .= wrap(
-            wrap('&nbsp;', 'span', ['class' => 'ReactSprite React-'.$action->ActionID.' '.$action->CssClass])
+            renderYagaActionIcon($action, 'React')
                 .wrapIf(rand(1, 18), 'span', ['class' => 'Count'])
                 .wrap($action->Name, 'span', ['class' => 'ReactLabel']),
             'div',

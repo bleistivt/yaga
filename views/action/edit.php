@@ -9,6 +9,25 @@ if (property_exists($this, 'Action')) {
 
 $originalCssClass = $this->Form->getValue('CssClass');
 
+$icons = '';
+foreach ($this->data('Icons') as $icon) {
+    $class = 'React'.$icon;
+    $selected = '';
+    if ($originalCssClass == $class) {
+        $selected = 'Selected';
+    }
+    $icons .= img(
+        'plugins/yaga/design/images/action-icons/'.$icon.'.png',
+        ['title' => $icon, 'data-class' => $class, 'class' => $selected]
+    );
+}
+$icons = wrap($icons, 'div', ['id' => 'ActionIcons']);
+
+echo helpAsset(
+    Gdn::translate('Yaga.Action.IconHelpTitle'),
+    Gdn::translate('Yaga.Action.IconHelpContent').$icons
+);
+
 echo $this->Form->open(['enctype' => 'multipart/form-data', 'class' => 'Action']);
 echo $this->Form->errors();
 ?>
@@ -25,6 +44,7 @@ echo $this->Form->errors();
         <div class="label-wrap">
             <?php
             echo $this->Form->label('Photo', 'PhotoUpload');
+            echo wrap(Gdn::translate('Yaga.Action.PhotoDesc'), 'div', ['class' => 'info']);
             $photo = $this->Form->getValue('Photo');
             if ($photo) {
                 echo '<br />';
@@ -44,7 +64,10 @@ echo $this->Form->errors();
     </li>
     <li class="form-group">
         <div class="label-wrap">
-            <?php echo $this->Form->label('Emoji', 'Emoji'); ?>
+            <?php
+            echo $this->Form->label('Emoji', 'Emoji');
+            echo wrap(Gdn::translate('Yaga.Action.EmojiDesc'), 'div', ['class' => 'info']);
+            ?>
         </div>
         <div class="input-wrap">
             <?php echo $this->Form->textBox('Emoji'); ?>
@@ -66,29 +89,12 @@ echo $this->Form->errors();
             <?php echo $this->Form->textBox('AwardValue', ['type' => 'number']); ?>
         </div>
     </li>
-    <li class="form-group" id="ActionIcons">
-        <div class="label-wrap">
-            <?php echo $this->Form->label('Icon'); ?>
-        </div>
-        <div class="input-wrap">
-            <?php 
-            foreach ($this->data('Icons') as $icon) {
-                $class = 'React'.$icon;
-                $selected = '';
-                if ($originalCssClass == $class) {
-                    $selected = 'Selected';
-                }
-                echo img(
-                    'plugins/yaga/design/images/action-icons/'.$icon.'.png',
-                    ['title' => $icon, 'data-class' => $class, 'class' => $selected]
-                );
-            }
-            ?>
-        </div>
-    </li>
     <li class="form-group">
         <div class="label-wrap">
-            <?php echo $this->Form->label('Css Class', 'CssClass'); ?>
+            <?php
+            echo $this->Form->label('Css Class', 'CssClass');
+            echo wrap(Gdn::translate('Yaga.Action.CssDesc'), 'div', ['class' => 'info']);
+            ?>
         </div>
         <div class="input-wrap">
             <?php echo $this->Form->textBox('CssClass'); ?>

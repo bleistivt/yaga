@@ -26,10 +26,20 @@
     margin-right: 3px;
 }
 
-.UserReactionWrap .ReactSprite {
+.UserReactionWrap .PhotoWrapSmall {
+    height: 24px;
+    width: 24px;
+}
+
+.UserReactionWrap .YagaReactSprite,
+.UserReactionWrap .YagaReactPhoto,
+.UserReactionWrap .YagaReactEmoji {
     position: absolute;
     right: -2px;
     bottom: -2px;
+}
+
+.UserReactionWrap .YagaReactSprite {
     background-image: url('images/action-sprites-bordered.png');
 }
 
@@ -80,13 +90,14 @@
 }
 
 .Reactions .Count {
-    font-size: 8px;
     background: #555;
+    color: white;
     border-radius: 3px;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     margin-right: 4px;
     vertical-align: top;
+    padding: 1px 0.8ex;
 }
 .Item .Reactions > * {
     visibility: hidden;
@@ -100,7 +111,9 @@
     visibility: visible;
 }
 
-.Reactions > a.React > .ReactSprite {
+.Reactions > a.React > .YagaReactSprite,
+.Reactions > a.React > .YagaReactPhoto,
+.Reactions > a.React > .YagaReactEmoji {
     margin-right: 2px;
 }
 
@@ -110,22 +123,27 @@ only screen and (max-device-width: 480px) {
     .Item .Reactions > * { visibility: visible; }
 }
 
-/* Override default reactsprite styles from style.css to work with custom sheets */
-.ReactSprite {
+.YagaReactSprite, .YagaReactPhoto, .YagaReactEmoji {
     display: inline-block;
     width: 16px;
     height: 16px;
     margin-right: 4px;
-    line-height: 18px;
+    font-size: 16px;
     vertical-align: bottom;
-    background-image: url('images/action-sprites.png')!important;
+}
+
+.YagaReactPhoto > .YagaReactionImage {
+    max-width: 16px;
+    max-height: 16px;
+}
+
+.YagaReactSprite {
+    background-image: url('images/action-sprites.png');
     background-position: 16px 16px;
     background-repeat: no-repeat;
 }
-.ReactButton.Quote .ReactSprite.ReactQuote {
-    background-image: none!important;
-}
-input + .ReactSprite {
+
+input + .YagaReactSprite {
     vertical-align: middle;
 }
 
@@ -210,18 +228,16 @@ input + .ReactSprite {
 .ReactCheckmark { background-position: -340px -100px; }
 .ReactClose { background-position: -364px -100px; }
 
-/* Share icons need to be specified here to undo the override */
-.ReactFacebook { background-position: -29px -124px; }
-.ReactTwitter { background-position: -53px -124px; }
-.ReactGooglePlus { background-position: -77px -124px; }
-
-.ReactSprite.ReactFacebook, .ReactSprite.ReactTwitter, .ReactSprite.ReactGooglePlus {
-    background-image: url('../../dashboard/design/images/sprites-14-000000.png');
+.MenuItems a:hover .YagaReactSprite {
+    background-image: url('images/action-sprites-white.png');
 }
 
+#ActionIcons {
+    margin-top: 10px;
+}
 
-.MenuItems a:hover .ReactSprite {
-    background-image: url('images/action-sprites-white.png');
+#ActionIcons img.Selected {
+    background: rgba(0, 0, 0, .15);
 }
 
 #Content .BoxFilter.BoxBestFilter {

@@ -29,24 +29,18 @@ jQuery(document).ready(function ($) {
     });
 
     var formSetup = function () {
-        // Hide the advanced settings
-        $('#AdvancedActionSettings').children('div').hide();
-        $('#AdvancedActionSettings span').click(function () {
-            $(this).siblings().slideToggle();
-        });
-
         // If someone types in the class manually, deselect icons and select if needed
         $("input[name='CssClass']").on('input', function () {
             $('#ActionIcons img.Selected').removeClass('Selected');
 
             var FindCssClass = $(this).val();
             if (FindCssClass.length) {
-                $("#ActionIcons img[data-class='" + CurrentCssClass + "']").addClass('Selected');
+                $("#ActionIcons img[data-class='" + FindCssClass + "']").addClass('Selected');
             }
         });
 
         $('#ActionIcons img').click(function () {
-            var newCssClass = 'React' + $(this).attr('title');
+            var newCssClass = $(this).data('class');
             $("input[name='CssClass']").val(newCssClass);
             $('#ActionIcons img.Selected').removeClass('Selected');
             $(this).addClass('Selected');

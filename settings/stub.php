@@ -15,7 +15,6 @@ if (!$row) {
         'AwardValue' => 5,
         'Permission' => 'Garden.Curation.Manage',
         'Sort' => 0
-    
     ]);
     $sql->insert('YagaAction', [
         'ActionID' => 2,
