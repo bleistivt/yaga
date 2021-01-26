@@ -169,7 +169,10 @@ class YagaPlugin extends Gdn_Plugin {
             throw notFoundException();
         }
 
-        list($offset, $limit) = offsetLimit($page, Gdn::config('Yaga.ReactedContent.PerPage', 5));
+        list($offset, $limit) = offsetLimit(
+            $page,
+            Gdn::config('Yaga.ReactedContent.PerPage', Gdn::config('Yaga.BestContent.PerPage'))
+        );
         if (!is_numeric($offset) || $offset < 0) {
             $offset = 0;
         }
