@@ -27,7 +27,7 @@ $Definition['Tooltip'] = 'Tooltip';
 $Definition['Weeks'] = 'Wochen';
 $Definition['Yaga.Settings'] = 'Yaga Einstellungen';
 $Definition['Years'] = 'Jahre';
-$Definition['Yaga.MenuLinks.Show'] = 'Links zu Yaga-Übersichtsseiten im Hauptmenü zeigen.';
+$Definition['Yaga.MenuLinks.Show'] = 'Links zu Yaga-Übersichtsseiten im Hauptmenü zeigen';
 
 // Actions
 $Definition['Yaga.Action'] = 'Reaktion';

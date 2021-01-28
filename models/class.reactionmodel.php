@@ -307,7 +307,10 @@ class ReactionModel extends Gdn_Model {
         // Is this on a profile page (user context)?
         if ($inProfile) {
             $this->SQL->where('ParentAuthorID', $userID);
-        } else {
+        }
+
+        // Apply a threshold for all public aggregated "best of" pages.
+        if ($method === self::ITEMS_BEST_ALL || $method === self::ITEMS_BEST_RECENT) {
             $this->SQL->where('ParentScore >=', Gdn::config('Yaga.BestContent.Threshold'));
         }
 
