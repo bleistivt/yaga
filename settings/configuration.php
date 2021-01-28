@@ -16,6 +16,7 @@ $Configuration['Modules']['Yaga']['Panel'] = ['MeModule', 'UserBoxModule', 'Acti
 $Configuration['Modules']['Yaga']['Content'] = ['MessageModule', 'MeModule', 'UserBoxModule', 'ProfileOptionsModule', 'Notices', 'ActivityFilterModule', 'ProfileFilterModule', 'BestFilterModule', 'Content', 'Ads'];
 
 $Configuration['Yaga']['BestContent']['PerPage'] = 10; // Per page limit on the best of page
+$Configuration['Yaga']['BestContent']['Threshold'] = 5; // Minimum amount of points needed for display
 $Configuration['Yaga']['Ranks']['Photo'] = 'plugins/yaga/design/images/default_promotion.png'; // Default photo used for ranks activity items
 $Configuration['Yaga']['Badges']['DefaultPhoto'] = 'plugins/yaga/design/images/default_badge.png'; // Default photo used for badges pages
 $Configuration['Yaga']['Badges']['RecentAwards'] = 15; // How many recent badge awards should be displayed

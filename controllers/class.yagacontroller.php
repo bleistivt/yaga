@@ -82,6 +82,11 @@ class YagaController extends DashboardController {
                 'LabelCode' => 'Yaga.LeaderBoard.Max',
                 'Control' => 'Textbox',
                 'Options' => ['type' => 'number']
+            ],
+            'Yaga.BestContent.Threshold' => [
+                'LabelCode' => 'Yaga.BestContent.MinPoints',
+                'Control' => 'Textbox',
+                'Options' => ['type' => 'number']
             ]
         ]);
         $this->ConfigurationModule = $configModule;

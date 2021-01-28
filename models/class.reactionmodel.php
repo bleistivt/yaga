@@ -307,6 +307,8 @@ class ReactionModel extends Gdn_Model {
         // Is this on a profile page (user context)?
         if ($inProfile) {
             $this->SQL->where('ParentAuthorID', $userID);
+        } else {
+            $this->SQL->where('ParentScore >=', Gdn::config('Yaga.BestContent.Threshold'));
         }
 
         // Group by specific reaction or any reacton?

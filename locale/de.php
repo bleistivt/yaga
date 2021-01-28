@@ -93,6 +93,7 @@ $Definition['Yaga.BestContent'] = 'Bestenliste';
 $Definition['Yaga.BestContent.Action'] = 'Bester %s Inhalt';
 $Definition['Yaga.BestContent.AllTime'] = 'Bester Inhalt insgesamt';
 $Definition['Yaga.BestContent.Recent'] = 'Bester Inhalt kürzlich';
+$Definition['Yaga.BestContent.MinPoints'] = 'Mindestanzahl nötiger Punkte für Beiträge auf der Bestenliste';
 
 // Errors
 $Definition['Yaga.Error.AddFile'] = 'Datei konnte nicht hinzugefügt werden: %s';
