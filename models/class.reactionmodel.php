@@ -325,7 +325,9 @@ class ReactionModel extends Gdn_Model {
         if ($method === self::ITEMS_PROFILE_REACTION || $method === self::ITEMS_BEST_RECENT) {
             $this->SQL->orderBy('ParentDateInserted', 'desc');
         } else {
-            $this->SQL->orderBy('ParentScore', 'desc');
+            $this->SQL
+                ->orderBy('ParentScore', 'desc')
+                ->orderBy('ParentDateInserted', 'desc');
         }
 
         $records = $this->SQL
