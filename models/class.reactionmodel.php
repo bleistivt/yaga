@@ -627,4 +627,43 @@ class ReactionModel extends Gdn_Model {
         ];
     }
 
+    /**
+     * Add multi-dimensional reaction data to an array.
+     * Users should make sure that ReationModel::prefetch is called before fetching a large number of reactions.
+     *
+     * @param array|iterable $rows Results we need to associate user data with.
+     * @param array $columns Database columns containing IDs and types to get data for.
+     *    A value of ['ContentID', 'ItemType'] will use the second field for the type.
+     *    A value of ['CommentID'] will recognize "comment" as the type.
+     */
+    public function expandYagaReactions(&$rows, array $columns) {
+        if (count($rows) === 0 || count($columns) === 0) {
+            return;
+        }
+
+        reset($rows);
+        $single = !($rows instanceof Traversable) && is_string(key($rows));
+
+        $type = count($columns) === 1 ? strtolower(stringEndsWith($columns[0], 'ID', true, true)) : '';
+
+        if ($single) {
+            $rows['yagaReactions'] = [];
+            foreach($this->getRecord($rows[$columns[0]], $type ?: $rows[$columns[1]]) as $reaction) {
+                $reaction->InsertUserID = $reaction->UserID;
+                // UserModel::expandUsers requires an array.
+                $rows['yagaReactions'][] = (array)$reaction;
+            }
+            $this->userModel->expandUsers($row['yagaReactions'], ['InsertUserID']);
+        } else {
+            foreach ($rows as &$row) {
+                $row['yagaReactions'] = [];
+                foreach($this->getRecord($row[$columns[0]], $type ?: $row[$columns[1]]) as $reaction) {
+                    $reaction->InsertUserID = $reaction->UserID;
+                    $row['yagaReactions'][] = (array)$reaction;
+                }
+                $this->userModel->expandUsers($row['yagaReactions'], ['InsertUserID']);
+            }
+        }
+    }
+
 }
