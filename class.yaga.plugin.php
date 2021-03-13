@@ -184,11 +184,6 @@ class YagaPlugin extends Gdn_Plugin {
         $sender->getUserInfo($userReference, $username);
         $sender->setTabView(Gdn::translate('Yaga.Reactions'), 'reactions', 'profile', 'plugins/yaga');
 
-        $sender->addJsFile('jquery.expander.js');
-        $sender->addJsFile('reactions.js', 'plugins/yaga');
-        $sender->addDefinition('ExpandText', Gdn::translate('(more)'));
-        $sender->addDefinition('CollapseText', Gdn::translate('(less)'));
-
         $model = Gdn::getContainer()->get(ReactionModel::class);
         $data = $model->getBest($model::ITEMS_PROFILE_REACTION, $limit, $offset, $actionID, $sender->User->UserID);
 
@@ -251,11 +246,6 @@ class YagaPlugin extends Gdn_Plugin {
         $sender->getUserInfo($userReference, $username);
         $sender->_SetBreadcrumbs(Gdn::translate('Yaga.BestContent'), userUrl($sender->User, '', 'best'));
         $sender->setTabView(Gdn::translate('Yaga.BestContent'), 'best', 'profile', 'plugins/yaga');
-
-        $sender->addJsFile('jquery.expander.js');
-        $sender->addJsFile('reactions.js', 'plugins/yaga');
-        $sender->addDefinition('ExpandText', Gdn::translate('(more)'));
-        $sender->addDefinition('CollapseText', Gdn::translate('(less)'));
 
         $model = Gdn::getContainer()->get(ReactionModel::class);
         $data = $model->getBest($model::ITEMS_PROFILE_BEST, $limit, $offset, false, $sender->User->UserID);
