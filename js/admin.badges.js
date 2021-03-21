@@ -1,19 +1,17 @@
-/* Copyright 2013 Zachary Doll */
-
-jQuery(document).ready(function ($) {
+jQuery(($) => {
     // Poor mans cache
-    var Cache = {
+    const Cache = {
         data: {},
-        remove: function (key) {
+        remove(key) {
             delete Cache.data[key];
         },
-        exists: function (key) {
+        exists(key) {
             return Cache.data.hasOwnProperty(key) && Cache.data[key] !== null;
         },
-        get: function (key) {
+        get(key) {
             return Cache.data[key];
         },
-        set: function (key, cachedData) {
+        set(key, cachedData) {
             Cache.remove(key);
             Cache.data[key] = cachedData;
         }
@@ -31,20 +29,20 @@ jQuery(document).ready(function ($) {
         placeholder: 'Placeholder',
         opacity: .6,
         tolerance: 'pointer',
-        update: function () {
+        update() {
             $.post(
                 gdn.url('badge/sort.json'), {
                     'SortArray': $('#Badges tbody').sortable('toArray'),
                     'TransientKey': gdn.definition('TransientKey')
                 },
-                function (response) {
+                (response) => {
                     if (!response || !response.Result) {
                         alert("Oops - Didn't save order properly");
                     }
                 }
             );
         },
-        helper: function (e, ui) {
+        helper(e, ui) {
             // Preserve width of row
             ui.children().each(function () {
                 $(this).width($(this).width());
@@ -58,7 +56,7 @@ jQuery(document).ready(function ($) {
         $(this).attr('value', $(this).val());
     });
     $(document).on('blur', '#Rule-Criteria select', function () {
-        var currentValue = $(this).val();
+        const currentValue = $(this).val();
         $(this).children('option').each(function () {
             $(this).removeAttr('selected');
         });
@@ -70,16 +68,16 @@ jQuery(document).ready(function ($) {
     // This handles retrieving and displaying the different rule criteria forms
     $("form.Badge select[name='RuleClass']").focus(function () {
         // Save the current form to the current value's cache on focus
-        var Rule = $(this).val();
-        var RuleForm = $('#Rule-Criteria').html();
-        var RuleDesc = $('#Rule-Description').html();
+        const Rule = $(this).val();
+        const RuleForm = $('#Rule-Criteria').html();
+        const RuleDesc = $('#Rule-Description').html();
         Cache.set(Rule, {
             'Form': RuleForm,
             'Description': RuleDesc
         });
     }).change(function () {
         // Grab the form from cache or ajax on change
-        var NewRule = $(this).val();
+        const NewRule = $(this).val();
         if (Cache.exists(NewRule)) {
             $('#Rule-Criteria').fadeOut(function () {
                 $(this).html(Cache.get(NewRule).Form).fadeIn();
@@ -89,19 +87,19 @@ jQuery(document).ready(function ($) {
             });
         } else {
             // Grab the form via ajax
-            var url = gdn.url('/badge/rulecriteriaform/' + NewRule);
+            const url = gdn.url('/badge/rulecriteriaform/' + NewRule);
             $.ajax({
-                url: url,
+                url,
                 global: false,
                 type: 'GET',
                 data: {
                     'DeliveryMethod': 'JSON'
                 },
                 dataType: 'json',
-                success: function (data) {
+                success({CriteriaForm, Description}) {
                     Cache.set(NewRule, {
-                        'Form': data.CriteriaForm,
-                        'Description': data.Description
+                        'Form': CriteriaForm,
+                        'Description': Description
                     });
                     $('#Rule-Criteria').fadeOut(function () {
                         $(this).html(Cache.get(NewRule).Form).fadeIn();
@@ -110,7 +108,7 @@ jQuery(document).ready(function ($) {
                         $(this).html(Cache.get(NewRule).Description).fadeIn();
                     });
                 },
-                error: function (jqXHR) {
+                error(jqXHR) {
                     gdn.informError(jqXHR);
                 }
             });

@@ -1,6 +1,4 @@
-/* Copyright 2013 Zachary Doll */
-
-jQuery(document).ready(function ($) {
+jQuery(($) => {
     $('#Actions tbody').sortable({
         axis: 'y',
         containment: 'parent',
@@ -13,13 +11,13 @@ jQuery(document).ready(function ($) {
         placeholder: 'Placeholder',
         opacity: .6,
         tolerance: 'pointer',
-        update: function () {
+        update() {
             $.post(
                 gdn.url('action/sort.json'), {
                     'SortArray': $('#Actions tbody').sortable('toArray'),
                     'TransientKey': gdn.definition('TransientKey')
                 },
-                function (response) {
+                (response) => {
                     if (!response || !response.Result) {
                         alert("Oops - Didn't save order properly");
                     }
@@ -28,26 +26,26 @@ jQuery(document).ready(function ($) {
         }
     });
 
-    var formSetup = function () {
+    const formSetup = () => {
         // If someone types in the class manually, deselect icons and select if needed
         $("input[name='CssClass']").on('input', function () {
             $('#ActionIcons img.Selected').removeClass('Selected');
 
-            var FindCssClass = $(this).val();
+            const FindCssClass = $(this).val();
             if (FindCssClass.length) {
                 $("#ActionIcons img[data-class='" + FindCssClass + "']").addClass('Selected');
             }
         });
 
         $('#ActionIcons img').click(function () {
-            var newCssClass = $(this).data('class');
+            const newCssClass = $(this).data('class');
             $("input[name='CssClass']").val(newCssClass);
             $('#ActionIcons img.Selected').removeClass('Selected');
             $(this).addClass('Selected');
         });
 
-        var DeleteForm = $("form#DeleteAction");
-        var OtherAction = DeleteForm.find('#ReplacementAction');
+        const DeleteForm = $("form#DeleteAction");
+        const OtherAction = DeleteForm.find('#ReplacementAction');
         OtherAction.css('opacity', '0.5');
         gdn.disable(OtherAction);
 

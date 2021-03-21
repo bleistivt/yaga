@@ -1,6 +1,4 @@
-/* Copyright 2013 Zachary Doll */
-
-jQuery(document).ready(function ($) {
+jQuery(($) => {
     $('#Ranks tbody').sortable({
         axis: 'y',
         containment: 'parent',
@@ -13,21 +11,21 @@ jQuery(document).ready(function ($) {
         placeholder: 'Placeholder',
         opacity: .6,
         tolerance: 'pointer',
-        update: function () {
+        update() {
             // Save the current sort method
             $.post(
                 gdn.url('rank/sort.json'), {
                     'SortArray': $('#Ranks tbody').sortable('toArray'),
                     'TransientKey': gdn.definition('TransientKey')
                 },
-                function (response) {
+                (response) => {
                     if (!response || !response.Result) {
                         alert("Oops - Didn't save order properly");
                     }
                 }
             );
         },
-        helper: function (e, ui) {
+        helper(e, ui) {
             // Preserve width of row
             ui.children().each(function () {
                 $(this).width($(this).width());
