@@ -14,32 +14,48 @@ $database = Gdn::database();
 $sql = $database->sql(); // To run queries.
 $construct = $database->structure(); // To modify and add database tables.
 $px = $database->DatabasePrefix;
+$duplicateTableMessage = 'Please check both the %s and %s tables. Delete the one which does NOT contain your data.';
 
 // Rename Reaction, Action, Badge, BadgeAward & Rank
 
 $construct->table('Reaction');
 // Differentiate between GDN_reaction (lowercase) and GDN_Reaction on case insensitive systems.
 if ($construct->tableExists() && $construct->columnExists('ActionID')) {
+    if ($construct->tableExists('YagaReaction')) {
+        throw new Gdn_UserException(sprintf($duplicateTableMessage, $px.'Reaction', $px.'YagaReaction'));
+    }
     $construct->renameTable($px.'Reaction', $px.'YagaReaction', false);
 }
 
 $construct->table('Action');
 if ($construct->tableExists()) {
+    if ($construct->tableExists('YagaAction')) {
+        throw new Gdn_UserException(sprintf($duplicateTableMessage, $px.'Action', $px.'YagaAction'));
+    }
     $construct->renameTable($px.'Action', $px.'YagaAction', false);
 }
 
 $construct->table('Badge');
 if ($construct->tableExists()) {
+    if ($construct->tableExists('YagaBadge')) {
+        throw new Gdn_UserException(sprintf($duplicateTableMessage, $px.'Badge', $px.'YagaBadge'));
+    }
     $construct->renameTable($px.'Badge', $px.'YagaBadge', false);
 }
 
 $construct->table('BadgeAward');
 if ($construct->tableExists()) {
+    if ($construct->tableExists('YagaBadgeAward')) {
+        throw new Gdn_UserException(sprintf($duplicateTableMessage, $px.'BadgeAward', $px.'YagaBadgeAward'));
+    }
     $construct->renameTable($px.'BadgeAward', $px.'YagaBadgeAward', false);
 }
 
 $construct->table('Rank');
 if ($construct->tableExists()) {
+    if ($construct->tableExists('YagaRank')) {
+        throw new Gdn_UserException(sprintf($duplicateTableMessage, $px.'Rank', $px.'YagaRank'));
+    }
     $construct->renameTable($px.'Rank', $px.'YagaRank', false);
 }
 
