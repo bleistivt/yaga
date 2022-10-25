@@ -300,6 +300,9 @@ class ReactionModel extends Gdn_Model {
         $permissions = $session->getPermissionsArray()['Vanilla.Discussions.View'] ?? [0];
         $inProfile = $method === self::ITEMS_PROFILE_REACTION || $method === self::ITEMS_PROFILE_BEST;
 
+        // Add the global junction ID.
+        $permissions = array_merge($permissions, [-1]);
+
         $this->SQL
             ->from($this->Name)
             ->whereIn('ParentPermissionCategoryID', $permissions);
