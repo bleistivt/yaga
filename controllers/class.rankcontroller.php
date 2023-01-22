@@ -28,10 +28,7 @@ class RankController extends DashboardController
     {
         parent::initialize();
         $this->Application = "Yaga";
-        Gdn_Theme::section("Dashboard");
-        if ($this->Menu) {
-            $this->Menu->highlightRoute("/rank");
-        }
+        Gdn_Theme::section("Settings");
         $this->addJsFile("jquery-ui-1.10.0.custom.min.js");
         $this->addJsFile("admin.ranks.js");
         $this->removeCssFile("magnific-popup.css");

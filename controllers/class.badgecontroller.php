@@ -42,10 +42,7 @@ class BadgeController extends DashboardController
     {
         parent::initialize();
         $this->Application = "Yaga";
-        Gdn_Theme::section("Dashboard");
-        if ($this->Menu) {
-            $this->Menu->highlightRoute("/badge");
-        }
+        Gdn_Theme::section("Settings");
         $this->addJsFile("jquery-ui-1.10.0.custom.min.js");
         $this->addJsFile("admin.badges.js");
         $this->addCssFile("badges.css");

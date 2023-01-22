@@ -35,10 +35,7 @@ class YagaController extends DashboardController
         parent::initialize();
         $this->Application = "Yaga";
         $this->ApplicationFolder = "yaga";
-        Gdn_Theme::section("Dashboard");
-        if ($this->Menu) {
-            $this->Menu->highlightRoute("/yaga");
-        }
+        Gdn_Theme::section("Settings");
         $this->setHighlightRoute("yaga/settings");
 
         $this->addCssFile("yaga.css", "plugins/yaga");

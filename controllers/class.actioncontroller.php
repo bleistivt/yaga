@@ -113,10 +113,7 @@ class ActionController extends DashboardController
     {
         parent::initialize();
         $this->Application = "Yaga";
-        Gdn_Theme::section("Dashboard");
-        if ($this->Menu) {
-            $this->Menu->highlightRoute("/action");
-        }
+        Gdn_Theme::section("Settings");
         $this->addJsFile("jquery-ui-1.10.0.custom.min.js");
         $this->addJsFile("admin.actions.js");
         $this->addCssFile("reactions.css");

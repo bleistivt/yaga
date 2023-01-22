@@ -6,6 +6,6 @@
     "prettier": "^2.8.3"
   },
   "scripts": {
-    "format": "prettier -w */**"
+    "format": "prettier -w * */**"
   }
 }
