@@ -1,4 +1,6 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined("APPLICATION")) {
+    exit();
+}
 
 /**
  * This rule awards badges based on a user's sign in date
@@ -7,54 +9,66 @@
  * @since 1.0
  * @package Yaga
  */
-class HolidayVisit implements YagaRule {
-
-    public function award($sender, $user, $criteria) {
+class HolidayVisit implements YagaRule
+{
+    public function award($sender, $user, $criteria)
+    {
         // Determine if today is the target day
-        $month = date('n');
-        $day = date('j');
+        $month = date("n");
+        $day = date("j");
 
         return $criteria->Month == $month && $criteria->Day == $day;
     }
 
-    public function form($form) {
+    public function form($form)
+    {
         $months = [];
         $days = [];
         for ($i = 1; $i <= 12; $i++) {
-            $months[$i] = date('F', mktime(0,0,0,$i));
+            $months[$i] = date("F", mktime(0, 0, 0, $i));
         }
         for ($i = 1; $i <= 31; $i++) {
             $days[$i] = $i;
         }
 
-        $string = $form->label('Yaga.Rules.HolidayVisit.Criteria.Head', 'HolidayVisit');
-        $string .= $form->dropDown('Month', $months);
-        $string .= $form->dropDown('Day', $days);
+        $string = $form->label(
+            "Yaga.Rules.HolidayVisit.Criteria.Head",
+            "HolidayVisit"
+        );
+        $string .= $form->dropDown("Month", $months);
+        $string .= $form->dropDown("Day", $days);
         return $string;
     }
 
-    public function validate($criteria, $form) {
+    public function validate($criteria, $form)
+    {
         $validation = new Gdn_Validation();
-        $validation->applyRule('Month', ['Required', 'Integer']);
-        $validation->applyRule('Day', ['Required', 'Integer']);
+        $validation->applyRule("Month", ["Required", "Integer"]);
+        $validation->applyRule("Day", ["Required", "Integer"]);
         $validation->validate($criteria);
         $form->setValidationResults($validation->results());
     }
 
-    public function hooks() {
-        return ['gdn_dispatcher_appStartup'];
+    public function hooks()
+    {
+        return ["gdn_dispatcher_appStartup"];
     }
 
-    public function description() {
-        $description = Gdn::translate('Yaga.Rules.HolidayVisit.Desc');
-        return wrap($description, 'div', ['class' => 'alert alert-info padded']);
+    public function description()
+    {
+        $description = Gdn::translate("Yaga.Rules.HolidayVisit.Desc");
+        return wrap($description, "div", [
+            "class" => "alert alert-info padded",
+        ]);
     }
 
-    public function name() {
-        return Gdn::translate('Yaga.Rules.HolidayVisit');
+    public function name()
+    {
+        return Gdn::translate("Yaga.Rules.HolidayVisit");
     }
 
-    public function interacts() {
+    public function interacts()
+    {
         return false;
     }
 }

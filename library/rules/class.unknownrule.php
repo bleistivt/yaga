@@ -1,4 +1,6 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined("APPLICATION")) {
+    exit();
+}
 
 /**
  * This rule is selected if the rule class saved in the database is no longer
@@ -8,34 +10,41 @@
  * @since 1.1
  * @package Yaga
  */
-class UnknownRule implements YagaRule {
-
-    public function award($sender, $user, $criteria) {
+class UnknownRule implements YagaRule
+{
+    public function award($sender, $user, $criteria)
+    {
         return false;
     }
 
-    public function form($form) {
-        return '';
+    public function form($form)
+    {
+        return "";
     }
 
-    public function validate($criteria, $form) {
+    public function validate($criteria, $form)
+    {
         return;
     }
 
-    public function hooks() {
+    public function hooks()
+    {
         return [];
     }
 
-    public function description() {
-        $description = Gdn::translate('Yaga.Rules.UnknownRule.Desc');
-        return wrap($description, 'div', ['class' => 'AlertMessage']);
+    public function description()
+    {
+        $description = Gdn::translate("Yaga.Rules.UnknownRule.Desc");
+        return wrap($description, "div", ["class" => "AlertMessage"]);
     }
 
-    public function name() {
-        return Gdn::translate('Yaga.Rules.UnknownRule');
+    public function name()
+    {
+        return Gdn::translate("Yaga.Rules.UnknownRule");
     }
 
-    public function interacts() {
+    public function interacts()
+    {
         return false;
     }
 }

@@ -1,4 +1,6 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined("APPLICATION")) {
+    exit();
+}
 
 /* Copyright 2014 Zachary Doll */
 
@@ -8,14 +10,15 @@
  * @package Yaga
  * @since 1.0
  */
-class BestFilterModule extends Gdn_Module {
-
+class BestFilterModule extends Gdn_Module
+{
     /**
      * Load up the action list.
-     * 
+     *
      * @param string $sender
      */
-    public function __construct($sender = '') {
+    public function __construct($sender = "")
+    {
         parent::__construct($sender);
 
         if ($sender) {
@@ -33,20 +36,21 @@ class BestFilterModule extends Gdn_Module {
 
     /**
      * Specifies the asset this module should be rendered to.
-     * 
+     *
      * @return string
      */
-    public function assetTarget() {
-        return 'Content';
+    public function assetTarget()
+    {
+        return "Content";
     }
 
     /**
      * Renders an action list.
-     * 
+     *
      * @return string
      */
-    public function toString() {
+    public function toString()
+    {
         return parent::toString();
     }
-
 }

@@ -10,19 +10,24 @@ use Yaga\Models\YagaActionFragmentSchema;
 /**
  * Schema to validate the shape of YAGA reactions records.
  */
-class YagaReactionsFragmentSchema extends Schema {
-
+class YagaReactionsFragmentSchema extends Schema
+{
     /**
      * Override constructor to initialize schema.
      */
-    public function __construct() {
-        parent::__construct($this->parseInternal([
-            ':a' => YagaActionFragmentSchema::instance()->merge(Schema::parse([
-                'insertUserID:i' => 'The user giving the reaction',
-                'insertUser' => UserFragmentSchema::instance(),
-                'dateInserted:dt' => 'The date the reaction was given'
-            ]))
-        ]));
+    public function __construct()
+    {
+        parent::__construct(
+            $this->parseInternal([
+                ":a" => YagaActionFragmentSchema::instance()->merge(
+                    Schema::parse([
+                        "insertUserID:i" => "The user giving the reaction",
+                        "insertUser" => UserFragmentSchema::instance(),
+                        "dateInserted:dt" => "The date the reaction was given",
+                    ])
+                ),
+            ])
+        );
     }
 
     /** @var YagaReactionsFragmentSchema */
@@ -31,12 +36,15 @@ class YagaReactionsFragmentSchema extends Schema {
     /**
      * @return YagaReactionsFragmentSchema
      */
-    public static function instance(): YagaReactionsFragmentSchema {
+    public static function instance(): YagaReactionsFragmentSchema
+    {
         if (self::$cache === null) {
-            self::$cache = SchemaFactory::get(self::class, 'YagaReactionsFragment');
+            self::$cache = SchemaFactory::get(
+                self::class,
+                "YagaReactionsFragment"
+            );
         }
 
         return self::$cache;
     }
-
 }

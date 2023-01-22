@@ -1,4 +1,6 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined("APPLICATION")) {
+    exit();
+}
 
 /**
  * Describes the functions required to create a new rule for badges in Yaga.
@@ -7,7 +9,8 @@
  * @since 1.0
  * @package Yaga
  */
-interface YagaRule {
+interface YagaRule
+{
     /**
      * This performs the grunt work of an award rule. Given an expected criteria,
      * it determines if a specific user meets muster.
@@ -25,7 +28,7 @@ interface YagaRule {
 
     /**
      * This determines what hook(s) the rule should be checked on.
-     * 
+     *
      * @since 1.0
      * @return array The hook name(s) in lower case to fire our calculations on
      */
@@ -67,9 +70,9 @@ interface YagaRule {
 
     /**
      * Returns a bool representing whether the Award function can award a user
-     * other than the calling user. Rules that depend on interaction should return 
+     * other than the calling user. Rules that depend on interaction should return
      * true.
-     * 
+     *
      * @since 1.0
      * @return bool Whether or not interactions need to be checked
      */

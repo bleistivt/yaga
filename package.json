@@ -1,0 +1,11 @@
+{
+  "name": "yaga",
+  "private": true,
+  "devDependencies": {
+    "@prettier/plugin-php": "^0.18.4",
+    "prettier": "^2.8.3"
+  },
+  "scripts": {
+    "format": "prettier -w */**"
+  }
+}

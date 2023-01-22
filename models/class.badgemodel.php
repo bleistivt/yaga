@@ -1,4 +1,6 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined("APPLICATION")) {
+    exit();
+}
 
 use Garden\EventManager;
 
@@ -13,8 +15,8 @@ use Garden\EventManager;
  * @since 1.0
  */
 
-class BadgeModel extends Gdn_Model {
-
+class BadgeModel extends Gdn_Model
+{
     /**
      * Used as a cache
      * @var DataSet
@@ -23,7 +25,7 @@ class BadgeModel extends Gdn_Model {
 
     /**
      * Memory cache for getInteractionRules()
-     * 
+     *
      * @var interactionRulesCache
      */
     private $_interactionRulesCache = null;
@@ -34,9 +36,10 @@ class BadgeModel extends Gdn_Model {
     /**
      * Defines the related database table name.
      */
-    public function __construct(EventManager $eventManager) {
-        parent::__construct('YagaBadge');
-        $this->PrimaryKey = 'BadgeID';
+    public function __construct(EventManager $eventManager)
+    {
+        parent::__construct("YagaBadge");
+        $this->PrimaryKey = "BadgeID";
 
         $this->eventManager = $eventManager;
     }
@@ -46,9 +49,24 @@ class BadgeModel extends Gdn_Model {
      *
      * @return Gdn_DataSet
      */
-    public function get($orderFields = '', $orderDirection = 'asc', $limit = false, $pageNumber = false) {
-        if ($orderFields !== '' || $orderDirection !== 'asc' || $limit !== false || $pageNumber !== false) {
-            return parent::get($orderFields, $orderDirection, $limit, $pageNumber);
+    public function get(
+        $orderFields = "",
+        $orderDirection = "asc",
+        $limit = false,
+        $pageNumber = false
+    ) {
+        if (
+            $orderFields !== "" ||
+            $orderDirection !== "asc" ||
+            $limit !== false ||
+            $pageNumber !== false
+        ) {
+            return parent::get(
+                $orderFields,
+                $orderDirection,
+                $limit,
+                $pageNumber
+            );
         }
 
         // Cache any get() call with default arguments.
@@ -56,7 +74,7 @@ class BadgeModel extends Gdn_Model {
             $this->_badges = $this->SQL
                 ->select()
                 ->from($this->Name)
-                ->orderBy('Sort')
+                ->orderBy("Sort")
                 ->get()
                 ->result();
         }
@@ -70,16 +88,14 @@ class BadgeModel extends Gdn_Model {
      * @param int $badgeID
      * @param bool $enable
      */
-    public function enable($badgeID, $enable) {
-        $enable = (!$enable) ? 0 : 1;
-        $this->update(
-            ['Enabled' => $enable],
-            ['BadgeID' => $badgeID]
-        );
+    public function enable($badgeID, $enable)
+    {
+        $enable = !$enable ? 0 : 1;
+        $this->update(["Enabled" => $enable], ["BadgeID" => $badgeID]);
 
-        $this->EventArguments['BadgeID'] = $badgeID;
-        $this->EventArguments['Enable'] = (bool)$enable;
-        $this->fireEvent('BadgeEnable');
+        $this->EventArguments["BadgeID"] = $badgeID;
+        $this->EventArguments["Enable"] = (bool) $enable;
+        $this->fireEvent("BadgeEnable");
     }
 
     /**
@@ -89,7 +105,8 @@ class BadgeModel extends Gdn_Model {
      * @throws Exception
      * @return boolean
      */
-    public function deleteID($badgeID, $options = []) {
+    public function deleteID($badgeID, $options = [])
+    {
         $badge = $this->getID($badgeID);
         if (empty($badge)) {
             return false;
@@ -104,27 +121,31 @@ class BadgeModel extends Gdn_Model {
 
             // Find the affected users
             $userIDSet = $badgeAwardModel
-                ->getWhere(['BadgeID' => $badgeID])
+                ->getWhere(["BadgeID" => $badgeID])
                 ->resultArray();
 
-            $userIDs = array_column($userIDSet, 'UserID');
+            $userIDs = array_column($userIDSet, "UserID");
 
             // Decrement their badge count
             $this->SQL
-                ->update('User')
-                ->set('CountBadges', 'CountBadges - 1', false)
-                ->where('UserID', $userIDs)
+                ->update("User")
+                ->set("CountBadges", "CountBadges - 1", false)
+                ->where("UserID", $userIDs)
                 ->put();
 
             // Remove their points
             foreach ($userIDs as $userID) {
-                UserModel::givePoints($userID, -1 * $badge->AwardValue, 'Badge');
+                UserModel::givePoints(
+                    $userID,
+                    -1 * $badge->AwardValue,
+                    "Badge"
+                );
             }
             // Remove the award rows
-            $badgeAwardModel->delete(['BadgeID' => $badgeID]);
+            $badgeAwardModel->delete(["BadgeID" => $badgeID]);
 
             $this->Database->commitTransaction();
-        } catch(Exception $ex) {
+        } catch (Exception $ex) {
             $this->Database->rollbackTransaction();
             throw $ex;
         }
@@ -139,11 +160,12 @@ class BadgeModel extends Gdn_Model {
      * @param array $sortArray
      * @return boolean
      */
-    public function saveSort($sortArray) {
+    public function saveSort($sortArray)
+    {
         foreach ($sortArray as $index => $badge) {
             // remove the 'BadgeID_' prefix
             $badgeID = substr($badge, 8);
-            $this->setField($badgeID, 'Sort', $index);
+            $this->setField($badgeID, "Sort", $index);
         }
         return true;
     }
@@ -156,31 +178,43 @@ class BadgeModel extends Gdn_Model {
      * @return array Rules that are currently available to use. The class names
      * are keys and the friendly names are values.
      */
-    public function getRules() {
-        $rules = Gdn::cache()->get('Yaga.Badges.Rules');
+    public function getRules()
+    {
+        $rules = Gdn::cache()->get("Yaga.Badges.Rules");
 
         // rule files must always be loaded
-        foreach (glob(PATH_PLUGINS.'/yaga/library/rules/*.php') as $filename) {
+        foreach (
+            glob(PATH_PLUGINS . "/yaga/library/rules/*.php")
+            as $filename
+        ) {
             include_once $filename;
         }
 
         if ($rules === Gdn_Cache::CACHEOP_FAILURE) {
             $tempRules = [];
             foreach (get_declared_classes() as $className) {
-                if (in_array('YagaRule', class_implements($className))) {
+                if (in_array("YagaRule", class_implements($className))) {
                     $rule = new $className();
                     $tempRules[$className] = $rule->name();
                 }
             }
 
-            $tempRules = $this->eventManager->fireFilter('yaga_getRules', $tempRules);
+            $tempRules = $this->eventManager->fireFilter(
+                "yaga_getRules",
+                $tempRules
+            );
 
-            $this->EventArguments['Rules'] = &$tempRules;
-            $this->fireAs('Yaga')->fireEvent('AfterGetRules');
+            $this->EventArguments["Rules"] = &$tempRules;
+            $this->fireAs("Yaga")->fireEvent("AfterGetRules");
 
             asort($tempRules);
             $rules = dbencode(empty($tempRules) ? false : $tempRules);
-            Gdn::cache()->store('Yaga.Badges.Rules', $rules, [Gdn_Cache::FEATURE_EXPIRY => Gdn::config('Yaga.Rules.CacheExpire', 86400)]);
+            Gdn::cache()->store("Yaga.Badges.Rules", $rules, [
+                Gdn_Cache::FEATURE_EXPIRY => Gdn::config(
+                    "Yaga.Rules.CacheExpire",
+                    86400
+                ),
+            ]);
         }
 
         return dbdecode($rules);
@@ -191,7 +225,8 @@ class BadgeModel extends Gdn_Model {
      *
      * @return YagaRule
      */
-    public function createRule($class) {
+    public function createRule($class)
+    {
         if (class_exists($class)) {
             return new $class();
         } else {
@@ -206,9 +241,10 @@ class BadgeModel extends Gdn_Model {
      *
      * @return array Rules that are currently available to use that are interactive.
      */
-    public function getInteractionRules() {
+    public function getInteractionRules()
+    {
         if ($this->_interactionRulesCache === null) {
-            $rules = Gdn::cache()->get('Yaga.Badges.InteractionRules');
+            $rules = Gdn::cache()->get("Yaga.Badges.InteractionRules");
             if ($rules === Gdn_Cache::CACHEOP_FAILURE) {
                 $allRules = $this->getRules();
 
@@ -220,13 +256,17 @@ class BadgeModel extends Gdn_Model {
                     }
                 }
                 $rules = dbencode(empty($tempRules) ? false : $tempRules);
-                Gdn::cache()->store('Yaga.Badges.InteractionRules', $rules, [Gdn_Cache::FEATURE_EXPIRY => Gdn::config('Yaga.Rules.CacheExpire', 86400)]);
+                Gdn::cache()->store("Yaga.Badges.InteractionRules", $rules, [
+                    Gdn_Cache::FEATURE_EXPIRY => Gdn::config(
+                        "Yaga.Rules.CacheExpire",
+                        86400
+                    ),
+                ]);
             }
 
             $this->_interactionRulesCache = dbdecode($rules);
         }
-        
+
         return $this->_interactionRulesCache;
     }
-
 }

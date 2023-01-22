@@ -1,4 +1,6 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined("APPLICATION")) {
+    exit();
+}
 
 /**
  * This rule awards badges if a comment is placed on a discussion within a short amount of time
@@ -7,18 +9,19 @@
  * @since 1.0
  * @package Yaga
  */
-class ReflexComment implements YagaRule {
+class ReflexComment implements YagaRule
+{
+    public function award($sender, $user, $criteria)
+    {
+        $discussion = $sender->EventArguments["Discussion"];
+        $comment = $sender->EventArguments["Comment"];
 
-    public function award($sender, $user, $criteria) {
-        $discussion = $sender->EventArguments['Discussion'];
-	$comment = $sender->EventArguments['Comment'];
-
-	// Don't award a user for commenting on their own discussion
+        // Don't award a user for commenting on their own discussion
         if ($discussion->InsertUserID == $user->UserID) {
-	    return false;
-	}
-	$discussionDate = strtotime($discussion->DateInserted);
-        $commentDate = strtotime($comment['DateInserted']);
+            return false;
+        }
+        $discussionDate = strtotime($discussion->DateInserted);
+        $commentDate = strtotime($comment["DateInserted"]);
 
         $difference = $commentDate - $discussionDate;
 
@@ -29,34 +32,45 @@ class ReflexComment implements YagaRule {
         }
     }
 
-    public function form($form) {
-        $string = $form->label('Yaga.Rules.ReflexComment.Criteria.Head', 'ReflexComment');
-        $string .= $form->textbox('Seconds');
+    public function form($form)
+    {
+        $string = $form->label(
+            "Yaga.Rules.ReflexComment.Criteria.Head",
+            "ReflexComment"
+        );
+        $string .= $form->textbox("Seconds");
 
         return $string;
     }
 
-    public function validate($criteria, $form) {
+    public function validate($criteria, $form)
+    {
         $validation = new Gdn_Validation();
-        $validation->applyRule('Seconds', ['Required', 'Integer']);
+        $validation->applyRule("Seconds", ["Required", "Integer"]);
         $validation->validate($criteria);
         $form->setValidationResults($validation->results());
     }
 
-    public function hooks() {
-        return ['commentModel_beforeNotification'];
+    public function hooks()
+    {
+        return ["commentModel_beforeNotification"];
     }
 
-    public function description() {
-        $description = Gdn::translate('Yaga.Rules.ReflexComment.Desc');
-        return wrap($description, 'div', ['class' => 'alert alert-info padded']);
+    public function description()
+    {
+        $description = Gdn::translate("Yaga.Rules.ReflexComment.Desc");
+        return wrap($description, "div", [
+            "class" => "alert alert-info padded",
+        ]);
     }
 
-    public function name() {
-        return Gdn::translate('Yaga.Rules.ReflexComment');
+    public function name()
+    {
+        return Gdn::translate("Yaga.Rules.ReflexComment");
     }
 
-    public function interacts() {
+    public function interacts()
+    {
         return false;
     }
 }

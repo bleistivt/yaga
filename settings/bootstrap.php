@@ -1,15 +1,17 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined("APPLICATION")) {
+    exit();
+}
 
 Gdn::getContainer()
     ->rule(ActionModel::class)
-        ->setShared(true)
+    ->setShared(true)
     ->rule(ReactionModel::class)
-        ->setShared(true)
+    ->setShared(true)
     ->rule(BadgeModel::class)
-        ->setShared(true)
+    ->setShared(true)
     ->rule(BadgeAwardModel::class)
-        ->setShared(true)
+    ->setShared(true)
     ->rule(RankModel::class)
-        ->setShared(true);
+    ->setShared(true);
 
-require_once(PATH_PLUGINS.'/yaga/library/functions.render.php');
+require_once PATH_PLUGINS . "/yaga/library/functions.render.php";

@@ -1,4 +1,6 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined("APPLICATION")) {
+    exit();
+}
 
 /* Copyright 2013 Zachary Doll */
 
@@ -8,8 +10,8 @@
  * @package Yaga
  * @since 1.0
  */
-class LeaderBoardModule extends Gdn_Module {
-
+class LeaderBoardModule extends Gdn_Module
+{
     /**
      * Holds the title of the module.
      *
@@ -23,15 +25,16 @@ class LeaderBoardModule extends Gdn_Module {
      * @var string Valid options are 'a': All Time, 'w': Weekly, 'm':
      * Monthly, 'y': Yearly
      */
-    public $slotType = 'a';
+    public $slotType = "a";
 
     /**
      * Specifies the asset this module should be rendered to.
      *
      * @return string
      */
-    public function assetTarget() {
-        return 'Panel';
+    public function assetTarget()
+    {
+        return "Panel";
     }
 
     /**
@@ -39,8 +42,9 @@ class LeaderBoardModule extends Gdn_Module {
      *
      * @param object $sender
      */
-    public function __construct($sender = '') {
-        parent::__construct($sender, 'plugins/yaga');
+    public function __construct($sender = "")
+    {
+        parent::__construct($sender, "plugins/yaga");
     }
 
     /**
@@ -49,46 +53,51 @@ class LeaderBoardModule extends Gdn_Module {
      * @param string $slotType Valid options are 'a': All Time, 'w': Weekly, 'm':
      * Monthly, 'y': Yearly
      */
-    public function setSlotType($slotType) {
+    public function setSlotType($slotType)
+    {
         $this->slotType = $slotType;
     }
 
     /**
      * Fetch necessary data for the selected slot type.
      */
-    public function getData() {
-        switch(strtolower($this->slotType)) {
-            case 'w':
-                $this->Title = Gdn::translate('Yaga.LeaderBoard.Week');
-                $slot = 'w';
+    public function getData()
+    {
+        switch (strtolower($this->slotType)) {
+            case "w":
+                $this->Title = Gdn::translate("Yaga.LeaderBoard.Week");
+                $slot = "w";
                 break;
-            case 'm':
-                $this->Title = Gdn::translate('Yaga.LeaderBoard.Month');
-                $slot = 'm';
+            case "m":
+                $this->Title = Gdn::translate("Yaga.LeaderBoard.Month");
+                $slot = "m";
                 break;
-            case 'y':
-                $this->Title = Gdn::translate('Yaga.LeaderBoard.Year');
-                $slot = 'y';
+            case "y":
+                $this->Title = Gdn::translate("Yaga.LeaderBoard.Year");
+                $slot = "y";
                 break;
             default:
-            case 'a':
-                $this->Title = Gdn::translate('Yaga.LeaderBoard.AllTime');
-                $slot = 'a';
+            case "a":
+                $this->Title = Gdn::translate("Yaga.LeaderBoard.AllTime");
+                $slot = "a";
                 break;
         }
 
         // Get the leaderboard data
         $leaders = Gdn::sql()
-            ->select('up.Points as YagaPoints, u.*')
-            ->from('User u')
-            ->join('UserPoints up', 'u.UserID = up.UserID')
-            ->where('u.Banned', 0)
-            ->where('u.Deleted', 0)
-            ->where('up.SlotType', $slot)
-            ->where('up.TimeSlot', gmdate('Y-m-d', Gdn_Statistics::timeSlotStamp($slot)))
-            ->where('up.Source', 'Total')
-            ->orderBy('up.Points', 'desc')
-            ->limit(Gdn::config('Yaga.LeaderBoard.Limit', 10), 0)
+            ->select("up.Points as YagaPoints, u.*")
+            ->from("User u")
+            ->join("UserPoints up", "u.UserID = up.UserID")
+            ->where("u.Banned", 0)
+            ->where("u.Deleted", 0)
+            ->where("up.SlotType", $slot)
+            ->where(
+                "up.TimeSlot",
+                gmdate("Y-m-d", Gdn_Statistics::timeSlotStamp($slot))
+            )
+            ->where("up.Source", "Total")
+            ->orderBy("up.Points", "desc")
+            ->limit(Gdn::config("Yaga.LeaderBoard.Limit", 10), 0)
             ->get()
             ->result();
 
@@ -100,13 +109,13 @@ class LeaderBoardModule extends Gdn_Module {
      *
      * @return string
      */
-    public function toString() {
+    public function toString()
+    {
         $this->getData();
 
         if (count($this->Data)) {
             return parent::toString();
         }
-        return '';
+        return "";
     }
-
 }

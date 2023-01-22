@@ -2,132 +2,133 @@
 
 /* Donation Aside */
 .Footer .Aside.Box form {
-    text-align: center;
-    padding: 20px;
+  text-align: center;
+  padding: 20px;
 }
 
 /* Panel Icon */
 #Panel div.Gamification h4 {
- background-position: 164px -841px;
+  background-position: 164px -841px;
 }
 
 .Yaga div.Popup div.Body {
-    max-width: 300px;
+  max-width: 300px;
 }
 
 .Yaga.Badge .InfoMessage,
 .Yaga.Badge .AlertMessage,
 .Yaga.Badge .CasualMessage,
 .Yaga.Badge .WarningMessage {
-    width: 240px;
-    padding: 10px;
+  width: 240px;
+  padding: 10px;
 }
 
 .Yaga #Content h3 {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 /* Reaction Specific Settings view */
 #ActionIcons img {
-    padding: 6px;
-    cursor: pointer;
+  padding: 6px;
+  cursor: pointer;
 }
 
 #Actions tbody tr {
-    cursor: move;
+  cursor: move;
 }
 
 #Actions tr.Placeholder {
-    background-color: #cfcfcf;
+  background-color: #cfcfcf;
 }
 
 #Actions h4 {
-    padding: 0px;
+  padding: 0px;
 }
 
 #Actions .Action {
-    display: inline-block;
+  display: inline-block;
 }
 #Actions .Tools {
-    display: inline-block;
-    vertical-align: top;
+  display: inline-block;
+  vertical-align: top;
 }
 .Reactions.Preview {
-    font-size: 14px;
-    margin-top: 10px;
-    text-align: left;
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: left;
 }
-.Reactions.Preview .Count{
-    padding: 1px 0.8ex;
-    color: white;
+.Reactions.Preview .Count {
+  padding: 1px 0.8ex;
+  color: white;
 }
 
 #AdvancedActionSettings {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 #AdvancedActionSettings span {
-    text-align: right;
-    width: 250px;
+  text-align: right;
+  width: 250px;
 }
 
 /* Badges Settings */
 #Badges tbody tr {
-    cursor: move;
+  cursor: move;
 }
 
-#Rule-Criteria input, #Rule-Criteria input {
-    display: block;
-    margin: 5px 0;
+#Rule-Criteria input,
+#Rule-Criteria input {
+  display: block;
+  margin: 5px 0;
 }
 
 /* Rank Settings */
 #Ranks tbody tr {
-    cursor: move;
+  cursor: move;
 }
 
 .Rank .Aside {
-    border: medium none;
-    padding: 10px 20px 0px 20px;
-    background: none;
-    border-left: solid 1px #EEEEEE;
-    max-width: none;
+  border: medium none;
+  padding: 10px 20px 0px 20px;
+  background: none;
+  border-left: solid 1px #eeeeee;
+  max-width: none;
 }
 
 .Rank .Aside img {
-    float: left;
-    height: 100px;
-    margin-right: 20px;
+  float: left;
+  height: 100px;
+  margin-right: 20px;
 }
 
 .Rank.settings #Content form ul {
-    padding: 0px;
+  padding: 0px;
 }
 
 /* Dashboard Stats */
 ul.StatsOverview {
-     text-align: center;
-     padding: 20px 0 20px 20px;
+  text-align: center;
+  padding: 20px 0 20px 20px;
 }
 ul.StatsOverview li {
-     display: inline-block;
-     width: 25%;
-     text-align: center;
-     white-space: nowrap;
-     color: #555;
-     font-size: 10px;
+  display: inline-block;
+  width: 25%;
+  text-align: center;
+  white-space: nowrap;
+  color: #555;
+  font-size: 10px;
 }
 ul.StatsOverview li div {
-     margin: 0 auto;
-     text-align: left;
-     width: 140px;
-     overflow: visible;
+  margin: 0 auto;
+  text-align: left;
+  width: 140px;
+  overflow: visible;
 }
 ul.StatsOverview li strong {
-     display: block;
-     font-family: 'helvetica neue', arial, helvetica;
-     font-weight: bold;
-     font-size: 30px;
-     line-height: 1;
-     color: #222;
+  display: block;
+  font-family: "helvetica neue", arial, helvetica;
+  font-weight: bold;
+  font-size: 30px;
+  line-height: 1;
+  color: #222;
 }

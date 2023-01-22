@@ -1,4 +1,6 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined("APPLICATION")) {
+    exit();
+}
 
 /* Copyright 2013 Zachary Doll */
 
@@ -11,8 +13,8 @@
  * @since 1.0
  */
 
-class ActionModel extends Gdn_Model {
-
+class ActionModel extends Gdn_Model
+{
     /**
      * This is used as a cache.
      * @var object
@@ -22,9 +24,10 @@ class ActionModel extends Gdn_Model {
     /**
      * Defines the related database table name.
      */
-    public function __construct() {
-        parent::__construct('YagaAction');
-        $this->PrimaryKey = 'ActionID';
+    public function __construct()
+    {
+        parent::__construct("YagaAction");
+        $this->PrimaryKey = "ActionID";
     }
 
     /**
@@ -32,9 +35,24 @@ class ActionModel extends Gdn_Model {
      *
      * @return Gdn_DataSet
      */
-    public function get($orderFields = '', $orderDirection = 'asc', $limit = false, $pageNumber = false) {
-        if ($orderFields !== '' || $orderDirection !== 'asc' || $limit !== false || $pageNumber !== false) {
-            return parent::get($orderFields, $orderDirection, $limit, $pageNumber);
+    public function get(
+        $orderFields = "",
+        $orderDirection = "asc",
+        $limit = false,
+        $pageNumber = false
+    ) {
+        if (
+            $orderFields !== "" ||
+            $orderDirection !== "asc" ||
+            $limit !== false ||
+            $pageNumber !== false
+        ) {
+            return parent::get(
+                $orderFields,
+                $orderDirection,
+                $limit,
+                $pageNumber
+            );
         }
 
         // Cache any get() call with default arguments.
@@ -42,7 +60,7 @@ class ActionModel extends Gdn_Model {
             $this->_actions = $this->SQL
                 ->select()
                 ->from($this->Name)
-                ->orderBy('Sort')
+                ->orderBy("Sort")
                 ->get()
                 ->result();
         }
@@ -56,7 +74,8 @@ class ActionModel extends Gdn_Model {
      * @param int $actionID
      * @return bool
      */
-    public function exists($actionID) {
+    public function exists($actionID)
+    {
         return !empty($this->getID($actionID));
     }
 
@@ -68,7 +87,8 @@ class ActionModel extends Gdn_Model {
      * to. null will delete the associated reactions.
      * @return boolean Whether or not the deletion was successful
      */
-    public function deleteAction($actionID, $replacementID = null) {
+    public function deleteAction($actionID, $replacementID = null)
+    {
         if (!$this->exists($actionID)) {
             return false;
         }
@@ -80,11 +100,11 @@ class ActionModel extends Gdn_Model {
 
         if ($replacementID && $this->exists($replacementID)) {
             $reactionModel->update(
-                ['ActionID' => $replacementID],
-                ['ActionID' => $actionID]
+                ["ActionID" => $replacementID],
+                ["ActionID" => $actionID]
             );
         } else {
-            $reactionModel->delete(['ActionID' => $actionID]);
+            $reactionModel->delete(["ActionID" => $actionID]);
         }
 
         return true;
@@ -96,13 +116,13 @@ class ActionModel extends Gdn_Model {
      * @param array $sortArray
      * @return boolean
      */
-    public function saveSort($sortArray) {
+    public function saveSort($sortArray)
+    {
         foreach ($sortArray as $index => $action) {
             // remove the 'ActionID_' prefix
             $actionID = substr($action, 9);
-            $this->setField($actionID, 'Sort', $index);
+            $this->setField($actionID, "Sort", $index);
         }
         return true;
     }
-
 }

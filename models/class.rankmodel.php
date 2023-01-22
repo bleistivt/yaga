@@ -1,4 +1,6 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined("APPLICATION")) {
+    exit();
+}
 
 /* Copyright 2013 Zachary Doll */
 
@@ -11,8 +13,8 @@
  * @since 1.0
  */
 
-class RankModel extends Gdn_Model {
-
+class RankModel extends Gdn_Model
+{
     /**
      * Used as a cache
      * @var DataSet
@@ -28,9 +30,10 @@ class RankModel extends Gdn_Model {
     /**
      * Defines the related database table name.
      */
-    public function __construct() {
-        parent::__construct('YagaRank');
-        $this->PrimaryKey = 'RankID';
+    public function __construct()
+    {
+        parent::__construct("YagaRank");
+        $this->PrimaryKey = "RankID";
     }
 
     /**
@@ -38,9 +41,24 @@ class RankModel extends Gdn_Model {
      *
      * @return Gdn_DataSet
      */
-    public function get($orderFields = '', $orderDirection = 'asc', $limit = false, $pageNumber = false) {
-        if ($orderFields !== '' || $orderDirection !== 'asc' || $limit !== false || $pageNumber !== false) {
-            return parent::get($orderFields, $orderDirection, $limit, $pageNumber);
+    public function get(
+        $orderFields = "",
+        $orderDirection = "asc",
+        $limit = false,
+        $pageNumber = false
+    ) {
+        if (
+            $orderFields !== "" ||
+            $orderDirection !== "asc" ||
+            $limit !== false ||
+            $pageNumber !== false
+        ) {
+            return parent::get(
+                $orderFields,
+                $orderDirection,
+                $limit,
+                $pageNumber
+            );
         }
 
         // Cache any get() call with default arguments.
@@ -48,7 +66,7 @@ class RankModel extends Gdn_Model {
             self::$_ranks = $this->SQL
                 ->select()
                 ->from($this->Name)
-                ->orderBy('Sort')
+                ->orderBy("Sort")
                 ->get()
                 ->result();
         }
@@ -62,7 +80,8 @@ class RankModel extends Gdn_Model {
      * @param object $user
      * @return mixed null if no qualifying ranks are found, Rank object otherwise
      */
-    public function getHighestQualifyingRank($user) {
+    public function getHighestQualifyingRank($user)
+    {
         $points = $user->Points;
         $posts = $user->CountDiscussions + $user->CountComments;
         $startDate = strtotime($user->DateInserted);
@@ -77,7 +96,11 @@ class RankModel extends Gdn_Model {
             }
 
             $targetDate = time() - $rank->AgeReq;
-            if ($points >= $rank->PointReq && $posts >= $rank->PostReq && $startDate <= $targetDate) {
+            if (
+                $points >= $rank->PointReq &&
+                $posts >= $rank->PostReq &&
+                $startDate <= $targetDate
+            ) {
                 $highestRank = $rank;
             } else {
                 // Don't continue if we do not qualify
@@ -94,7 +117,8 @@ class RankModel extends Gdn_Model {
      * @param int $rankID
      * @return array
      */
-    public function getPerks($rankID) {
+    public function getPerks($rankID)
+    {
         if (!array_key_exists($rankID, self::$_perks)) {
             $ranks = $this->get();
             foreach ($ranks as $rank) {
@@ -106,7 +130,9 @@ class RankModel extends Gdn_Model {
             }
         }
 
-        return (array_key_exists($rankID, self::$_perks)) ? self::$_perks[$rankID] : [];
+        return array_key_exists($rankID, self::$_perks)
+            ? self::$_perks[$rankID]
+            : [];
     }
 
     /**
@@ -115,7 +141,8 @@ class RankModel extends Gdn_Model {
      * @param int $rankID
      * @return array
      */
-    public function getPerkRoleIDs($rankID) {
+    public function getPerkRoleIDs($rankID)
+    {
         $roleIDs = [];
 
         $perks = $this->getPerks($rankID);
@@ -125,7 +152,7 @@ class RankModel extends Gdn_Model {
         }
 
         foreach ($perks as $perk => $value) {
-            if (substr($perk, 0, 4) === 'Role') {
+            if (substr($perk, 0, 4) === "Role") {
                 $roleIDs[] = $value;
             }
         }
@@ -139,12 +166,10 @@ class RankModel extends Gdn_Model {
      * @param int $rankID
      * @param bool $enable
      */
-    public function enable($rankID, $enable) {
-        $enable = (!$enable) ? 0 : 1;
-        $this->update(
-            ['Enabled' => $enable],
-            ['RankID' => $rankID]
-        );
+    public function enable($rankID, $enable)
+    {
+        $enable = !$enable ? 0 : 1;
+        $this->update(["Enabled" => $enable], ["RankID" => $rankID]);
     }
 
     /**
@@ -154,7 +179,8 @@ class RankModel extends Gdn_Model {
      * @param int $userID This is the user that should get the award
      * @param bool $activity Whether or not to insert an activity record.
      */
-    public function set($rankID, $userID, $activity = false) {
+    public function set($rankID, $userID, $activity = false)
+    {
         $rank = $this->getID($rankID);
         $userModel = Gdn::userModel();
         $oldRankID = $userModel->getID($userID)->RankID;
@@ -169,37 +195,41 @@ class RankModel extends Gdn_Model {
             $activityModel = new ActivityModel();
 
             $activity = [
-                'ActivityType' => 'RankPromotion',
-                'ActivityUserID' => $userID,
-                'RegardingUserID' => $userID,
-                'Photo' => Gdn::config('Yaga.Ranks.Photo'),
-                'RecordType' => 'Rank',
-                'RecordID' => $rank->RankID,
-                'HeadlineFormat' => Gdn::translate('Yaga.Rank.PromotedHeadlineFormat'),
-                'Data' => [
-                    'Name' => $rank->Name
+                "ActivityType" => "RankPromotion",
+                "ActivityUserID" => $userID,
+                "RegardingUserID" => $userID,
+                "Photo" => Gdn::config("Yaga.Ranks.Photo"),
+                "RecordType" => "Rank",
+                "RecordID" => $rank->RankID,
+                "HeadlineFormat" => Gdn::translate(
+                    "Yaga.Rank.PromotedHeadlineFormat"
+                ),
+                "Data" => [
+                    "Name" => $rank->Name,
                 ],
-                'Story' => $rank->Description
+                "Story" => $rank->Description,
             ];
 
             // Create a public record
             $activityModel->queue($activity, false); // TODO: enable the grouped notifications after issue #1776 is resolved , ['GroupBy' => 'Story']);
 
             // Notify the user of the award
-            $activity['NotifyUserID'] = $userID;
-            $activityModel->queue($activity, 'RankPromotion', ['Force' => true]);
+            $activity["NotifyUserID"] = $userID;
+            $activityModel->queue($activity, "RankPromotion", [
+                "Force" => true,
+            ]);
 
             $activityModel->saveQueue();
         }
 
-        $userModel->setField($userID, 'RankID', $rank->RankID);
+        $userModel->setField($userID, "RankID", $rank->RankID);
 
         // Update the roles if necessary
         $this->_updateUserRoles($userID, $oldRankID, $rank->RankID);
 
-        $this->EventArguments['Rank'] = $rank;
-        $this->EventArguments['UserID'] = $userID;
-        $this->fireEvent('AfterRankChange');
+        $this->EventArguments["Rank"] = $rank;
+        $this->EventArguments["UserID"] = $userID;
+        $this->fireEvent("AfterRankChange");
     }
 
     /**
@@ -209,15 +239,20 @@ class RankModel extends Gdn_Model {
      * @param array $settings
      * @return boolean
      */
-    public function save($formPostValues, $settings = false) {
-        if (!isset($formPostValues[$this->PrimaryKey]) && !isset($formPostValues['Sort'])) {
-            $max = $this->SQL
-                ->select('Sort', 'max', 'MaxValue')
-                ->from($this->Name)
-                ->get()
-                ->firstRow(DATASET_TYPE_ARRAY)['MaxValue'] ?? 0;
+    public function save($formPostValues, $settings = false)
+    {
+        if (
+            !isset($formPostValues[$this->PrimaryKey]) &&
+            !isset($formPostValues["Sort"])
+        ) {
+            $max =
+                $this->SQL
+                    ->select("Sort", "max", "MaxValue")
+                    ->from($this->Name)
+                    ->get()
+                    ->firstRow(DATASET_TYPE_ARRAY)["MaxValue"] ?? 0;
 
-            $formPostValues['Sort'] = $max + 1;
+            $formPostValues["Sort"] = $max + 1;
         }
 
         return parent::save($formPostValues, $settings);
@@ -229,11 +264,12 @@ class RankModel extends Gdn_Model {
      * @param array $sortArray
      * @return boolean
      */
-    public function saveSort($sortArray) {
+    public function saveSort($sortArray)
+    {
         foreach ($sortArray as $index => $rank) {
             // remove the 'RankID_' prefix
             $rankID = substr($rank, 7);
-            $this->setField($rankID, 'Sort', $index);
+            $this->setField($rankID, "Sort", $index);
         }
         return true;
     }
@@ -245,12 +281,16 @@ class RankModel extends Gdn_Model {
      * @param int $oldRankID
      * @param int $newRankID
      */
-    private function _updateUserRoles($userID, $oldRankID, $newRankID) {
+    private function _updateUserRoles($userID, $oldRankID, $newRankID)
+    {
         $userModel = Gdn::userModel();
 
         // Get the user's current roles
         $currentRoleData = $userModel->getRoles($userID);
-        $currentRoleIDs = array_column($currentRoleData->resultArray(), 'RoleID');
+        $currentRoleIDs = array_column(
+            $currentRoleData->resultArray(),
+            "RoleID"
+        );
 
         // Get the associated role perks
         $oldPerkRoles = $this->getPerkRoleIDs($oldRankID);
@@ -267,5 +307,4 @@ class RankModel extends Gdn_Model {
             $userModel->saveRoles($userID, $newRoleIDs, false);
         }
     }
-
 }
